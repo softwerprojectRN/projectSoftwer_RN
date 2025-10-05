@@ -15,8 +15,8 @@ public class LibrarySystem {
 
     public LibrarySystem() {
         // في البداية، نضيف مسؤول افتراضي للنظام.
-        admins.put("admin", new Admin("rahaf", "1234"));
-        admins.put("admin", new Admin("nour", "5678"));
+        admins.put("rahaf", new Admin("rahaf", "1234"));
+        admins.put("nour", new Admin("nour", "5678"));
 
     }
 
@@ -51,5 +51,14 @@ public class LibrarySystem {
         return this.loggedInAdmin != null;
     }
 
+
+
+    /**
+     * Gets the currently logged-in admin.
+     * @return an Optional containing the admin if logged in, otherwise an empty Optional.
+*/
+    public Optional<Admin> getCurrentAdmin() {
+    return Optional.ofNullable(this.loggedInAdmin);
+    }
 
 }
