@@ -19,4 +19,14 @@ public class Book {
     public void setAvailable(boolean available) { this.isAvailable = available; }
 
 
+    /**
+     * Provides a user-friendly string representation of the book.
+     * @return A string with book details.
+     */
+    @Override
+    public String toString() {
+        return "Title: '" + title + "', Author: '" + author + "', ISBN: " + isbn + ", Available: " + (isAvailable ? "Yes" : "No");
+    }
+
+
 }

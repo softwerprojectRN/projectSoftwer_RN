@@ -3,13 +3,14 @@ package domain;
 //هذا هو "عقل" النظام.
 // سيدير حالة تسجيل الدخول ويحتوي على منطق التحقق.
 // سنستخدم Map لتخزين المسؤولين للبحث عنهم بسرعة.
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LibrarySystem {
 
     private Map<String, Admin> admins = new HashMap<>();
+    private List<Book> books;
 
     private Admin loggedInAdmin = null;
 
@@ -17,6 +18,7 @@ public class LibrarySystem {
         // في البداية، نضيف مسؤول افتراضي للنظام.
         admins.put("rahaf", new Admin("rahaf", "1234"));
         admins.put("nour", new Admin("nour", "5678"));
+        books = new ArrayList<>();
 
     }
 
@@ -60,5 +62,37 @@ public class LibrarySystem {
     public Optional<Admin> getCurrentAdmin() {
     return Optional.ofNullable(this.loggedInAdmin);
     }
+    /////////////////////////////////////////////////////////////////////////////
+    ///
 
+
+
+
+    // Add a new book
+    public void addBook(String title, String author, String isbn) {
+        Book newBook = new Book(title, author, isbn);
+        books.add(newBook);
+        System.out.println("Book added: " + title);
+    }
+
+    public List<Book> searchBooks(String query) {
+        List<Book> results = new ArrayList<>();
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(query) ||
+                    book.getAuthor().equalsIgnoreCase(query) ||
+                    book.getIsbn().equalsIgnoreCase(query)) {
+                results.add(book);
+            }
+        }
+        return results;
+    }
+
+    // List all available books
+    public void listAvailableBooks() {
+        for (Book book : books) {
+            if (book.isAvailable()) {
+                System.out.println(book.getTitle() + " by " + book.getAuthor());
+            }
+        }
+    }
 }
