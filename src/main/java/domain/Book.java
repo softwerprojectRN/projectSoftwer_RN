@@ -6,6 +6,7 @@ public class Book {
     String isbn;
     boolean isAvailable;
 
+
     public Book(String title, String author, String isbn) {
         this.title = title;
         this.author = author;
@@ -18,6 +19,9 @@ public class Book {
     public boolean isAvailable() { return isAvailable; }
     public void setAvailable(boolean available) { this.isAvailable = available; }
 
+    public void borrow(){ this.isAvailable = false;}
+    public void returnBook() { this.isAvailable = true; }
+
 
     /**
      * Provides a user-friendly string representation of the book.
@@ -27,8 +31,12 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Title: '" + title + "', Author: '" + author + "', ISBN: " + isbn + ", Available: " + (isAvailable ? "Yes" : "No");
+        return "Book{" +
+                "title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", available=" + isAvailable +
+                '}';
     }
-
 
 }
