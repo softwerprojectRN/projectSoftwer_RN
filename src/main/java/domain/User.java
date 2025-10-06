@@ -30,6 +30,7 @@ public class User {
 
     public boolean login(String username, String password) {
         if(this.username.equals(username) && this.password.equals(password)){
+            this.loggedIn = true;
             System.out.println(" Login successful, welcome " + username + "!");
             return  true;
         }
