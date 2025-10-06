@@ -40,7 +40,7 @@ class LibrarySystemTest {
         boolean result = system.login("rahaf", "7896");
 
         assertFalse(result, "Login should fail with a non-existent username.");
-        assertFalse(result, "Login should fail with wrong password.");
+
         assertFalse(system.isLoggedIn(), "System should report that no user is logged in.");
     }
 
@@ -92,6 +92,13 @@ class LibrarySystemTest {
 
         assertFalse(result, "Login should fail with a whitespace-only username.");
         assertFalse(system.isLoggedIn());
+    }
+    @Test
+    void testLoginFailureWithWhitespaceOnlyPassword() {
+        boolean result = system.login("rahaf", "    ");
+        assertFalse(result, "Login should fail with a whitespace-only password.");
+        assertFalse(system.isLoggedIn());
+
     }
 ///////////////////////////////////////////////////////////////////////
 
