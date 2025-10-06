@@ -1,19 +1,25 @@
 package domain;
-//مسؤوليته: فقط تخزين البيانات. ما الو دخل بأي عملية في المكتبة
-public class Admin {
-    private String username;
-    private String password;
+
+
+public class Admin extends User {
+
+    @Override
+    public String getUsername() {
+        return super.getUsername();
+    }
+
+    @Override
+    public String getPassword() {
+        return super.getPassword();
+    }
+
 
     public Admin(String username, String password) {
-        this.username = username;
-        this.password = password;
+        super(username, password);
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public String getPassword() {
-        return password;
+    public void showAdminInfo() {
+        System.out.println("Admin username: " + getUsername());
     }
 }
