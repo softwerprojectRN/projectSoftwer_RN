@@ -54,4 +54,49 @@ class LibrarySystemTest {
         system.logout();
         assertFalse(system.isLoggedIn(),"not logout");
     }
+
+    // فرضا كانت كلمة السر الي دخلها فارغة :
+    @Test
+    void testifnullpassword(){
+        boolean result = system.login("rahaf",null);
+        assertFalse(result,"Login should fail with a non-null password.");
+        assertFalse(system.isLoggedIn());
+
+    }
+
+    @Test
+    void testifnullusername(){
+        boolean result = system.login(null,"1234");
+        assertFalse(result,"Login should fail with a non-null username.");
+        assertFalse(system.isLoggedIn());
+    }
+    @Test
+    void testLoginFailureWithEmptyUsername() {
+        boolean result = system.login("", "1234");
+
+        assertFalse(result, "Login should fail with an empty username.");
+        assertFalse(system.isLoggedIn(), "System should report that no user is logged in.");
+    }
+
+    @Test
+    void testLoginFailureWithEmptyPassword() {
+
+        boolean result = system.login("rahaf", "");
+
+        assertFalse(result, "Login should fail with an empty password.");
+        assertFalse(system.isLoggedIn(), "System should report that no user is logged in.");
+    }
+    @Test
+    void testLoginFailureWithWhitespaceOnlyUsername() {
+        boolean result = system.login("   ", "1234");
+
+        assertFalse(result, "Login should fail with a whitespace-only username.");
+        assertFalse(system.isLoggedIn());
+    }
+///////////////////////////////////////////////////////////////////////
+
+    // نور هون رح تضيف test cases على عمليات الكتب
+
+
+
 }
