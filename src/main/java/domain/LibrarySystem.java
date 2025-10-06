@@ -66,15 +66,6 @@ public class LibrarySystem {
     ///
 
 
-
-
-    // Add a new book
-    public void addBook(String title, String author, String isbn) {
-        Book newBook = new Book(title, author, isbn);
-        books.add(newBook);
-        System.out.println("Book added: " + title);
-    }
-
     public List<Book> searchBooks(String query) {
         List<Book> results = new ArrayList<>();
         for (Book book : books) {
@@ -87,12 +78,7 @@ public class LibrarySystem {
         return results;
     }
 
-    // List all available books
-    public void listAvailableBooks() {
-        for (Book book : books) {
-            if (book.isAvailable()) {
-                System.out.println(book.getTitle() + " by " + book.getAuthor());
-            }
-        }
+    public void addBook(Book newBook) {
+        books.add(newBook);
     }
 }
