@@ -1,4 +1,5 @@
 import domain.LibrarySystem;
+import domain.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -103,6 +104,43 @@ class LibrarySystemTest {
 ///////////////////////////////////////////////////////////////////////
 
     // نور هون رح تضيف test cases على عمليات الكتب
+
+    @Test
+    void testBookConstructorAndGetters() {
+        Book book = new Book("Clean Code", "Robert C. Martin", "9780132350884");
+
+        assertEquals("Clean Code", book.getTitle());
+        assertEquals("Robert C. Martin", book.getAuthor());
+        assertEquals("9780132350884", book.getIsbn());
+        assertTrue(book.isAvailable());
+    }
+
+    @Test
+    void testSetAvailable() {
+        Book book = new Book("Design Patterns", "GoF", "9780201633610");
+
+        // Initially available
+        assertTrue(book.isAvailable());
+
+        // Change availability
+        book.setAvailable(false);
+        assertFalse(book.isAvailable());
+    }
+
+    @Test
+    void testToString() {
+        Book book = new Book("Refactoring", "Martin Fowler", "9780201485677");
+
+        String expected = "Title: 'Refactoring', Author: 'Martin Fowler', ISBN: 9780201485677, Available: Yes";
+        assertEquals(expected, book.toString());
+
+        // After marking as unavailable
+        book.setAvailable(false);
+        String expectedUnavailable = "Title: 'Refactoring', Author: 'Martin Fowler', ISBN: 9780201485677, Available: No";
+        assertEquals(expectedUnavailable, book.toString());
+    }
+
+
 
 
 
