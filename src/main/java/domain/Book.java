@@ -31,12 +31,15 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
-                "title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", isbn='" + isbn + '\'' +
-                ", available=" + isAvailable +
-                '}';
+        String available ;
+        if (isAvailable)
+        {
+            available = "Yes";
+        }
+        else {
+            available = "No";
+        }
+        return "Title: '" +title + "'" + ", Author: '" + author + "', ISBN: " + isbn + ", Available: "+ available;
     }
 
 }

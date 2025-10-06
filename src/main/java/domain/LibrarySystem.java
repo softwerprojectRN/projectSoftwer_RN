@@ -22,7 +22,6 @@ public class LibrarySystem {
 
     }
 
-
     public boolean login(String username, String password) {
         // البحث عن المسؤول في قائمة المسؤولين
         Admin admin = admins.get(username);
@@ -77,8 +76,6 @@ public class LibrarySystem {
         }
         return results;
     }
-
-
 
     public void addBook(Book newBook) {
         books.add(newBook);

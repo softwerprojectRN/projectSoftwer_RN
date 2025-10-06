@@ -16,7 +16,7 @@ public class Admin extends User {
         return super.getPassword();
     }
 
-    // Add a new book ///////////////
+    // Add a new book //
     public void addBook(LibrarySystem library, String title, String author, String isbn) {
         Book newBook = new Book(title, author, isbn);
         library.addBook(newBook);
