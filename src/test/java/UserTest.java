@@ -41,8 +41,8 @@ class UserTest {
     @Test
     void testLoginFailureWrongPassword() {
         boolean result = user.login("testUser", "wrongPass");
-        assertFalse(result, "Login should fail with incorrect password");
-        assertFalse(user.isLoggedIn(), "User should not be logged in after failed login");
+        assertFalse(result);
+        assertFalse(user.isLoggedIn());
     }
 
     // Test logout when user is logged in
@@ -50,38 +50,38 @@ class UserTest {
     void testLogoutWhenLoggedIn() {
         user.login("testUser", "testPass");
         user.logout();
-        assertFalse(user.isLoggedIn(), "User should be logged out after calling logout");
+        assertFalse(user.isLoggedIn());
     }
 
     // Test logout when user is not logged in
     @Test
     void testLogoutWhenNotLoggedIn() {
         user.logout();
-        assertFalse(user.isLoggedIn(), "User should remain logged out if not logged in");
+        assertFalse(user.isLoggedIn());
     }
 
     // Test setUsername
     @Test
     void testSetUsername() {
         user.setUsername("newUser");
-        assertEquals("newUser", user.getUsername(), "Username should be updated correctly");
+        assertEquals("newUser", user.getUsername());
     }
 
     // Test login sets loggedIn to true only once
     @Test
     void testMultipleLogin() {
         user.login("testUser", "testPass");
-        assertTrue(user.isLoggedIn(), "User should be logged in after first login");
+        assertTrue(user.isLoggedIn());
         // login again with correct credentials
         user.login("testUser", "testPass");
-        assertTrue(user.isLoggedIn(), "User should remain logged in after second login");
+        assertTrue(user.isLoggedIn());
     }
 
     // Test login does not set loggedIn if credentials are wrong
     @Test
     void testFailedLoginDoesNotChangeState() {
         user.login("wrongUser", "wrongPass");
-        assertFalse(user.isLoggedIn(), "User should not be logged in after failed login");
+        assertFalse(user.isLoggedIn());
     }
 
     // Test logout after failed login
@@ -89,6 +89,6 @@ class UserTest {
     void testLogoutAfterFailedLogin() {
         user.login("wrongUser", "wrongPass");
         user.logout();
-        assertFalse(user.isLoggedIn(), "User should remain logged out after failed login and logout attempt");
+        assertFalse(user.isLoggedIn());
     }
 }
