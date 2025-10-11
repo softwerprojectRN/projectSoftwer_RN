@@ -26,9 +26,6 @@ public class Borrower extends User {
             System.out.println("You have unpaid fines. Please pay them before borrowing new books.");
             return;
         }
-
-
-
         if (book.isAvailable()) {
             book.borrow();
             LocalDate dueDate = LocalDate.now().plusDays(28); // تاريخ الاسترجاع بعد 28 يوم
@@ -119,22 +116,26 @@ public class Borrower extends User {
     }
 
     // دفع الغرامة
-    public void payFine(double amount) {
+    public double payFine(double amount) {
         if (amount <= 0) {
             System.out.println("Invalid payment amount.");
-            return;
+            return 0;
         }
 
         if (fineBalance == 0) {
             System.out.println("No fines to pay.");
-            return;
+            return amount; // ترجّع المبلغ كله للعميل
         }
 
-        fineBalance -= amount;
-        if (fineBalance < 0) fineBalance = 0;
+        double paid = Math.min(amount, fineBalance); // المبلغ الذي سيتم خصمه
+        fineBalance -= paid;
 
         System.out.println("Payment successful. Remaining fine: " + fineBalance);
+
+        // إذا دفع العميل أكثر من اللازم، نرجّع الفائض
+        return amount - paid;
     }
+
 
     public double getFineBalance() {
         return fineBalance;
