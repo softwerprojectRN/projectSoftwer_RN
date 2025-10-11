@@ -1,5 +1,6 @@
 package domain;
 
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
@@ -138,6 +139,10 @@ public class Borrower extends User {
 
     public double getFineBalance() {
         return fineBalance;
+    }
+
+    public List<BookRecord> getBorrowedBooks() {
+        return borrowedBooks;
     }
 
 
