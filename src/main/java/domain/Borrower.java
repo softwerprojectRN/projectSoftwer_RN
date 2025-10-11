@@ -119,32 +119,25 @@ public class Borrower extends User {
     }
 
     // دفع الغرامة
-    public double payFine(double amount) {
+    public void payFine(double amount) {
         if (amount <= 0) {
             System.out.println("Invalid payment amount.");
-            return 0;
+            return;
         }
 
         if (fineBalance == 0) {
             System.out.println("No fines to pay.");
-            return amount; // ترجّع المبلغ كله للعميل
+            return;
         }
 
-        double paid = Math.min(amount, fineBalance); // المبلغ الذي سيتم خصمه
-        fineBalance -= paid;
+        fineBalance -= amount;
+        if (fineBalance < 0) fineBalance = 0;
 
         System.out.println("Payment successful. Remaining fine: " + fineBalance);
-
-        // إذا دفع العميل أكثر من اللازم، نرجّع الفائض
-        return amount-paid;
     }
 
     public double getFineBalance() {
         return fineBalance;
-    }
-
-    public List<BookRecord> getBorrowedBooks() {
-        return borrowedBooks;
     }
 
 
@@ -189,8 +182,5 @@ public class Borrower extends User {
         }
         return overdue;
     }
-
-
-
 }
 
