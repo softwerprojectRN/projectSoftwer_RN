@@ -90,5 +90,5 @@ class UserTest {
         user.login("wrongUser", "wrongPass");
         user.logout();
         assertFalse(user.isLoggedIn());
-    }
+}
 }

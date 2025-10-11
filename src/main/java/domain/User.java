@@ -30,15 +30,15 @@ public class User {
 
     public boolean login(String username, String password) {
         if(this.username.equals(username) && this.password.equals(password)){
-            System.out.println(" Login successful, welcome " + username + "!");
-            return  true;
-        }
-        else{
+            this.loggedIn = true; // <- add this
+            System.out.println("Login successful, welcome " + username + "!");
+            return true;
+        } else {
             System.out.println("Invalid username or password.");
-
             return false;
         }
     }
+
     public void logout() {
         if(this.loggedIn){
             this.loggedIn = false;
@@ -47,6 +47,6 @@ public class User {
         else{
             System.out.println("You are not logged in yet.");
 
-        }
-    }
+ }
+}
 }
