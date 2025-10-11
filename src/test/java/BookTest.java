@@ -1,9 +1,9 @@
 import domain.Book;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class BookTest {
     private Book book;
 
@@ -13,45 +13,89 @@ class BookTest {
     }
 
     @Test
-    void testConstructorAndGetters() {
+    void testConstructorSetsFieldsCorrectly() {
         assertEquals("The Great Gatsby", book.getTitle());
         assertEquals("F. Scott Fitzgerald", book.getAuthor());
         assertEquals("1234567890", book.getIsbn());
+    }
+
+
+    @Test
+    void testGetTitle() {
+        assertEquals("The Great Gatsby", book.getTitle());
+    }
+
+    @Test
+    void testGetAuthor() {
+        assertEquals("F. Scott Fitzgerald", book.getAuthor());
+    }
+
+    @Test
+    void testGetIsbn() {
+        assertEquals("1234567890", book.getIsbn());
+    }
+
+
+    @Test
+    void testBookIsAvailableByDefault() {
         assertTrue(book.isAvailable());
     }
 
     @Test
-    void testSetAvailable() {
-        book.setAvailable(false);
+    void testBorrowChangesAvailabilityToFalse() {
+        book.borrow();
         assertFalse(book.isAvailable());
+    }
+
+    @Test
+    void testReturnBookChangesAvailabilityToTrue() {
+        book.borrow();
+        book.returnBook();
+        assertTrue(book.isAvailable());
+    }
+
+    @Test
+    void testSetAvailableTrue() {
         book.setAvailable(true);
         assertTrue(book.isAvailable());
     }
 
     @Test
-    void testBorrow() {
-        book.borrow();
-        assertFalse(book.isAvailable(), "Book should not be available after borrowing");
+    void testSetAvailableFalse() {
+        book.setAvailable(false);
+        assertFalse(book.isAvailable());
     }
 
     @Test
-    void testReturnBook() {
-        book.borrow(); // Make it unavailable first
-        book.returnBook();
-        assertTrue(book.isAvailable(), "Book should be available after return");
-    }
-
-    @Test
-    void testToStringAvailable() {
+    void testToStringWhenAvailable() {
         String result = book.toString();
-        assertTrue(result.contains("Available: Yes"));
         assertTrue(result.contains("Title: 'The Great Gatsby'"));
+        assertTrue(result.contains("Author: 'F. Scott Fitzgerald'"));
+        assertTrue(result.contains("ISBN: 1234567890"));
+        assertTrue(result.contains("Available: Yes"));
     }
 
     @Test
-    void testToStringNotAvailable() {
+    void testToStringWhenNotAvailable() {
         book.borrow();
         String result = book.toString();
+        assertTrue(result.contains("Title: 'The Great Gatsby'"));
+        assertTrue(result.contains("Author: 'F. Scott Fitzgerald'"));
+        assertTrue(result.contains("ISBN: 1234567890"));
         assertTrue(result.contains("Available: No"));
+    }
+
+    @Test
+    void testBorrowTwiceKeepsUnavailable() {
+        book.borrow();
+        book.borrow();
+        assertFalse(book.isAvailable());
+    }
+
+    @Test
+    void testReturnBookWhenAlreadyAvailable() {
+        // AlreadyAvailable
+        book.returnBook();
+        assertTrue(book.isAvailable());
     }
 }
