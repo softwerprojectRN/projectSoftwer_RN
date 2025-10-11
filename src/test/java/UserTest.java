@@ -1,4 +1,5 @@
 import domain.User;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,85 +11,72 @@ class UserTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("testUser", "testPass");
+        user = new User("Ola", "1234");
     }
 
-    // Test constructor and getters
     @Test
-    void testConstructorAndGetters() {
-        assertEquals("testUser", user.getUsername());
-        assertEquals("testPass", user.getPassword());
+    void testGetUsername() {
+        assertEquals("Ola", user.getUsername());
+    }
+
+    @Test
+    void testGetPassword() {
+        assertEquals("1234", user.getPassword());
+    }
+
+
+    @Test
+    void testUserIsLoggedOutByDefault() {
         assertFalse(user.isLoggedIn());
     }
 
-    // Test login with correct credentials
+
     @Test
-    void testLoginSuccess() {
-        boolean result = user.login("testUser", "testPass");
+    void testSetUsernameUpdatesUsername() {
+        user.setUsername("OlaRabi");
+        assertEquals("OlaRabi", user.getUsername());
+    }
+
+    @Test
+    void testLoginWithCorrectCredentialsReturnsTrue() {
+        boolean result = user.login("Ola", "1234");
         assertTrue(result);
+    }
+
+    @Test
+    void testLoginWithCorrectCredentialsSetsLoggedInTrue() {
+        user.login("Ola", "1234");
         assertTrue(user.isLoggedIn());
     }
 
-    // Test login with incorrect username
     @Test
-    void testLoginFailureWrongUsername() {
-        boolean result = user.login("wrongUser", "testPass");
+    void testLoginWithIncorrectUsernameReturnsFalse() {
+        boolean result = user.login("WrongUser", "1234");
         assertFalse(result);
-        assertFalse(user.isLoggedIn());
     }
 
-    // Test login with incorrect password
     @Test
-    void testLoginFailureWrongPassword() {
-        boolean result = user.login("testUser", "wrongPass");
+    void testLoginWithIncorrectPasswordReturnsFalse() {
+        boolean result = user.login("Ola", "wrongpass");
         assertFalse(result);
+    }
+
+    @Test
+    void testLoginWithIncorrectCredentialsKeepsLoggedInFalse() {
+        user.login("WrongUser", "wrongpass");
         assertFalse(user.isLoggedIn());
     }
 
-    // Test logout when user is logged in
     @Test
-    void testLogoutWhenLoggedIn() {
-        user.login("testUser", "testPass");
+    void testLogoutWhenLoggedInSetsLoggedInFalse() {
+        user.login("Ola", "1234"); // log in first
         user.logout();
         assertFalse(user.isLoggedIn());
     }
 
-    // Test logout when user is not logged in
     @Test
-    void testLogoutWhenNotLoggedIn() {
-        user.logout();
-        assertFalse(user.isLoggedIn());
-    }
-
-    // Test setUsername
-    @Test
-    void testSetUsername() {
-        user.setUsername("newUser");
-        assertEquals("newUser", user.getUsername());
-    }
-
-    // Test login sets loggedIn to true only once
-    @Test
-    void testMultipleLogin() {
-        user.login("testUser", "testPass");
-        assertTrue(user.isLoggedIn());
-        // login again with correct credentials
-        user.login("testUser", "testPass");
-        assertTrue(user.isLoggedIn());
-    }
-
-    // Test login does not set loggedIn if credentials are wrong
-    @Test
-    void testFailedLoginDoesNotChangeState() {
-        user.login("wrongUser", "wrongPass");
-        assertFalse(user.isLoggedIn());
-    }
-
-    // Test logout after failed login
-    @Test
-    void testLogoutAfterFailedLogin() {
-        user.login("wrongUser", "wrongPass");
-        user.logout();
+    void testLogoutWhenNotLoggedInRemainsFalse() {
+        user.logout(); // still false by default
         assertFalse(user.isLoggedIn());
 }
 }
