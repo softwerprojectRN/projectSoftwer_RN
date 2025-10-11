@@ -29,16 +29,16 @@ public class User {
     }
 
     public boolean login(String username, String password) {
-        if(this.username.equals(username) && this.password.equals(password)){
-            System.out.println(" Login successful, welcome " + username + "!");
-            return  true;
-        }
-        else{
+        if (this.username.equals(username) && this.password.equals(password)) {
+            this.loggedIn = true;
+            System.out.println("Login successful, welcome " + username + "!");
+            return true;
+        } else {
             System.out.println("Invalid username or password.");
-
             return false;
         }
     }
+
     public void logout() {
         if(this.loggedIn){
             this.loggedIn = false;
