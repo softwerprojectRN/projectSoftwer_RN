@@ -178,21 +178,6 @@ public class User {
         }
     }
 
-    public static void main(String[] args) {
-        // تسجيل مستخدم جديد
-        User newUser = User.register("yaqeen shatat", "98745");
-        if (newUser != null) {
-            System.out.println("تم التسجيل!");
-        }
-
-        // تسجيل دخول
-        User currentUser = User.login("ahmed salameh", "12345");
-        if (currentUser != null) {
-            System.out.println("مسجل الدخول: " + currentUser.getUsername());
-            currentUser.logout();
-        }
-    }
-
     protected void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
     }

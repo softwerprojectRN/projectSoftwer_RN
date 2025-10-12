@@ -170,30 +170,4 @@ public class Book {
         String available = isAvailable ? "Yes" : "No";
         return "ID: " + id + ", Title: '" + title + "', Author: '" + author + "', ISBN: " + isbn + ", Available: " + available;
     }
-
-    // Main method للاختبار (مشابه لليوزر)
-    public static void main(String[] args) {
-        // إضافة كتاب جديد
-        Book newBook = Book.addBook("Java Programming", "John Doe", "123456789");
-        if (newBook != null) {
-            System.out.println("تم الإضافة!");
-            System.out.println(newBook.toString());
-        }
-
-        // جلب جميع الكتب
-        List<Book> allBooks = Book.getAllBooks();
-        for (Book b : allBooks) {
-            System.out.println(b.toString());
-        }
-
-        // اختبار إعارة (افترض الكتاب الأول)
-        if (!allBooks.isEmpty()) {
-            Book firstBook = allBooks.get(0);
-            firstBook.borrow();
-            System.out.println("بعد الإعارة: " + firstBook.toString());
-
-            firstBook.returnBook();
-            System.out.println("بعد الإرجاع: " + firstBook.toString());
-        }
-    }
 }

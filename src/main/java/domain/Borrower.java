@@ -266,9 +266,4 @@ public class Borrower extends User {
     public double getFineBalance() { return fineBalance; }
 
     protected void setFineBalance(double fineBalance) { this.fineBalance = fineBalance; }
-
-    // =================== Main Test ===================
-    public static void main(String[] args) {
-        System.out.println("اختبر Borrower مع BorrowingService.");
-    }
 }

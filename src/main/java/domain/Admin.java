@@ -145,19 +145,4 @@ public class Admin extends User {
     public void showAdminInfo() {
         System.out.println("Admin username: " + getUsername());
     }
-
-    public static void main(String[] args) {
-        // تسجيل أدمن جديد
-        Admin newAdmin = Admin.register("rahaf shtayeh", "20041");
-        if (newAdmin != null) {
-            System.out.println("تم التسجيل!");
-        }
-
-        // تسجيل دخول (محاولة لأدمن آخر غير مسجل، زي الـ User)
-        Admin currentAdmin = Admin.login("nour shatat", "200412");
-        if (currentAdmin != null) {
-            System.out.println("مسجل الدخول: " + currentAdmin.getUsername());
-            currentAdmin.logout();
-}
-}
 }
