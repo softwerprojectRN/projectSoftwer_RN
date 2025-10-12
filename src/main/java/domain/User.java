@@ -195,5 +195,5 @@ public class User {
 
     protected void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
-}
+    }
 }
