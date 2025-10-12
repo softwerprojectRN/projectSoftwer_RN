@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DatabaseToolSources">
-    <data-source name="localhost" uuid="760c297f-49fd-4f3f-b303-6baf4aaad734" type="SQLITE">
+    <data-source name="localhost" uuid="3c4c8901-6286-4bdd-af53-ba16e737a6d8" type="SQLITE">
       <base-info connect-type="DB_DEFAULT" product="SQLite" version="3.45.1" major-version="3" minor-version="45" jdbc-name="SQLite JDBC" jdbc-version="3.45.1.0" jdbc-major-version="3" jdbc-minor-version="45" />
       <user-name />
       <schema-mapping>
@@ -21,7 +21,7 @@
       <use-database kind="schema">
         <name qname="main" operator="@" />
       </use-database>
-      <url>jdbc:sqlite:C:/Users/ly/OneDrive/Desktop/database/database.db</url>
+      <url>jdbc:sqlite:C:/Users/ly/OneDrive/Desktop/intiliji_all files/githup-inti-demo/database.db</url>
       <remarks />
       <vm-options />
       <driver-info id="sqlite.xerial" />
