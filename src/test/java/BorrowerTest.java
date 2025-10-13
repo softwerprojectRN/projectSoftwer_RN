@@ -1,301 +1,456 @@
-//import domain.Book;
-//import domain.Borrower;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//
-//import java.lang.reflect.Field;
-//import java.time.LocalDate;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-///**
-// * Comprehensive test class for the Borrower class.
-// * This suite is designed to achieve 100% coverage for Methods, Lines, and Branches.
-// */
-//class BorrowerTest {
-//
-//    private Borrower borrower;
-//    private Book availableBook;
-//    private Book anotherBook;
-//
-//    @BeforeEach
-//    void setUp() {
-//        borrower = new Borrower("testuser", "password");
-//        borrower.login("testuser", "password");
-//
-//        availableBook = new Book("The Great Gatsby", "F. Scott Fitzgerald", "978-0743273565");
-//        anotherBook = new Book("1984", "George Orwell", "978-0451524935");
-//    }
-//
-//    // ========================================================================
-//    // Test Cases for borrowBook() - US2.1
-//    // ========================================================================
-//    //يتأكد إنو لما المستخدم يستعير كتاب، حالة الكتاب تتغير إلى غير متاح (isAvailable = false).
-//    @Test
-//    void testBorrowBook_MarksBookAsUnavailable() {
-//        borrower.borrowBook(availableBook);
-//        assertFalse(availableBook.isAvailable(), "Book should be marked as unavailable after borrowing.");
-//    }
-////تأكد إنو الكتاب المٌستعار ينضاف إلى قائمة الكتب المستعارة عند المستخدم (borrowedBooks).
-//    @Test
-//    void testBorrowBook_AddsBookToBorrowedList() {
-//        borrower.borrowBook(availableBook);
-//        assertEquals(1, borrower.getBorrowedBooks().size(), "Borrower's book list should contain one book.");
-//    }
-//
-//    @Test
-//    void testBorrowBook_FailsWhenNotLoggedIn() {
-//        Borrower loggedOutBorrower = new Borrower("user2", "pass");
-//        loggedOutBorrower.borrowBook(availableBook);
-//        assertEquals(0, loggedOutBorrower.getBorrowedBooks().size(), "Logged out user should not be able to borrow.");
-//    }
-////التأكد إنو المستخدم اللي عليه غرامة (fineBalance > 0) ما يقدر يستعير كتاب.
-//    @Test
-//    void testBorrowBook_FailsWithUnpaidFines() {
-//        setFineBalance(borrower, 10.0);
-//        borrower.borrowBook(availableBook);
-//        assertEquals(0, borrower.getBorrowedBooks().size(), "User with fines should not be able to borrow.");
-//    }
-////التأكد إنو المستخدم ما يقدر يستعير كتاب أصلاً مش متاح.
-//    @Test
-//    void testBorrowBook_FailsWhenBookIsNotAvailable() {
-//        availableBook.setAvailable(false);
-//        borrower.borrowBook(availableBook);
-//        assertEquals(0, borrower.getBorrowedBooks().size(), "User should not be able to borrow an unavailable book.");
-//    }
-//
-//    // ========================================================================
-//    // Test Cases for returnBook() and Fine Calculation - US2.2 & US2.3
-//    // ========================================================================
-////التأكد إنو لما ترجعي الكتاب بالوقت، يرجع متاح (isAvailable = true).
-//    @Test
-//    void testReturnBook_OnTime_MarksBookAsAvailable() {
-//        borrower.borrowBook(availableBook);
-//        borrower.returnBook(availableBook);
-//        assertTrue(availableBook.isAvailable(), "Book should be marked as available after on-time return.");
-//    }
-////: التأكد إنو بعد إرجاع الكتاب، ينحذف من قائمة الكتب المستعارة.
-//    @Test
-//    void testReturnBook_OnTime_RemovesBookFromBorrowedList() {
-//        borrower.borrowBook(availableBook);
-//        borrower.returnBook(availableBook);
-//        assertEquals(0, borrower.getBorrowedBooks().size(), "Book should be removed from borrower's list after return.");
-//    }
-////التأكد إنو إذا رجع الكتاب بالموعد، ما تنضاف أي غرامة للمستخدم (fineBalance = 0).
-//    @Test
-//    void testReturnBook_OnTime_DoesNotAddFine() {
-//        borrower.borrowBook(availableBook);
-//        borrower.returnBook(availableBook);
-//        assertEquals(0.0, borrower.getFineBalance(), "Fine balance should be zero for on-time return.");
-//    }
-////التأكد إنو حتى لو الكتاب تأخر (متأخر 5 أيام مثلاً)، لما يرجع يصير متاح مرة ثانية.
-//    @Test
-//    void testReturnBook_Overdue_MarksBookAsAvailable() {
-//        borrower.borrowBook(availableBook);
-//        setDueDate(borrower.getBorrowedBooks().get(0), LocalDate.now().minusDays(5));
-//        borrower.returnBook(availableBook);
-//        assertTrue(availableBook.isAvailable(), "Overdue book should be marked as available after return.");
-//    }
-////التأكد إنو الكتاب المتأخر كمان ينشال من قائمة الكتب المستعارة بعد الإرجاع
-//    @Test
-//    void testReturnBook_Overdue_RemovesBookFromBorrowedList() {
-//        borrower.borrowBook(availableBook);
-//        setDueDate(borrower.getBorrowedBooks().get(0), LocalDate.now().minusDays(5));
-//        borrower.returnBook(availableBook);
-//        assertEquals(0, borrower.getBorrowedBooks().size(), "Overdue book should be removed from borrower's list after return.");
-//    }
-////التأكد إنو الغرامة المحسوبة تساوي عدد الأيام المتأخرة.
-//    @Test
-//    void testReturnBook_Overdue_AddsCorrectFine() {
-//        borrower.borrowBook(availableBook);
-//        setDueDate(borrower.getBorrowedBooks().get(0), LocalDate.now().minusDays(5));
-//        borrower.returnBook(availableBook);
-//        assertEquals(5.0, borrower.getFineBalance(), "Fine balance should be 5.0 for a 5-day overdue book.");
-//    }
-//    @Test
-//    void testReturnBook_FailsIfBookNotBorrowedByUser() {
-//        borrower.borrowBook(availableBook);
-//        borrower.returnBook(anotherBook);
-//        assertEquals(1, borrower.getBorrowedBooks().size(), "Borrowed books list should not change if returning a non-borrowed book.");
-//    }
-//    @Test
-//    void testReturnBook_FailsWhenBorrowedListIsEmpty() {
-//        // Covers the case where the 'for' loop is never entered.
-//        borrower.returnBook(availableBook);
-//        assertEquals(0, borrower.getBorrowedBooks().size(), "List should remain empty if user tries to return a book they never borrowed.");
-//    }
-//
-//    // ========================================================================
-//    // Test Cases for payFine() - US2.3
-//    // ========================================================================
-////لما المستخدم يدفع الغرامة كاملة → الرصيد يصير صفر.
-//    @Test
-//    void testPayFine_FullPayment() {
-//        setFineBalance(borrower, 10.0);
-//        borrower.payFine(10.0);
-//        assertEquals(0.0, borrower.getFineBalance(), "Fine balance should be zero after full payment.");
-//    }
-////التأكد إنو الدفع الجزئي ينقص الغرامة بمقدار المبلغ المدفوع.
-//    @Test
-//    void testPayFine_PartialPayment() {
-//        setFineBalance(borrower, 10.0);
-//        borrower.payFine(4.0);
-//        assertEquals(6.0, borrower.getFineBalance(), "Fine balance should be reduced by the partial payment.");
-//    }
-////إذا المستخدم دفع أكثر من الغرامة، الرصيد ما بصير سالب، يثبت عند صفر.
-//    @Test
-//    void testPayFine_Overpayment() {
-//        setFineBalance(borrower, 10.0);
-//        borrower.payFine(15.0);
-//        assertEquals(0.0, borrower.getFineBalance(), "Fine balance should be zero, not negative, after overpayment.");
-//    }
-////ذا حاول يدفع صفر أو سالب → ما يصير أي تغيير على الغرامة.
-//    @Test
-//    void testPayFine_FailsWithInvalidAmount() {
-//
-//        setFineBalance(borrower, 10.0);
-//        borrower.payFine(0.0);
-//        assertEquals(10.0, borrower.getFineBalance(), "Fine balance should not change with invalid payment.");
-//    }
-////يغطي حالة إنو المستخدم ما عليه أي غرامة، ومع هيك يحاول يدفع.
-//    @Test
-//    void testPayFine_FailsWhenNoFinesToPay() {
-//
-//        borrower.payFine(5.0);
-//        assertEquals(0.0, borrower.getFineBalance(), "Fine balance should remain zero if there are no fines to pay.");
-//    }
-//
-//    // ========================================================================
-//    // Test Cases for getOverdueBooks() - US2.2
-//    // ========================================================================
-//
-//    @Test
-//    void testGetOverdueBooks_ReturnsEmptyList() {
-//        borrower.borrowBook(availableBook);
-//        List<Borrower.BookRecord> overdueBooks = borrower.getOverdueBooks();
-//        assertTrue(overdueBooks.isEmpty(), "Should return an empty list when no books are overdue.");
-//    }
-////التأكد إنو الدالة ترجع العدد الصحيح من الكتب المتأخرة فقط.
-//    @Test
-//    void testGetOverdueBooks_ReturnsCorrectCount() {
-//        borrower.borrowBook(availableBook);
-//        borrower.borrowBook(anotherBook);
-//        setDueDate(borrower.getBorrowedBooks().get(1), LocalDate.now().minusDays(2));
-//        List<Borrower.BookRecord> overdueBooks = borrower.getOverdueBooks();
-//        assertEquals(1, overdueBooks.size(), "Should return a list with one overdue book.");
-//    }
-////يتأكد إنو الكتاب اللي راجعته الدالة فعلاً هو المتأخر (مش غيره).
-//    @Test
-//    void testGetOverdueBooks_ReturnsCorrectBook() {
-//        borrower.borrowBook(availableBook);
-//        borrower.borrowBook(anotherBook);
-//        setDueDate(borrower.getBorrowedBooks().get(1), LocalDate.now().minusDays(2));
-//        List<Borrower.BookRecord> overdueBooks = borrower.getOverdueBooks();
-//        assertEquals(anotherBook, overdueBooks.get(0).getBook(), "The returned book should be the overdue one.");
-//    }
-//
-//    // ========================================================================
-//    // Test Cases for uncalled methods (to improve Method and Line Coverage)
-//    // ========================================================================
-//
-//    @Test
-//    void testShowBorrowedBooks_WhenListIsEmpty() {
-//        borrower.showBorrowedBooks();
-//        assertTrue(true, "Method executed without throwing an exception.");
-//    }
-//
-//    @Test
-//    void testShowBorrowedBooks_WhenListHasNoOverdueBooks() {
-//        // Covers the 'else' part of the ternary operator in showBorrowedBooks().
-//        borrower.borrowBook(availableBook);
-//        borrower.showBorrowedBooks();
-//        assertTrue(true, "Method executed without throwing an exception.");
-//    }
-//
-//    @Test
-//    void testShowOverdueBooks_WhenListIsEmpty() {
-//        borrower.showOverdueBooks();
-//        assertTrue(true, "Method executed without throwing an exception.");
-//    }
-//
-//    @Test
-//    void testShowOverdueBooks_WhenListHasNoOverdueBooks() {
-//        // Covers the 'if(!anyOverdue)' branch in showOverdueBooks().
-//        borrower.borrowBook(availableBook);
-//        borrower.showOverdueBooks();
-//        assertTrue(true, "Method executed without throwing an exception.");
-//    }
-//
-//    @Test
-//    void testShowOverdueBooks_WhenListHasOverdueBooks() {
-//        borrower.borrowBook(availableBook);
-//        setDueDate(borrower.getBorrowedBooks().get(0), LocalDate.now().minusDays(2));
-//        borrower.showOverdueBooks();
-//        assertTrue(true, "Method executed without throwing an exception.");
-//    }
-//
-//    @Test
-//    void testCheckOverdueBooks_WhenListIsEmpty() {
-//        borrower.checkOverdueBooks();
-//        assertTrue(true, "Method executed without throwing an exception.");
-//    }
-//
-//    @Test
-//    void testCheckOverdueBooks_WhenListHasNoOverdueBooks() {
-//        // Covers the 'if (!found)' branch in checkOverdueBooks().
-//        borrower.borrowBook(availableBook);
-//        borrower.checkOverdueBooks();
-//        assertTrue(true, "Method executed without throwing an exception.");
-//    }
-//
-//    @Test
-//    void testCheckOverdueBooks_WhenListHasOverdueBooks() {
-//        borrower.borrowBook(availableBook);
-//        setDueDate(borrower.getBorrowedBooks().get(0), LocalDate.now().minusDays(2));
-//        borrower.checkOverdueBooks();
-//        assertTrue(true, "Method executed without throwing an exception.");
-//    }
-//
-//    // ========================================================================
-//    // Test Cases for the inner class BookRecord (for 100% Branch Coverage)
-//    // ========================================================================
-//
-//    @Test
-//    void testGetOverdueDays_ForNonOverdueBook() {
-//        // Covers the 'if(!isOverdue()) return 0;' branch in BookRecord.getOverdueDays().
-//        Borrower.BookRecord onTimeRecord = borrower.new BookRecord(availableBook, LocalDate.now().plusDays(10));
-//        assertEquals(0, onTimeRecord.getOverdueDays(), "Overdue days should be 0 for a non-overdue book.");
-//    }
-//
-//    @Test
-//    void testGetOverdueDays_ForOverdueBook() {
-//        Borrower.BookRecord overdueRecord = borrower.new BookRecord(availableBook, LocalDate.now().minusDays(3));
-//        assertEquals(3, overdueRecord.getOverdueDays(), "Overdue days should be 3 for a book overdue by 3 days.");
-//    }
-//
-//
-//    // ========================================================================
-//    // Helper Methods (using Reflection to test private fields)
-//    // ========================================================================
-//
-//    private void setFineBalance(Borrower borrower, double amount) {
-//        try {
-//            Field fineBalanceField = Borrower.class.getDeclaredField("fineBalance");
-//            fineBalanceField.setAccessible(true);
-//            fineBalanceField.set(borrower, amount);
-//        } catch (Exception e) {
-//            fail("Failed to set fine balance for test: " + e.getMessage());
-//        }
-//    }
-//
-//    private void setDueDate(Borrower.BookRecord record, LocalDate date) {
-//        try {
-//            Field dueDateField = record.getClass().getDeclaredField("dueDate");
-//            dueDateField.setAccessible(true);
-//            dueDateField.set(record, date);
-//        } catch (Exception e) {
-//            fail("Failed to set due date for test: " + e.getMessage());
-//        }
-//    }
-//}
+import domain.Borrower;
+import domain.Book;
+
+import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+public class BorrowerTest {
+
+    // --- Mocks ثابتة ومشتركة ---
+    private static MockedStatic<Borrower> mockedBorrowerStatic;
+    private static Connection mockConnection;
+
+    // --- Mocks يتم إنشاؤها لكل اختبار ---
+    private PreparedStatement mockPreparedStatement;
+    private ResultSet mockResultSet;
+    private Borrower borrower;
+    private Book testBook;
+
+    @BeforeAll
+    public static void setUpStatic() {
+        mockConnection = mock(Connection.class);
+        mockedBorrowerStatic = mockStatic(Borrower.class);
+        mockedBorrowerStatic.when(Borrower::connect).thenReturn(mockConnection);
+    }
+
+    @AfterAll
+    public static void tearDownStatic() {
+        mockedBorrowerStatic.close();
+    }
+
+    @BeforeEach
+    public void setUp() throws SQLException {
+        mockPreparedStatement = mock(PreparedStatement.class);
+        mockResultSet = mock(ResultSet.class);
+        testBook = new Book(1, "Test Book", "Test Author", "123456789", false);
+
+        // --- إعداد mocks لسلوك الـ constructor ---
+        when(mockConnection.prepareStatement(contains("SELECT id FROM users"))).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt("id")).thenReturn(123);
+
+        PreparedStatement mockBorrowedStmt = mock(PreparedStatement.class);
+        ResultSet mockBorrowedRs = mock(ResultSet.class);
+        when(mockConnection.prepareStatement(contains("SELECT br.*, b.id as book_id"))).thenReturn(mockBorrowedStmt);
+        when(mockBorrowedStmt.executeQuery()).thenReturn(mockBorrowedRs);
+        when(mockBorrowedRs.next()).thenReturn(false);
+
+        PreparedStatement mockFineStmt = mock(PreparedStatement.class);
+        ResultSet mockFineRs = mock(ResultSet.class);
+        when(mockConnection.prepareStatement(contains("SELECT total_fine FROM user_fines"))).thenReturn(mockFineStmt);
+        when(mockFineStmt.executeQuery()).thenReturn(mockFineRs);
+        when(mockFineRs.next()).thenReturn(true);
+        when(mockFineRs.getDouble("total_fine")).thenReturn(0.0);
+
+        borrower = new Borrower("testuser", "hashedpassword", "salt");
+    }
+
+    // ========== الاختبارات الأصلية (لم يتم تغييرها) ==========
+
+    @Test
+    public void testGetUserId() throws SQLException {
+        // Mock للاتصال
+        mockedBorrowerStatic.when(Borrower::connect).thenReturn(mockConnection);
+
+        // إعداد PreparedStatement و ResultSet
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+
+        when(mockConnection.prepareStatement(contains("SELECT id FROM users"))).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(true);
+        when(mockRs.getInt("id")).thenReturn(999);
+
+        // استدعاء الدالة
+        int userId = borrower.getUserId();
+
+        // التحقق
+        assertEquals(999, userId);
+        verify(mockStmt).setString(1, "testuser");
+    }
+
+
+    @Test
+    public void testLoadBorrowedBooks() throws SQLException {
+        PreparedStatement mockLoadStmt = mock(PreparedStatement.class);
+        ResultSet mockLoadRs = mock(ResultSet.class);
+        when(mockConnection.prepareStatement(contains("SELECT br.*, b.id as book_id"))).thenReturn(mockLoadStmt);
+        when(mockLoadStmt.executeQuery()).thenReturn(mockLoadRs);
+        when(mockLoadRs.next()).thenReturn(true, true, false);
+        when(mockLoadRs.getInt("book_id")).thenReturn(1, 2);
+        when(mockLoadRs.getString("book_title")).thenReturn("Test Book 1", "Test Book 2");
+        when(mockLoadRs.getString("book_isbn")).thenReturn("123456789", "987654321");
+        when(mockLoadRs.getString("due_date")).thenReturn(LocalDate.now().plusDays(14).toString(),
+                LocalDate.now().plusDays(7).toString());
+        when(mockLoadRs.getInt("id")).thenReturn(1, 2);
+        borrower.loadBorrowedBooks();
+        List<Borrower.BookRecord> borrowedBooks = borrower.getBorrowedBooks();
+        assertEquals(2, borrowedBooks.size());
+    }
+    @Test
+    public void testLoadFineBalance() throws SQLException {
+        // Mock للاتصال
+        mockedBorrowerStatic.when(Borrower::connect).thenReturn(mockConnection);
+
+        // Mock PreparedStatement و ResultSet
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+
+        // إعداد الـ mocks
+        when(mockConnection.prepareStatement(contains("SELECT total_fine"))).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(true);           // يوجد سجل
+        when(mockRs.getDouble("total_fine")).thenReturn(50.75);
+
+        // استدعاء الدالة
+        borrower.loadFineBalance();
+
+        // التأكد من أن الرصيد تم تحميله
+        assertEquals(50.75, borrower.getFineBalance(), 0.001);
+    }
+
+
+    @Test
+    public void testAddBorrowRecord() throws SQLException {
+        // Mock للاتصال
+        mockedBorrowerStatic.when(Borrower::connect).thenReturn(mockConnection);
+
+        // Mock PreparedStatement و ResultSet
+        PreparedStatement mockInsertStmt = mock(PreparedStatement.class);
+        ResultSet mockGeneratedKeys = mock(ResultSet.class);
+
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(mockInsertStmt);
+        when(mockInsertStmt.executeUpdate()).thenReturn(1); // نجاح الإدراج
+        when(mockInsertStmt.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
+        when(mockGeneratedKeys.next()).thenReturn(true); // المفتاح موجود
+        when(mockGeneratedKeys.getInt(1)).thenReturn(456); // ID وهمي
+
+        // استدعاء الدالة
+        LocalDate dueDate = LocalDate.now().plusDays(14);
+        borrower.addBorrowRecord(testBook, dueDate);
+
+        // التأكد من إضافة السجل
+        List<Borrower.BookRecord> borrowedBooks = borrower.getBorrowedBooks();
+        assertEquals(1, borrowedBooks.size());
+        assertEquals(testBook.getTitle(), borrowedBooks.get(0).getBook().getTitle());
+        assertEquals(dueDate, borrowedBooks.get(0).getDueDate());
+        assertEquals(456, borrowedBooks.get(0).getRecordId());
+    }
+
+
+    @Test
+    public void testRemoveBorrowRecord() throws Exception {
+        Borrower.BookRecord record = borrower.new BookRecord(testBook, LocalDate.now().plusDays(7), 123);
+        Field borrowedBooksField = Borrower.class.getDeclaredField("borrowedBooks");
+        borrowedBooksField.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        List<Borrower.BookRecord> actualBorrowedBooks = (List<Borrower.BookRecord>) borrowedBooksField.get(borrower);
+        actualBorrowedBooks.add(record);
+
+        PreparedStatement mockUpdateStmt = mock(PreparedStatement.class);
+        when(mockConnection.prepareStatement(contains("UPDATE borrow_records SET returned = 1"))).thenReturn(mockUpdateStmt);
+        when(mockUpdateStmt.executeUpdate()).thenReturn(1);
+        borrower.removeBorrowRecord(record, 5.0);
+        assertTrue(borrower.getBorrowedBooks().isEmpty());
+        assertEquals(5.0, borrower.getFineBalance(), 0.001);
+    }
+
+    @Test
+    public void testPayFine() throws SQLException {
+        borrower.setFineBalance(10.0);
+        PreparedStatement mockUpdateFineStmt = mock(PreparedStatement.class);
+        when(mockConnection.prepareStatement(contains("UPDATE user_fines SET total_fine"))).thenReturn(mockUpdateFineStmt);
+        when(mockUpdateFineStmt.executeUpdate()).thenReturn(1);
+        boolean result = borrower.payFine(5.0);
+        assertTrue(result);
+        assertEquals(5.0, borrower.getFineBalance(), 0.001);
+    }
+
+    @Test
+    public void testPayFineInvalidAmount() {
+        borrower.setFineBalance(10.0);
+        assertFalse(borrower.payFine(15.0));
+        assertEquals(10.0, borrower.getFineBalance(), 0.001);
+    }
+
+    @Test
+    public void testGetOverdueBooks() throws Exception {
+        LocalDate overdueDate = LocalDate.now().minusDays(5);
+        LocalDate futureDate = LocalDate.now().plusDays(5);
+        Borrower.BookRecord overdueRecord = borrower.new BookRecord(testBook, overdueDate, 123);
+        Borrower.BookRecord futureRecord = borrower.new BookRecord(testBook, futureDate, 456);
+
+        Field borrowedBooksField = Borrower.class.getDeclaredField("borrowedBooks");
+        borrowedBooksField.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        List<Borrower.BookRecord> actualBorrowedBooks = (List<Borrower.BookRecord>) borrowedBooksField.get(borrower);
+        actualBorrowedBooks.add(overdueRecord);
+        actualBorrowedBooks.add(futureRecord);
+
+        List<Borrower.BookRecord> overdueBooks = borrower.getOverdueBooks();
+        assertEquals(1, overdueBooks.size());
+        assertEquals(overdueRecord, overdueBooks.get(0));
+    }
+
+    @Test
+    public void testBookRecordIsOverdue() {
+        Borrower.BookRecord overdueRecord = borrower.new BookRecord(testBook, LocalDate.now().minusDays(5), 123);
+        Borrower.BookRecord futureRecord = borrower.new BookRecord(testBook, LocalDate.now().plusDays(5), 456);
+        assertTrue(overdueRecord.isOverdue());
+        assertFalse(futureRecord.isOverdue());
+    }
+
+    @Test
+    public void testBookRecordGetOverdueDays() {
+        Borrower.BookRecord overdueRecord = borrower.new BookRecord(testBook, LocalDate.now().minusDays(5), 123);
+        assertEquals(5, overdueRecord.getOverdueDays());
+    }
+
+    // ========== الاختبارات الجديدة لزيادة التغطية ==========
+
+    @Test
+    public void testGetUserIdUserNotFound() throws SQLException {
+        PreparedStatement mockUserIdStmt = mock(PreparedStatement.class);
+        ResultSet mockUserIdRs = mock(ResultSet.class);
+        when(mockConnection.prepareStatement(contains("SELECT id FROM users"))).thenReturn(mockUserIdStmt);
+        when(mockUserIdStmt.executeQuery()).thenReturn(mockUserIdRs);
+        when(mockUserIdRs.next()).thenReturn(false); // المستخدم غير موجود
+        int userId = borrower.getUserId();
+        assertEquals(-1, userId);
+    }
+
+    @Test
+    public void testGetUserIdSqlException() throws SQLException {
+        PreparedStatement mockUserIdStmt = mock(PreparedStatement.class);
+        when(mockConnection.prepareStatement(contains("SELECT id FROM users"))).thenReturn(mockUserIdStmt);
+        when(mockUserIdStmt.executeQuery()).thenThrow(new SQLException("Database error"));
+        int userId = borrower.getUserId();
+        assertEquals(-1, userId);
+    }
+
+    @Test
+    public void testLoadBorrowedBooksWithInvalidUserId() throws SQLException {
+        PreparedStatement mockUserIdStmt = mock(PreparedStatement.class);
+        ResultSet mockUserIdRs = mock(ResultSet.class);
+        when(mockConnection.prepareStatement(contains("SELECT id FROM users"))).thenReturn(mockUserIdStmt);
+        when(mockUserIdStmt.executeQuery()).thenReturn(mockUserIdRs);
+        when(mockUserIdRs.next()).thenReturn(false); // getUserId() سيعيد -1
+
+        borrower.loadBorrowedBooks();
+        assertTrue(borrower.getBorrowedBooks().isEmpty());
+    }
+
+    @Test
+    public void testLoadFineBalanceInsertsNewRecord() throws SQLException {
+        PreparedStatement mockSelectStmt = mock(PreparedStatement.class);
+        ResultSet mockSelectRs = mock(ResultSet.class);
+        PreparedStatement mockInsertStmt = mock(PreparedStatement.class);
+
+        // عندما يتم استدعاء loadFineBalance، سيتم أولاً استدعاء getUserId
+        when(mockConnection.prepareStatement(contains("SELECT id FROM users"))).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt("id")).thenReturn(123);
+
+        // الآن، قم بإعداد mock لاستعلام تحميل الرصيد
+        when(mockConnection.prepareStatement(contains("SELECT total_fine FROM user_fines"))).thenReturn(mockSelectStmt);
+        when(mockSelectStmt.executeQuery()).thenReturn(mockSelectRs);
+        when(mockSelectRs.next()).thenReturn(false); // لا يوجد سجل غرامات
+
+        // وأخيراً، إعداد mock لعملية الإدراج
+        when(mockConnection.prepareStatement(contains("INSERT INTO user_fines"))).thenReturn(mockInsertStmt);
+        when(mockInsertStmt.executeUpdate()).thenReturn(1);
+
+        borrower.loadFineBalance();
+        assertEquals(0.0, borrower.getFineBalance());
+        verify(mockInsertStmt).executeUpdate();
+    }
+
+    @Test
+    public void testSaveFineBalanceInsertsNewRecord() throws SQLException {
+        borrower.setFineBalance(25.0);
+
+        // سنقوم بإنشاء mocks جديدة لهذا الاختبار لتجنب التداخل
+        PreparedStatement mockUpdateStmt = mock(PreparedStatement.class);
+        PreparedStatement mockInsertStmt = mock(PreparedStatement.class);
+
+        // getUserId() mock - سيتم استدعاؤه بواسطة saveFineBalance
+        when(mockConnection.prepareStatement(contains("SELECT id FROM users"))).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt("id")).thenReturn(123);
+
+        // إعداد mock لعملية التحديث (UPDATE) لتفشل
+        when(mockConnection.prepareStatement(contains("UPDATE user_fines SET total_fine"))).thenReturn(mockUpdateStmt);
+        when(mockUpdateStmt.executeUpdate()).thenReturn(0); // لم يتم تحديث أي صف
+
+        // إعداد mock لعملية الإدراج (INSERT) لتنجح
+        when(mockConnection.prepareStatement(contains("INSERT INTO user_fines"))).thenReturn(mockInsertStmt);
+        when(mockInsertStmt.executeUpdate()).thenReturn(1);
+
+        // --- التعديل الرئيسي ---
+        // قم بإزالة الاستدعاء المباشر للدالة الخاصة
+        // borrower.saveFineBalance(); // <-- احذف هذا السطر
+
+        // اختبر الدالة بشكل غير مباشر فقط
+        borrower.payFine(5.0); // هذا سيستدعي saveFineBalance() مرة واحدة فقط
+
+        // الآن، التحقق سينجح لأن كل دالة تم استدعاؤها مرة واحدة فقط
+        verify(mockUpdateStmt, times(1)).executeUpdate();
+        verify(mockInsertStmt, times(1)).executeUpdate();
+
+        // يمكنك أيضاً التحقق من أن الرصيد قد تغير بشكل صحيح
+        assertEquals(20.0, borrower.getFineBalance());
+    }
+    @Test
+    public void testAddBorrowRecordFailsToAddToList() throws SQLException {
+        PreparedStatement mockInsertStmt = mock(PreparedStatement.class);
+        ResultSet mockInsertRs = mock(ResultSet.class);
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(mockInsertStmt);
+        when(mockInsertStmt.executeUpdate()).thenReturn(1);
+        when(mockInsertStmt.getGeneratedKeys()).thenReturn(mockInsertRs);
+        when(mockInsertRs.next()).thenReturn(false); // لا توجد مفاتيح تم إنشاؤها
+
+        borrower.addBorrowRecord(testBook, LocalDate.now().plusDays(14));
+        assertTrue(borrower.getBorrowedBooks().isEmpty());
+    }
+
+    @Test
+    public void testRemoveBorrowRecordFailsToUpdate() throws Exception {
+        Borrower.BookRecord record = borrower.new BookRecord(testBook, LocalDate.now().plusDays(7), 123);
+        Field borrowedBooksField = Borrower.class.getDeclaredField("borrowedBooks");
+        borrowedBooksField.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        List<Borrower.BookRecord> actualBorrowedBooks = (List<Borrower.BookRecord>) borrowedBooksField.get(borrower);
+        actualBorrowedBooks.add(record);
+        double initialFine = borrower.getFineBalance();
+
+        PreparedStatement mockUpdateStmt = mock(PreparedStatement.class);
+        when(mockConnection.prepareStatement(contains("UPDATE borrow_records SET returned = 1"))).thenReturn(mockUpdateStmt);
+        when(mockUpdateStmt.executeUpdate()).thenReturn(0); // فشل التحديث
+
+        borrower.removeBorrowRecord(record, 5.0);
+
+        assertEquals(1, borrower.getBorrowedBooks().size()); // لم تتم إزالة الكتاب
+        assertEquals(initialFine, borrower.getFineBalance()); // لم تتم إضافة الغرامة
+    }
+
+    @Test
+    public void testPayFineZeroAmount() {
+        borrower.setFineBalance(10.0);
+        assertFalse(borrower.payFine(0.0));
+        assertEquals(10.0, borrower.getFineBalance(), 0.001);
+    }
+
+    @Test
+    public void testBookRecordGetOverdueDaysWhenNotOverdue() {
+        Borrower.BookRecord futureRecord = borrower.new BookRecord(testBook, LocalDate.now().plusDays(5), 456);
+        assertEquals(0, futureRecord.getOverdueDays());
+    }
+    @Test
+    public void testStaticInitializerDatabaseNull() {
+        mockedBorrowerStatic.when(Borrower::connect).thenReturn(null);
+        // هذا فقط لإجبار static block على الفرع الذي يتعامل مع conn == null
+        Borrower temp = new Borrower("user", "pass", "salt");
+        assertNotNull(temp);
+    }
+
+    @Test
+    public void testAddBorrowRecordExecuteUpdateFails() throws SQLException {
+        Borrower.BookRecord record = borrower.new BookRecord(testBook, LocalDate.now().plusDays(7), 0);
+
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockGeneratedKeys = mock(ResultSet.class);
+
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS))).thenReturn(mockStmt);
+        when(mockStmt.executeUpdate()).thenReturn(0); // فشل الإدراج
+        when(mockStmt.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
+        when(mockGeneratedKeys.next()).thenReturn(false); // لا يوجد مفتاح مولد
+
+        borrower.addBorrowRecord(testBook, LocalDate.now().plusDays(7));
+
+        // يجب أن لا يتم إضافة أي سجل
+        assertTrue(borrower.getBorrowedBooks().isEmpty());
+    }
+
+    @Test
+    public void testAddBorrowRecordNoGeneratedKeys() throws SQLException {
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS))).thenReturn(mockStmt);
+        when(mockStmt.executeUpdate()).thenReturn(1);
+        when(mockStmt.getGeneratedKeys()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(false); // لا توجد مفاتيح
+
+        borrower.addBorrowRecord(testBook, LocalDate.now().plusDays(7));
+        assertTrue(borrower.getBorrowedBooks().isEmpty());
+    }
+    @Test
+    public void testRemoveBorrowRecordExecuteUpdateFails() throws Exception {
+        // إنشاء سجل جديد
+        Borrower.BookRecord record = borrower.new BookRecord(testBook, LocalDate.now().plusDays(7), 123);
+
+        // استخدام Reflection لإضافة السجل إلى borrowedBooks الخاصة بالـ borrower
+        Field borrowedBooksField = Borrower.class.getDeclaredField("borrowedBooks");
+        borrowedBooksField.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        List<Borrower.BookRecord> actualBorrowedBooks = (List<Borrower.BookRecord>) borrowedBooksField.get(borrower);
+        actualBorrowedBooks.add(record);
+
+        // Mock PreparedStatement لتحديث borrow_records
+        PreparedStatement mockUpdateStmt = mock(PreparedStatement.class);
+        when(mockConnection.prepareStatement(contains("UPDATE borrow_records"))).thenReturn(mockUpdateStmt);
+        when(mockUpdateStmt.executeUpdate()).thenReturn(0); // فشل التحديث
+
+        // استدعاء الدالة
+        borrower.removeBorrowRecord(record, 5.0);
+
+        // التحقق: بما أن التحديث فشل، يجب أن يبقى السجل في القائمة
+        List<Borrower.BookRecord> borrowedBooks = borrower.getBorrowedBooks();
+        assertEquals(1, borrowedBooks.size());
+        assertEquals(0.0, borrower.getFineBalance(), 0.001); // لم تُضاف الغرامة
+    }
+
+    @Test
+    public void testBookRecordGetOverdueDaysNotOverdue() {
+        LocalDate futureDate = LocalDate.now().plusDays(3);
+        Borrower.BookRecord record = borrower.new BookRecord(testBook, futureDate, 1);
+        assertEquals(0, record.getOverdueDays());
+    }
+    @Test
+    public void testPayFineAmountTooHigh() {
+        borrower.setFineBalance(10.0);
+        assertFalse(borrower.payFine(20.0));
+    }
+
+}

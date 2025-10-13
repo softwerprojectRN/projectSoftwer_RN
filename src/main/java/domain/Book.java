@@ -13,7 +13,7 @@ public class Book {
     private boolean isAvailable;
 
     // دالة للاتصال بالداتابيز (SQLite)
-    private static Connection connect() {
+    public static Connection connect() {
         String url = "jdbc:sqlite:database.db";  // نفس ملف الداتابيز
         Connection conn = null;
         try {
@@ -42,8 +42,8 @@ public class Book {
         }
     }
 
-    // constructor خاص (protected) للاستخدام الداخلي (بعد الإضافة أو الاستعلام)
-    protected Book(int id, String title, String author, String isbn, boolean isAvailable) {
+    // constructor خاص (public) للاستخدام الداخلي (بعد الإضافة أو الاستعلام)
+    public Book(int id, String title, String author, String isbn, boolean isAvailable) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -117,7 +117,7 @@ public class Book {
     }
 
     // دالة لتحديث حالة التوافر (استخدمها في borrow و returnBook)
-    private void updateAvailability(boolean available) {
+    public void updateAvailability(boolean available) {
         if (id == 0) {
             System.out.println("لا يمكن تحديث كتاب بدون ID (غير محفوظ في الداتابيز).");
             return;
@@ -170,4 +170,7 @@ public class Book {
         String available = isAvailable ? "Yes" : "No";
         return "ID: " + id + ", Title: '" + title + "', Author: '" + author + "', ISBN: " + isbn + ", Available: " + available;
     }
+
+
+
 }

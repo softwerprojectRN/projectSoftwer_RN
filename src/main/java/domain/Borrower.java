@@ -11,14 +11,14 @@ public class Borrower extends User {
     private double fineBalance = 0.0;
 
     // constructor خاص (protected) للاستخدام الداخلي بعد الـ login (يتوافق مع User)
-    protected Borrower(String username, String passwordHash, String salt) {
+    public Borrower(String username, String passwordHash, String salt) {
         super(username, passwordHash, salt);
         loadBorrowedBooks();  // تحميل الكتب المستعارة من الداتابيز
         loadFineBalance();    // تحميل رصيد الغرامات الكلي
     }
 
     // دالة للاتصال بالداتابيز
-    private static Connection connect() {
+    public static Connection connect() {
         String url = "jdbc:sqlite:database.db";
         try {
             return DriverManager.getConnection(url);
@@ -70,7 +70,7 @@ public class Borrower extends User {
     }
 
     // =================== دوال المساعدة ===================
-    private int getUserId() {
+    public int getUserId() {
         Connection conn = connect();
         if (conn == null) return -1;
         String sql = "SELECT id FROM users WHERE username = ?";
@@ -86,7 +86,7 @@ public class Borrower extends User {
         return -1;
     }
 
-    private void loadBorrowedBooks() {
+    public void loadBorrowedBooks() {
         int userId = getUserId();
         if (userId == -1) return;
 
@@ -115,7 +115,7 @@ public class Borrower extends User {
         }
     }
 
-    private void loadFineBalance() {
+    public void loadFineBalance() {
         int userId = getUserId();
         if (userId == -1) return;
 
@@ -144,7 +144,7 @@ public class Borrower extends User {
         }
     }
 
-    private void saveFineBalance() {
+    public void saveFineBalance() {
         int userId = getUserId();
         if (userId == -1) return;
 
@@ -171,7 +171,7 @@ public class Borrower extends User {
     }
 
     // =================== Book Borrow/Return ===================
-    protected void addBorrowRecord(Book book, LocalDate dueDate) {
+    public void addBorrowRecord(Book book, LocalDate dueDate) {
         BookRecord record = new BookRecord(book, dueDate, 0);
 
         Connection conn = connect();
@@ -197,7 +197,7 @@ public class Borrower extends User {
         }
     }
 
-    protected void removeBorrowRecord(BookRecord record, double bookFine) {
+    public void removeBorrowRecord(BookRecord record, double bookFine) {
         Connection conn = connect();
         if (conn == null) return;
 
@@ -262,8 +262,8 @@ public class Borrower extends User {
         }
         return overdue;
     }
-
     public double getFineBalance() { return fineBalance; }
 
-    protected void setFineBalance(double fineBalance) { this.fineBalance = fineBalance; }
+    public void setFineBalance(double fineBalance) { this.fineBalance = fineBalance;
+    }
 }
