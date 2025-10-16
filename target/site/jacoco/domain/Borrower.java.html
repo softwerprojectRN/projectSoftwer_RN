@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Borrower.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">Borrower.java</span></div><h1>Borrower.java</h1><pre class="source lang-java linenums">package domain;
+
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Borrower extends User {
+
+<span class="fc" id="L10">    private List&lt;BookRecord&gt; borrowedBooks = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L11">    private double fineBalance = 0.0;</span>
+
+    // constructor خاص (protected) للاستخدام الداخلي بعد الـ login (يتوافق مع User)
+    public Borrower(String username, String passwordHash, String salt) {
+<span class="fc" id="L15">        super(username, passwordHash, salt);</span>
+<span class="fc" id="L16">        loadBorrowedBooks();  // تحميل الكتب المستعارة من الداتابيز</span>
+<span class="fc" id="L17">        loadFineBalance();    // تحميل رصيد الغرامات الكلي</span>
+<span class="fc" id="L18">    }</span>
+
+    // دالة للاتصال بالداتابيز
+    public static Connection connect() {
+<span class="fc" id="L22">        String url = &quot;jdbc:sqlite:database.db&quot;;</span>
+        try {
+<span class="fc" id="L24">            return DriverManager.getConnection(url);</span>
+<span class="nc" id="L25">        } catch (SQLException e) {</span>
+<span class="nc" id="L26">            System.out.println(&quot;Database connection error: &quot; + e.getMessage());</span>
+<span class="nc" id="L27">            return null;</span>
+        }
+    }
+
+    // إنشاء جدول borrow_records و user_fines تلقائياً إذا لم يكن موجود
+    static {
+<span class="fc" id="L33">        Connection conn = connect();</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if (conn == null) {</span>
+<span class="nc" id="L35">            System.out.println(&quot;Database not available, tables not created.&quot;);</span>
+        } else {
+<span class="fc" id="L37">            String borrowSql = &quot;CREATE TABLE IF NOT EXISTS borrow_records (\n&quot;</span>
+                    + &quot; id INTEGER PRIMARY KEY AUTOINCREMENT,\n&quot;
+                    + &quot; user_id INTEGER NOT NULL,\n&quot;
+                    + &quot; book_id INTEGER NOT NULL,\n&quot;
+                    + &quot; book_title TEXT NOT NULL,\n&quot;
+                    + &quot; book_isbn TEXT NOT NULL,\n&quot;
+                    + &quot; borrow_date TEXT NOT NULL,\n&quot;
+                    + &quot; due_date TEXT NOT NULL,\n&quot;
+                    + &quot; returned INTEGER DEFAULT 0,\n&quot;
+                    + &quot; return_date TEXT,\n&quot;
+                    + &quot; fine REAL DEFAULT 0.0,\n&quot;
+                    + &quot; FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,\n&quot;
+                    + &quot; FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE\n&quot;
+                    + &quot;);&quot;;
+<span class="fc" id="L51">            try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L52">                stmt.execute(borrowSql);</span>
+<span class="fc" id="L53">                System.out.println(&quot;جدول borrow_records تم إنشاؤه بنجاح.&quot;);</span>
+<span class="nc" id="L54">            } catch (SQLException e) {</span>
+<span class="nc" id="L55">                System.out.println(&quot;خطأ في إنشاء جدول borrow_records: &quot; + e.getMessage());</span>
+<span class="fc" id="L56">            }</span>
+
+<span class="fc" id="L58">            String fineSql = &quot;CREATE TABLE IF NOT EXISTS user_fines (\n&quot;</span>
+                    + &quot; user_id INTEGER PRIMARY KEY,\n&quot;
+                    + &quot; total_fine REAL DEFAULT 0.0,\n&quot;
+                    + &quot; FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE\n&quot;
+                    + &quot;);&quot;;
+<span class="fc" id="L63">            try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L64">                stmt.execute(fineSql);</span>
+<span class="fc" id="L65">                System.out.println(&quot;جدول user_fines تم إنشاؤه بنجاح.&quot;);</span>
+<span class="nc" id="L66">            } catch (SQLException e) {</span>
+<span class="nc" id="L67">                System.out.println(&quot;خطأ في إنشاء جدول user_fines: &quot; + e.getMessage());</span>
+<span class="fc" id="L68">            }</span>
+        }
+<span class="fc" id="L70">    }</span>
+
+    // =================== دوال المساعدة ===================
+    public int getUserId() {
+<span class="fc" id="L74">        Connection conn = connect();</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (conn == null) return -1;</span>
+<span class="fc" id="L76">        String sql = &quot;SELECT id FROM users WHERE username = ?&quot;;</span>
+<span class="fc" id="L77">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L78">            pstmt.setString(1, getUsername());</span>
+<span class="fc" id="L79">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L81">                return rs.getInt(&quot;id&quot;);</span>
+            }
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L84">            System.out.println(&quot;Error fetching user id: &quot; + e.getMessage());</span>
+<span class="fc" id="L85">        }</span>
+<span class="fc" id="L86">        return -1;</span>
+    }
+
+    public void loadBorrowedBooks() {
+<span class="fc" id="L90">        int userId = getUserId();</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (userId == -1) return;</span>
+
+<span class="fc" id="L93">        Connection conn = connect();</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (conn == null) return;</span>
+
+<span class="fc" id="L96">        String sql = &quot;SELECT br.*, b.id as book_id, b.title, b.isbn FROM borrow_records br &quot;</span>
+                + &quot;JOIN books b ON br.book_id = b.id &quot;
+                + &quot;WHERE br.user_id = ? AND br.returned = 0&quot;;
+
+<span class="fc" id="L100">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L101">            pstmt.setInt(1, userId);</span>
+<span class="fc" id="L102">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L104">                int bookId = rs.getInt(&quot;book_id&quot;);</span>
+<span class="fc" id="L105">                String title = rs.getString(&quot;book_title&quot;);</span>
+<span class="fc" id="L106">                String isbn = rs.getString(&quot;book_isbn&quot;);</span>
+<span class="fc" id="L107">                LocalDate dueDate = LocalDate.parse(rs.getString(&quot;due_date&quot;));</span>
+<span class="fc" id="L108">                Book book = new Book(bookId, title, null, isbn, false);</span>
+<span class="fc" id="L109">                BookRecord record = new BookRecord(book, dueDate, rs.getInt(&quot;id&quot;));</span>
+<span class="fc" id="L110">                borrowedBooks.add(record);</span>
+<span class="fc" id="L111">            }</span>
+<span class="fc" id="L112">            System.out.println(&quot;تم تحميل &quot; + borrowedBooks.size() + &quot; كتب مستعارة للمستخدم &quot; + getUsername());</span>
+<span class="nc" id="L113">        } catch (SQLException e) {</span>
+<span class="nc" id="L114">            System.out.println(&quot;Error loading borrowed books: &quot; + e.getMessage());</span>
+<span class="fc" id="L115">        }</span>
+<span class="fc" id="L116">    }</span>
+
+    public void loadFineBalance() {
+<span class="fc" id="L119">        int userId = getUserId();</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (userId == -1) return;</span>
+
+<span class="fc" id="L122">        Connection conn = connect();</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        if (conn == null) return;</span>
+
+<span class="fc" id="L125">        String sql = &quot;SELECT total_fine FROM user_fines WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L126">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L127">            pstmt.setInt(1, userId);</span>
+<span class="fc" id="L128">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L130">                fineBalance = rs.getDouble(&quot;total_fine&quot;);</span>
+            } else {
+<span class="fc" id="L132">                String insertSql = &quot;INSERT INTO user_fines (user_id, total_fine) VALUES (?, 0.0)&quot;;</span>
+<span class="fc" id="L133">                try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {</span>
+<span class="fc" id="L134">                    insertStmt.setInt(1, userId);</span>
+<span class="fc" id="L135">                    insertStmt.executeUpdate();</span>
+<span class="nc" id="L136">                } catch (SQLException ex) {</span>
+<span class="nc" id="L137">                    System.out.println(&quot;Error initializing fines: &quot; + ex.getMessage());</span>
+<span class="fc" id="L138">                }</span>
+<span class="fc" id="L139">                fineBalance = 0.0;</span>
+            }
+<span class="nc" id="L141">        } catch (SQLException e) {</span>
+<span class="nc" id="L142">            System.out.println(&quot;Error loading fine balance: &quot; + e.getMessage());</span>
+<span class="nc" id="L143">            fineBalance = 0.0;</span>
+<span class="fc" id="L144">        }</span>
+<span class="fc" id="L145">    }</span>
+
+    public void saveFineBalance() {
+<span class="fc" id="L148">        int userId = getUserId();</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">        if (userId == -1) return;</span>
+
+<span class="fc" id="L151">        Connection conn = connect();</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        if (conn == null) return;</span>
+
+<span class="fc" id="L154">        String sql = &quot;UPDATE user_fines SET total_fine = ? WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L155">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L156">            pstmt.setDouble(1, fineBalance);</span>
+<span class="fc" id="L157">            pstmt.setInt(2, userId);</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            if (pstmt.executeUpdate() == 0) {</span>
+<span class="fc" id="L159">                String insertSql = &quot;INSERT INTO user_fines (user_id, total_fine) VALUES (?, ?)&quot;;</span>
+<span class="fc" id="L160">                try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {</span>
+<span class="fc" id="L161">                    insertStmt.setInt(1, userId);</span>
+<span class="fc" id="L162">                    insertStmt.setDouble(2, fineBalance);</span>
+<span class="fc" id="L163">                    insertStmt.executeUpdate();</span>
+<span class="nc" id="L164">                } catch (SQLException ex) {</span>
+<span class="nc" id="L165">                    System.out.println(&quot;Error saving fines: &quot; + ex.getMessage());</span>
+<span class="fc" id="L166">                }</span>
+            }
+<span class="nc" id="L168">        } catch (SQLException e) {</span>
+<span class="nc" id="L169">            System.out.println(&quot;Error saving fine balance: &quot; + e.getMessage());</span>
+<span class="fc" id="L170">        }</span>
+<span class="fc" id="L171">    }</span>
+
+    // =================== Book Borrow/Return ===================
+    public void addBorrowRecord(Book book, LocalDate dueDate) {
+<span class="fc" id="L175">        BookRecord record = new BookRecord(book, dueDate, 0);</span>
+
+<span class="fc" id="L177">        Connection conn = connect();</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (conn == null) return;</span>
+
+<span class="fc" id="L180">        String sql = &quot;INSERT INTO borrow_records (user_id, book_id, book_title, book_isbn, borrow_date, due_date) VALUES (?, ?, ?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L181">        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="fc" id="L182">            pstmt.setInt(1, getUserId());</span>
+<span class="fc" id="L183">            pstmt.setInt(2, book.getId());</span>
+<span class="fc" id="L184">            pstmt.setString(3, book.getTitle());</span>
+<span class="fc" id="L185">            pstmt.setString(4, book.getIsbn());</span>
+<span class="fc" id="L186">            pstmt.setString(5, LocalDate.now().toString());</span>
+<span class="fc" id="L187">            pstmt.setString(6, dueDate.toString());</span>
+<span class="fc" id="L188">            pstmt.executeUpdate();</span>
+
+<span class="fc" id="L190">            ResultSet generatedKeys = pstmt.getGeneratedKeys();</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">            if (generatedKeys.next()) {</span>
+<span class="fc" id="L192">                record.setRecordId(generatedKeys.getInt(1));</span>
+<span class="fc" id="L193">                borrowedBooks.add(record);</span>
+            }
+<span class="nc" id="L195">        } catch (SQLException e) {</span>
+<span class="nc" id="L196">            System.out.println(&quot;Error saving borrow record: &quot; + e.getMessage());</span>
+<span class="fc" id="L197">        }</span>
+<span class="fc" id="L198">    }</span>
+
+    public void removeBorrowRecord(BookRecord record, double bookFine) {
+<span class="fc" id="L201">        Connection conn = connect();</span>
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">        if (conn == null) return;</span>
+
+<span class="fc" id="L204">        String sql = &quot;UPDATE borrow_records SET returned = 1, return_date = ?, fine = ? WHERE id = ?&quot;;</span>
+<span class="fc" id="L205">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L206">            pstmt.setString(1, LocalDate.now().toString());</span>
+<span class="fc" id="L207">            pstmt.setDouble(2, bookFine);</span>
+<span class="fc" id="L208">            pstmt.setInt(3, record.getRecordId());</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">            if (pstmt.executeUpdate() &gt; 0) {</span>
+<span class="fc" id="L210">                borrowedBooks.remove(record);</span>
+<span class="fc" id="L211">                fineBalance += bookFine;</span>
+<span class="fc" id="L212">                saveFineBalance();</span>
+            }
+<span class="nc" id="L214">        } catch (SQLException e) {</span>
+<span class="nc" id="L215">            System.out.println(&quot;Error updating borrow record: &quot; + e.getMessage());</span>
+<span class="fc" id="L216">        }</span>
+<span class="fc" id="L217">    }</span>
+
+    public boolean payFine(double amount) {
+<span class="fc bfc" id="L220" title="All 4 branches covered.">        if (amount &lt;= 0 || amount &gt; fineBalance) {</span>
+<span class="fc" id="L221">            System.out.println(&quot;المبلغ غير صالح.&quot;);</span>
+<span class="fc" id="L222">            return false;</span>
+        }
+<span class="fc" id="L224">        fineBalance -= amount;</span>
+<span class="fc" id="L225">        saveFineBalance();</span>
+<span class="fc" id="L226">        System.out.println(&quot;تم دفع &quot; + amount + &quot;. الرصيد الجديد: &quot; + fineBalance);</span>
+<span class="fc" id="L227">        return true;</span>
+    }
+
+    // =================== BookRecord Inner Class ===================
+    public class BookRecord {
+        private Book book;
+        private LocalDate dueDate;
+        private int recordId;
+
+<span class="fc" id="L236">        public BookRecord(Book book, LocalDate dueDate, int recordId) {</span>
+<span class="fc" id="L237">            this.book = book;</span>
+<span class="fc" id="L238">            this.dueDate = dueDate;</span>
+<span class="fc" id="L239">            this.recordId = recordId;</span>
+<span class="fc" id="L240">        }</span>
+
+<span class="fc" id="L242">        public Book getBook() { return book; }</span>
+<span class="fc" id="L243">        public LocalDate getDueDate() { return dueDate; }</span>
+<span class="fc" id="L244">        public int getRecordId() { return recordId; }</span>
+<span class="fc" id="L245">        public void setRecordId(int recordId) { this.recordId = recordId; }</span>
+
+<span class="fc" id="L247">        public boolean isOverdue() { return LocalDate.now().isAfter(dueDate); }</span>
+
+        public long getOverdueDays() {
+<span class="fc bfc" id="L250" title="All 2 branches covered.">            if (!isOverdue()) return 0;</span>
+<span class="fc" id="L251">            return java.time.temporal.ChronoUnit.DAYS.between(dueDate, LocalDate.now());</span>
+        }
+    }
+
+    // =================== Getters ===================
+<span class="fc" id="L256">    public List&lt;BookRecord&gt; getBorrowedBooks() { return new ArrayList&lt;&gt;(borrowedBooks); }</span>
+
+    public List&lt;BookRecord&gt; getOverdueBooks() {
+<span class="fc" id="L259">        List&lt;BookRecord&gt; overdue = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">        for (BookRecord record : borrowedBooks) {</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">            if (record.isOverdue()) overdue.add(record);</span>
+<span class="fc" id="L262">        }</span>
+<span class="fc" id="L263">        return overdue;</span>
+    }
+<span class="fc" id="L265">    public double getFineBalance() { return fineBalance; }</span>
+
+<span class="fc" id="L267">    public void setFineBalance(double fineBalance) { this.fineBalance = fineBalance;</span>
+<span class="fc" id="L268">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

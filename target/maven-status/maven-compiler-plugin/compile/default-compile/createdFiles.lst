@@ -1,0 +1,6 @@
+domain\Borrower.class
+domain\Admin.class
+domain\User.class
+domain\BorrowingService.class
+domain\Book.class
+domain\Borrower$BookRecord.class
