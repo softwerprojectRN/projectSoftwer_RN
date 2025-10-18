@@ -126,4 +126,71 @@ public class Admin extends User {
     public void showAdminInfo() {
         System.out.println("Admin username: " + getUsername());
     }
+
+    // Add this method to the Admin class
+    public static boolean unregisterUser(String username) {
+        // First verify this is an admin operation
+        // In a real application, you would check if the current user is an admin
+
+        Connection conn = connect();
+        if (conn == null) return false;
+
+        try {
+            // Check if user exists
+            String checkUserSql = "SELECT id FROM users WHERE username = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(checkUserSql)) {
+                pstmt.setString(1, username);
+                ResultSet rs = pstmt.executeQuery();
+
+                if (!rs.next()) {
+                    System.out.println("User not found: " + username);
+                    return false;
+                }
+
+                int userId = rs.getInt("id");
+
+                // Check for active loans
+                String checkLoansSql = "SELECT COUNT(*) FROM borrow_records WHERE user_id = ? AND returned = 0";
+                try (PreparedStatement loansStmt = conn.prepareStatement(checkLoansSql)) {
+                    loansStmt.setInt(1, userId);
+                    ResultSet loansRs = loansStmt.executeQuery();
+
+                    if (loansRs.next() && loansRs.getInt(1) > 0) {
+                        System.out.println("Cannot unregister user with active loans: " + username);
+                        return false;
+                    }
+                }
+
+                // Check for unpaid fines
+                String checkFinesSql = "SELECT total_fine FROM user_fines WHERE user_id = ?";
+                try (PreparedStatement finesStmt = conn.prepareStatement(checkFinesSql)) {
+                    finesStmt.setInt(1, userId);
+                    ResultSet finesRs = finesStmt.executeQuery();
+
+                    if (finesRs.next() && finesRs.getDouble("total_fine") > 0) {
+                        System.out.println("Cannot unregister user with unpaid fines: " + username);
+                        return false;
+                    }
+                }
+
+                // If checks pass, delete the user
+                String deleteUserSql = "DELETE FROM users WHERE id = ?";
+                try (PreparedStatement deleteStmt = conn.prepareStatement(deleteUserSql)) {
+                    deleteStmt.setInt(1, userId);
+                    int affectedRows = deleteStmt.executeUpdate();
+
+                    if (affectedRows > 0) {
+                        System.out.println("Successfully unregistered user: " + username);
+                        return true;
+                    } else {
+                        System.out.println("Failed to unregister user: " + username);
+                        return false;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error unregistering user: " + e.getMessage());
+            return false;
+        }
+    }
 }
