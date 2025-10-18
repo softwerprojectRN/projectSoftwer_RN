@@ -36,7 +36,7 @@ public class Book {
                 + ");";
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("تم إنشاء جدول books بنجاح.");
+            System.out.println("The books table has been created successfully.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -61,11 +61,11 @@ public class Book {
             pstmt.setString(1, isbn);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                System.out.println("الكتاب موجود بالفعل (ISBN: " + isbn + ")");
+                System.out.println("The book is already available (ISBN:" + isbn + ")");
                 return null;  // فشل الإضافة
             }
         } catch (SQLException e) {
-            System.out.println("خطأ في التحقق: " + e.getMessage());
+            System.out.println("Error in ISBN verification" + e.getMessage());
             return null;
         }
 
@@ -81,14 +81,14 @@ public class Book {
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 int newId = generatedKeys.getInt(1);
-                System.out.println("تم إضافة الكتاب بنجاح: " + title);
+                System.out.println("The book has been added successfully: " + title);
                 return new Book(newId, title, author, isbn, true);
             } else {
-                System.out.println("خطأ في الحصول على ID الكتاب.");
+                System.out.println("Error in retrieving the book ID.");
                 return null;
             }
         } catch (SQLException e) {
-            System.out.println("خطأ في الإضافة: " + e.getMessage());
+            System.out.println("Error in adding the book: " + e.getMessage());
             return null;
         }
     }
@@ -109,9 +109,9 @@ public class Book {
                 boolean available = rs.getInt("available") == 1;
                 books.add(new Book(id, title, author, isbn, available));
             }
-            System.out.println("تم جلب " + books.size() + " كتب من الداتابيز.");
+            System.out.println("Books were retrieved from the database: " + books.size());
         } catch (SQLException e) {
-            System.out.println("خطأ في جلب الكتب: " + e.getMessage());
+            System.out.println("Error in fetching books: " + e.getMessage());
         }
         return books;
     }
@@ -119,7 +119,7 @@ public class Book {
     // دالة لتحديث حالة التوافر (استخدمها في borrow و returnBook)
     public void updateAvailability(boolean available) {
         if (id == 0) {
-            System.out.println("لا يمكن تحديث كتاب بدون ID (غير محفوظ في الداتابيز).");
+            System.out.println("A book cannot be updated without an ID (not saved in the database).");
             return;
         }
         Connection conn = connect();
@@ -130,12 +130,12 @@ public class Book {
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 this.isAvailable = available;
-                System.out.println("تم تحديث حالة الكتاب: " + title);
+                System.out.println("The book's status has been updated: " + title);
             } else {
-                System.out.println("لم يتم تحديث الكتاب (ID غير موجود).");
+                System.out.println("The book has not been updated (ID not found).");
             }
         } catch (SQLException e) {
-            System.out.println("خطأ في التحديث: " + e.getMessage());
+            System.out.println("Error in updating the book status:  " + e.getMessage());
         }
     }
 
@@ -149,7 +149,7 @@ public class Book {
         if (isAvailable) {
             updateAvailability(false);
         } else {
-            System.out.println("الكتاب غير متاح للإعارة.");
+            System.out.println("The book is not available for borrow.");
         }
     }
 
@@ -157,7 +157,7 @@ public class Book {
         if (!isAvailable) {
             updateAvailability(true);
         } else {
-            System.out.println("الكتاب متاح بالفعل.");
+            System.out.println("The book is already available.");
         }
     }
 

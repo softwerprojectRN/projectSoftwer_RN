@@ -69,7 +69,7 @@ public class BookTest {
     // ==================== Domain Model Tests ====================
 
     @Test
-    void testConstructor_SetsAllFieldsCorrectly() {
+    void testConstructor() {
         Book book = new Book(1, "Test Title", "Test Author", "1234567890", true);
         assertEquals(1, book.getId());
         assertEquals("Test Title", book.getTitle());
@@ -79,7 +79,7 @@ public class BookTest {
     }
 
     @Test
-    void testGetters_ReturnCorrectValues() {
+    void testGetters() {
         Book book = new Book(1, "Title", "Author", "ISBN", false);
         assertEquals(1, book.getId());
         assertEquals("Title", book.getTitle());

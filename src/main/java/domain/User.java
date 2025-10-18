@@ -14,7 +14,7 @@ public class User {
     private boolean loggedIn;
 
     // دالة للاتصال بالداتابيز (SQLite)
-    private static Connection connect() {
+    public static Connection connect() {
         String url = "jdbc:sqlite:database.db";  // اسم ملف الداتابيز
         Connection conn = null;
         try {
@@ -44,7 +44,7 @@ public class User {
     }
 
     // دالة لتوليد salt عشوائي (للأمان)
-    private static String generateSalt() {
+    public static String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
@@ -53,7 +53,7 @@ public class User {
 
     // دالة لتشفير كلمة المرور باستخدام SHA-256 مع salt
     // (الـ hashing غير قابل للفك، بس نقارن الـ hash الجديد مع المخزن)
-    private static String hashPassword(String password, String salt) {
+    public static String hashPassword(String password, String salt) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(salt.getBytes());
@@ -103,7 +103,7 @@ public class User {
     }
 
     // constructor خاص (private) للاستخدام الداخلي بعد الـ login
-    protected User(String username, String passwordHash, String salt) {
+    public User(String username, String passwordHash, String salt) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.salt = salt;
@@ -178,7 +178,7 @@ public class User {
         }
     }
 
-    protected void setLoggedIn(boolean loggedIn) {
+    public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
     }
 }
