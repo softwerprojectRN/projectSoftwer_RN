@@ -10,7 +10,7 @@ public class Admin extends User {
 
     // دالة للاتصال بالداتابيز (SQLite) - نسخة خاصة بـ Admin
     public static Connection connect() {
-        String url = "jdbc:sqlite:database.db";  // نفس ملف الداتابيز
+        String url = "jdbc:sqlite:database.db";
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
@@ -37,7 +37,7 @@ public class Admin extends User {
         }
     }
 
-    // دالة لتوليد salt عشوائي (للأمان) - نسخة خاصة بـ Admin
+    // دالة لتوليد salt عشوائي
     public static String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
@@ -45,7 +45,7 @@ public class Admin extends User {
         return Base64.getEncoder().encodeToString(salt);
     }
 
-    // دالة لتشفير كلمة المرور باستخدام SHA-256 مع salt - نسخة خاصة بـ Admin
+    // دالة لتشفير كلمة المرور باستخدام SHA-256 مع salt
     public static String hashPassword(String password, String salt) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -57,10 +57,8 @@ public class Admin extends User {
         }
     }
 
-    // دالة static لتسجيل أدمن جديد (Sign Up للأدمن)
-    // ترجع Admin object إذا نجح، أو null إذا كان الأدمن موجود
+    // تسجيل أدمن جديد
     public static Admin register(String username, String password) {
-        // تحقق إذا الأدمن موجود بالفعل
         Connection conn = connect();
         String checkSql = "SELECT * FROM admins WHERE username = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
@@ -68,18 +66,16 @@ public class Admin extends User {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 System.out.println("الأدمن موجود بالفعل: " + username);
-                return null;  // فشل التسجيل
+                return null;
             }
         } catch (SQLException e) {
             System.out.println("خطأ في التحقق: " + e.getMessage());
             return null;
         }
 
-        // توليد salt و hashing
         String salt = generateSalt();
         String passwordHash = hashPassword(password, salt);
 
-        // حفظ في الداتابيز (جدول admins)
         String sql = "INSERT INTO admins (username, password_hash, salt) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
@@ -87,7 +83,6 @@ public class Admin extends User {
             pstmt.setString(3, salt);
             pstmt.executeUpdate();
             System.out.println("تم تسجيل الأدمن بنجاح: " + username);
-            // إرجاع كائن Admin جديد
             return new Admin(username, passwordHash, salt);
         } catch (SQLException e) {
             System.out.println("خطأ في التسجيل: " + e.getMessage());
@@ -95,14 +90,13 @@ public class Admin extends User {
         }
     }
 
-    // constructor خاص (protected) للاستخدام الداخلي بعد الـ login
-    protected Admin(String username, String passwordHash, String salt) {
+    // constructor خاص
+    public Admin(String username, String passwordHash, String salt) {
         super(username, passwordHash, salt);
-        this.setLoggedIn(false);  // سيتم تحديثه في الـ login
+        this.setLoggedIn(false);
     }
 
-    // دالة static لتسجيل الدخول (Login للأدمن)
-    // ترجع Admin object إذا نجح، أو null إذا فشل
+    // تسجيل الدخول للأدمن
     public static Admin login(String username, String password) {
         Connection conn = connect();
         String sql = "SELECT password_hash, salt FROM admins WHERE username = ?";
@@ -113,34 +107,21 @@ public class Admin extends User {
             if (rs.next()) {
                 String storedHash = rs.getString("password_hash");
                 String salt = rs.getString("salt");
-
-                // hashing كلمة المرور المدخلة ومقارنتها
                 String inputHash = hashPassword(password, salt);
                 if (storedHash.equals(inputHash)) {
-                    System.out.println("Admin login successful, welcome " + username + "!");
                     Admin admin = new Admin(username, storedHash, salt);
                     admin.setLoggedIn(true);
                     return admin;
                 } else {
-                    System.out.println("Invalid username or password for admin.");
                     return null;
                 }
             } else {
-                System.out.println("الأدمن غير موجود.");
                 return null;
             }
         } catch (SQLException e) {
-            System.out.println("خطأ في الدخول: " + e.getMessage());
             return null;
         }
     }
-
-//    // Add a new book //
-//    public void addBook(LibrarySystem library, String title, String author, String isbn) {
-//        Book newBook = new Book(title, author, isbn);
-//        library.addBook(newBook);
-//        System.out.println("Admin " + getUsername() + " added book: " + title);
-//    }
 
     public void showAdminInfo() {
         System.out.println("Admin username: " + getUsername());

@@ -1,3 +1,5 @@
+AdminTest.class
 UserTest.class
-BookTest.class
+AdminTest$AdminTestHelper.class
 BorrowerTest.class
+BookTest.class

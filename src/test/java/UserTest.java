@@ -103,6 +103,25 @@ class UserTest {
     }
 
     @Test
+    void testRegister_InsertDatabaseError_Failure() throws SQLException {
+        // Arrange
+        String username = "newuser";
+        String password = "testpass";
+        SQLException insertError = new SQLException("Insert DB Error");
+        when(mockResultSet.next()).thenReturn(false); // User does not exist, select succeeds
+        // First prepareStatement (select) returns mock, second (insert) throws
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement).thenThrow(insertError);
+
+        // Act
+        User user = User.register(username, password);
+
+        // Assert
+        assertNull(user);
+        verify(mockPreparedStatement, times(1)).executeQuery(); // Only select query executed
+        verify(mockConnection, times(2)).prepareStatement(anyString()); // Both prepares attempted
+    }
+
+    @Test
     void testLogin_ValidCredentials_Success() throws SQLException {
         // Arrange
         String username = "validuser";
@@ -264,6 +283,21 @@ class UserTest {
             assertEquals(expectedHash, actualHash);
         } catch (NoSuchAlgorithmException e) {
             fail("Unexpected exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testHashPassword_NoSuchAlgorithmException_ThrowsRuntimeException() throws NoSuchAlgorithmException {
+        // Arrange & Act & Assert
+        try (MockedStatic<MessageDigest> mockedDigest = Mockito.mockStatic(MessageDigest.class)) {
+            mockedDigest.when(() -> MessageDigest.getInstance("SHA-256"))
+                    .thenThrow(new NoSuchAlgorithmException("Algorithm not found"));
+
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+                User.hashPassword("testpass", "testsalt");
+            });
+
+            assertTrue(exception.getMessage().contains("Hashing error"));
         }
     }
 
