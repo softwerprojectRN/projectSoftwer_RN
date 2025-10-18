@@ -37,7 +37,7 @@ public class User {
                 + ");";
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("تم إنشاء الجدول بنجاح.");
+            System.out.println("The table has been created successfully.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -60,7 +60,7 @@ public class User {
             byte[] hashedBytes = md.digest(password.getBytes());
             return Base64.getEncoder().encodeToString(hashedBytes);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("خطأ في الـ hashing: " + e.getMessage());
+            throw new RuntimeException("Hashing error: " + e.getMessage());
         }
     }
 
@@ -74,11 +74,11 @@ public class User {
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                System.out.println("المستخدم موجود بالفعل: " + username);
+                System.out.println("The user is already exist: " + username);
                 return null;  // فشل التسجيل
             }
         } catch (SQLException e) {
-            System.out.println("خطأ في التحقق: " + e.getMessage());
+            System.out.println("Error in verifying whether the user already exists or not: " + e.getMessage());
             return null;
         }
 
@@ -93,11 +93,11 @@ public class User {
             pstmt.setString(2, passwordHash);
             pstmt.setString(3, salt);
             pstmt.executeUpdate();
-            System.out.println("تم تسجيل المستخدم بنجاح: " + username);
+            System.out.println("The user has been successfully registered: " + username);
             // إرجاع كائن User جديد
             return new User(username, passwordHash, salt);
         } catch (SQLException e) {
-            System.out.println("خطأ في التسجيل: " + e.getMessage());
+            System.out.println("Registration error: " + e.getMessage());
             return null;
         }
     }
@@ -143,11 +143,11 @@ public class User {
                     return null;
                 }
             } else {
-                System.out.println("المستخدم غير موجود.");
+                System.out.println("The user is not available.");
                 return null;
             }
         } catch (SQLException e) {
-            System.out.println("خطأ في الدخول: " + e.getMessage());
+            System.out.println("Login error: " + e.getMessage());
             return null;
         }
     }
