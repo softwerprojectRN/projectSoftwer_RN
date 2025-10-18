@@ -9,7 +9,7 @@ import java.util.Base64;
 public class Admin extends User {
 
     // دالة للاتصال بالداتابيز (SQLite) - نسخة خاصة بـ Admin
-    private static Connection connect() {
+    public static Connection connect() {
 <span class="nc" id="L13">        String url = &quot;jdbc:sqlite:database.db&quot;;  // نفس ملف الداتابيز</span>
 <span class="nc" id="L14">        Connection conn = null;</span>
         try {
@@ -38,7 +38,7 @@ public class Admin extends User {
 <span class="nc" id="L38">    }</span>
 
     // دالة لتوليد salt عشوائي (للأمان) - نسخة خاصة بـ Admin
-    private static String generateSalt() {
+    public static String generateSalt() {
 <span class="nc" id="L42">        SecureRandom random = new SecureRandom();</span>
 <span class="nc" id="L43">        byte[] salt = new byte[16];</span>
 <span class="nc" id="L44">        random.nextBytes(salt);</span>
@@ -46,7 +46,7 @@ public class Admin extends User {
     }
 
     // دالة لتشفير كلمة المرور باستخدام SHA-256 مع salt - نسخة خاصة بـ Admin
-    private static String hashPassword(String password, String salt) {
+    public static String hashPassword(String password, String salt) {
         try {
 <span class="nc" id="L51">            MessageDigest md = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
 <span class="nc" id="L52">            md.update(salt.getBytes());</span>

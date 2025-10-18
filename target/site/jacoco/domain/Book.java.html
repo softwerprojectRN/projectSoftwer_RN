@@ -36,7 +36,7 @@ public class Book {
                 + &quot;);&quot;;
 <span class="fc" id="L37">        try (Statement stmt = conn.createStatement()) {</span>
 <span class="fc" id="L38">            stmt.execute(sql);</span>
-<span class="fc" id="L39">            System.out.println(&quot;تم إنشاء جدول books بنجاح.&quot;);</span>
+<span class="fc" id="L39">            System.out.println(&quot;The books table has been created successfully.&quot;);</span>
 <span class="nc" id="L40">        } catch (SQLException e) {</span>
 <span class="nc" id="L41">            System.out.println(e.getMessage());</span>
 <span class="fc" id="L42">        }</span>
@@ -61,11 +61,11 @@ public class Book {
 <span class="fc" id="L61">            pstmt.setString(1, isbn);</span>
 <span class="fc" id="L62">            ResultSet rs = pstmt.executeQuery();</span>
 <span class="fc bfc" id="L63" title="All 2 branches covered.">            if (rs.next()) {</span>
-<span class="fc" id="L64">                System.out.println(&quot;الكتاب موجود بالفعل (ISBN: &quot; + isbn + &quot;)&quot;);</span>
+<span class="fc" id="L64">                System.out.println(&quot;The book is already available (ISBN:&quot; + isbn + &quot;)&quot;);</span>
 <span class="fc" id="L65">                return null;  // فشل الإضافة</span>
             }
 <span class="pc bpc" id="L67" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="nc" id="L68">            System.out.println(&quot;خطأ في التحقق: &quot; + e.getMessage());</span>
+<span class="nc" id="L68">            System.out.println(&quot;Error in ISBN verification&quot; + e.getMessage());</span>
 <span class="nc" id="L69">            return null;</span>
 <span class="fc" id="L70">        }</span>
 
@@ -81,14 +81,14 @@ public class Book {
 <span class="fc" id="L81">            ResultSet generatedKeys = pstmt.getGeneratedKeys();</span>
 <span class="pc bpc" id="L82" title="1 of 2 branches missed.">            if (generatedKeys.next()) {</span>
 <span class="fc" id="L83">                int newId = generatedKeys.getInt(1);</span>
-<span class="fc" id="L84">                System.out.println(&quot;تم إضافة الكتاب بنجاح: &quot; + title);</span>
+<span class="fc" id="L84">                System.out.println(&quot;The book has been added successfully: &quot; + title);</span>
 <span class="fc" id="L85">                return new Book(newId, title, author, isbn, true);</span>
             } else {
-<span class="nc" id="L87">                System.out.println(&quot;خطأ في الحصول على ID الكتاب.&quot;);</span>
+<span class="nc" id="L87">                System.out.println(&quot;Error in retrieving the book ID.&quot;);</span>
 <span class="nc" id="L88">                return null;</span>
             }
 <span class="pc bpc" id="L90" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="fc" id="L91">            System.out.println(&quot;خطأ في الإضافة: &quot; + e.getMessage());</span>
+<span class="fc" id="L91">            System.out.println(&quot;Error in adding the book: &quot; + e.getMessage());</span>
 <span class="fc" id="L92">            return null;</span>
         }
     }
@@ -109,9 +109,9 @@ public class Book {
 <span class="pc bpc" id="L109" title="1 of 2 branches missed.">                boolean available = rs.getInt(&quot;available&quot;) == 1;</span>
 <span class="fc" id="L110">                books.add(new Book(id, title, author, isbn, available));</span>
 <span class="fc" id="L111">            }</span>
-<span class="fc" id="L112">            System.out.println(&quot;تم جلب &quot; + books.size() + &quot; كتب من الداتابيز.&quot;);</span>
+<span class="fc" id="L112">            System.out.println(&quot;Books were retrieved from the database: &quot; + books.size());</span>
 <span class="nc" id="L113">        } catch (SQLException e) {</span>
-<span class="nc" id="L114">            System.out.println(&quot;خطأ في جلب الكتب: &quot; + e.getMessage());</span>
+<span class="nc" id="L114">            System.out.println(&quot;Error in fetching books: &quot; + e.getMessage());</span>
 <span class="fc" id="L115">        }</span>
 <span class="fc" id="L116">        return books;</span>
     }
@@ -119,7 +119,7 @@ public class Book {
     // دالة لتحديث حالة التوافر (استخدمها في borrow و returnBook)
     public void updateAvailability(boolean available) {
 <span class="fc bfc" id="L121" title="All 2 branches covered.">        if (id == 0) {</span>
-<span class="fc" id="L122">            System.out.println(&quot;لا يمكن تحديث كتاب بدون ID (غير محفوظ في الداتابيز).&quot;);</span>
+<span class="fc" id="L122">            System.out.println(&quot;A book cannot be updated without an ID (not saved in the database).&quot;);</span>
 <span class="fc" id="L123">            return;</span>
         }
 <span class="fc" id="L125">        Connection conn = connect();</span>
@@ -130,12 +130,12 @@ public class Book {
 <span class="fc" id="L130">            int rowsAffected = pstmt.executeUpdate();</span>
 <span class="fc bfc" id="L131" title="All 2 branches covered.">            if (rowsAffected &gt; 0) {</span>
 <span class="fc" id="L132">                this.isAvailable = available;</span>
-<span class="fc" id="L133">                System.out.println(&quot;تم تحديث حالة الكتاب: &quot; + title);</span>
+<span class="fc" id="L133">                System.out.println(&quot;The book's status has been updated: &quot; + title);</span>
             } else {
-<span class="fc" id="L135">                System.out.println(&quot;لم يتم تحديث الكتاب (ID غير موجود).&quot;);</span>
+<span class="fc" id="L135">                System.out.println(&quot;The book has not been updated (ID not found).&quot;);</span>
             }
 <span class="nc" id="L137">        } catch (SQLException e) {</span>
-<span class="nc" id="L138">            System.out.println(&quot;خطأ في التحديث: &quot; + e.getMessage());</span>
+<span class="nc" id="L138">            System.out.println(&quot;Error in updating the book status:  &quot; + e.getMessage());</span>
 <span class="fc" id="L139">        }</span>
 <span class="fc" id="L140">    }</span>
 
@@ -149,7 +149,7 @@ public class Book {
 <span class="fc bfc" id="L149" title="All 2 branches covered.">        if (isAvailable) {</span>
 <span class="fc" id="L150">            updateAvailability(false);</span>
         } else {
-<span class="fc" id="L152">            System.out.println(&quot;الكتاب غير متاح للإعارة.&quot;);</span>
+<span class="fc" id="L152">            System.out.println(&quot;The book is not available for borrow.&quot;);</span>
         }
 <span class="fc" id="L154">    }</span>
 
@@ -157,7 +157,7 @@ public class Book {
 <span class="fc bfc" id="L157" title="All 2 branches covered.">        if (!isAvailable) {</span>
 <span class="fc" id="L158">            updateAvailability(true);</span>
         } else {
-<span class="fc" id="L160">            System.out.println(&quot;الكتاب متاح بالفعل.&quot;);</span>
+<span class="fc" id="L160">            System.out.println(&quot;The book is already available.&quot;);</span>
         }
 <span class="fc" id="L162">    }</span>
 
