@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Book.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">Book.java</span></div><h1>Book.java</h1><pre class="source lang-java linenums">package domain;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Book {
+
+    private int id;  // معرف الكتاب في الداتابيز
+    private String title;
+    private String author;
+    private String isbn;
+    private boolean isAvailable;
+
+    // دالة للاتصال بالداتابيز (SQLite)
+    public static Connection connect() {
+<span class="fc" id="L17">        String url = &quot;jdbc:sqlite:database.db&quot;;  // نفس ملف الداتابيز</span>
+<span class="fc" id="L18">        Connection conn = null;</span>
+        try {
+<span class="fc" id="L20">            conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L21">        } catch (SQLException e) {</span>
+<span class="nc" id="L22">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L23">        }</span>
+<span class="fc" id="L24">        return conn;</span>
+    }
+
+    // كتلة static لإنشاء الجدول تلقائياً أول مرة
+    static {
+<span class="fc" id="L29">        Connection conn = connect();</span>
+<span class="fc" id="L30">        String sql = &quot;CREATE TABLE IF NOT EXISTS books (\n&quot;</span>
+                + &quot; id integer PRIMARY KEY AUTOINCREMENT,\n&quot;
+                + &quot; title text NOT NULL,\n&quot;
+                + &quot; author text NOT NULL,\n&quot;
+                + &quot; isbn text NOT NULL UNIQUE,\n&quot;
+                + &quot; available integer NOT NULL DEFAULT 1\n&quot;  // 1 للمتاح، 0 للغير متاح
+                + &quot;);&quot;;
+<span class="fc" id="L37">        try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L38">            stmt.execute(sql);</span>
+<span class="fc" id="L39">            System.out.println(&quot;The books table has been created successfully.&quot;);</span>
+<span class="nc" id="L40">        } catch (SQLException e) {</span>
+<span class="nc" id="L41">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L42">        }</span>
+<span class="fc" id="L43">    }</span>
+
+    // constructor خاص (public) للاستخدام الداخلي (بعد الإضافة أو الاستعلام)
+<span class="fc" id="L46">    public Book(int id, String title, String author, String isbn, boolean isAvailable) {</span>
+<span class="fc" id="L47">        this.id = id;</span>
+<span class="fc" id="L48">        this.title = title;</span>
+<span class="fc" id="L49">        this.author = author;</span>
+<span class="fc" id="L50">        this.isbn = isbn;</span>
+<span class="fc" id="L51">        this.isAvailable = isAvailable;</span>
+<span class="fc" id="L52">    }</span>
+
+    // دالة static لإضافة كتاب جديد (Create)
+    // ترجع Book object إذا نجح، أو null إذا كان الـ ISBN موجود
+    public static Book addBook(String title, String author, String isbn) {
+        // تحقق إذا الـ ISBN موجود بالفعل
+<span class="fc" id="L58">        Connection conn = connect();</span>
+<span class="fc" id="L59">        String checkSql = &quot;SELECT * FROM books WHERE isbn = ?&quot;;</span>
+<span class="fc" id="L60">        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {</span>
+<span class="fc" id="L61">            pstmt.setString(1, isbn);</span>
+<span class="fc" id="L62">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L64">                System.out.println(&quot;The book is already available (ISBN:&quot; + isbn + &quot;)&quot;);</span>
+<span class="fc" id="L65">                return null;  // فشل الإضافة</span>
+            }
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L68">            System.out.println(&quot;Error in ISBN verification&quot; + e.getMessage());</span>
+<span class="nc" id="L69">            return null;</span>
+<span class="fc" id="L70">        }</span>
+
+        // إدراج الكتاب الجديد
+<span class="fc" id="L73">        String sql = &quot;INSERT INTO books (title, author, isbn, available) VALUES (?, ?, ?, 1)&quot;;</span>
+<span class="fc" id="L74">        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="fc" id="L75">            pstmt.setString(1, title);</span>
+<span class="fc" id="L76">            pstmt.setString(2, author);</span>
+<span class="fc" id="L77">            pstmt.setString(3, isbn);</span>
+<span class="fc" id="L78">            pstmt.executeUpdate();</span>
+
+            // الحصول على الـ ID المنشأ
+<span class="fc" id="L81">            ResultSet generatedKeys = pstmt.getGeneratedKeys();</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">            if (generatedKeys.next()) {</span>
+<span class="fc" id="L83">                int newId = generatedKeys.getInt(1);</span>
+<span class="fc" id="L84">                System.out.println(&quot;The book has been added successfully: &quot; + title);</span>
+<span class="fc" id="L85">                return new Book(newId, title, author, isbn, true);</span>
+            } else {
+<span class="nc" id="L87">                System.out.println(&quot;Error in retrieving the book ID.&quot;);</span>
+<span class="nc" id="L88">                return null;</span>
+            }
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L91">            System.out.println(&quot;Error in adding the book: &quot; + e.getMessage());</span>
+<span class="fc" id="L92">            return null;</span>
+        }
+    }
+
+    // دالة static للحصول على جميع الكتب (Read)
+    public static List&lt;Book&gt; getAllBooks() {
+<span class="fc" id="L98">        List&lt;Book&gt; books = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L99">        Connection conn = connect();</span>
+<span class="fc" id="L100">        String sql = &quot;SELECT * FROM books&quot;;</span>
+<span class="fc" id="L101">        try (Statement stmt = conn.createStatement();</span>
+<span class="fc" id="L102">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+
+<span class="fc bfc" id="L104" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L105">                int id = rs.getInt(&quot;id&quot;);</span>
+<span class="fc" id="L106">                String title = rs.getString(&quot;title&quot;);</span>
+<span class="fc" id="L107">                String author = rs.getString(&quot;author&quot;);</span>
+<span class="fc" id="L108">                String isbn = rs.getString(&quot;isbn&quot;);</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">                boolean available = rs.getInt(&quot;available&quot;) == 1;</span>
+<span class="fc" id="L110">                books.add(new Book(id, title, author, isbn, available));</span>
+<span class="fc" id="L111">            }</span>
+<span class="fc" id="L112">            System.out.println(&quot;Books were retrieved from the database: &quot; + books.size());</span>
+<span class="nc" id="L113">        } catch (SQLException e) {</span>
+<span class="nc" id="L114">            System.out.println(&quot;Error in fetching books: &quot; + e.getMessage());</span>
+<span class="fc" id="L115">        }</span>
+<span class="fc" id="L116">        return books;</span>
+    }
+
+    // دالة لتحديث حالة التوافر (استخدمها في borrow و returnBook)
+    public void updateAvailability(boolean available) {
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (id == 0) {</span>
+<span class="fc" id="L122">            System.out.println(&quot;A book cannot be updated without an ID (not saved in the database).&quot;);</span>
+<span class="fc" id="L123">            return;</span>
+        }
+<span class="fc" id="L125">        Connection conn = connect();</span>
+<span class="fc" id="L126">        String sql = &quot;UPDATE books SET available = ? WHERE id = ?&quot;;</span>
+<span class="fc" id="L127">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            pstmt.setInt(1, available ? 1 : 0);</span>
+<span class="fc" id="L129">            pstmt.setInt(2, id);</span>
+<span class="fc" id="L130">            int rowsAffected = pstmt.executeUpdate();</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">            if (rowsAffected &gt; 0) {</span>
+<span class="fc" id="L132">                this.isAvailable = available;</span>
+<span class="fc" id="L133">                System.out.println(&quot;The book's status has been updated: &quot; + title);</span>
+            } else {
+<span class="fc" id="L135">                System.out.println(&quot;The book has not been updated (ID not found).&quot;);</span>
+            }
+<span class="nc" id="L137">        } catch (SQLException e) {</span>
+<span class="nc" id="L138">            System.out.println(&quot;Error in updating the book status:  &quot; + e.getMessage());</span>
+<span class="fc" id="L139">        }</span>
+<span class="fc" id="L140">    }</span>
+
+<span class="fc" id="L142">    public String getTitle() { return title; }</span>
+<span class="fc" id="L143">    public String getAuthor() { return author; }</span>
+<span class="fc" id="L144">    public String getIsbn() { return isbn; }</span>
+<span class="fc" id="L145">    public boolean isAvailable() { return isAvailable; }</span>
+<span class="fc" id="L146">    public int getId() { return id; }  // getter للـ ID</span>
+
+    public void borrow() {
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (isAvailable) {</span>
+<span class="fc" id="L150">            updateAvailability(false);</span>
+        } else {
+<span class="fc" id="L152">            System.out.println(&quot;The book is not available for borrow.&quot;);</span>
+        }
+<span class="fc" id="L154">    }</span>
+
+    public void returnBook() {
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (!isAvailable) {</span>
+<span class="fc" id="L158">            updateAvailability(true);</span>
+        } else {
+<span class="fc" id="L160">            System.out.println(&quot;The book is already available.&quot;);</span>
+        }
+<span class="fc" id="L162">    }</span>
+
+    /**
+     * Provides a user-friendly string representation of the book.
+     * @return A string with book details.
+     */
+    @Override
+    public String toString() {
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        String available = isAvailable ? &quot;Yes&quot; : &quot;No&quot;;</span>
+<span class="fc" id="L171">        return &quot;ID: &quot; + id + &quot;, Title: '&quot; + title + &quot;', Author: '&quot; + author + &quot;', ISBN: &quot; + isbn + &quot;, Available: &quot; + available;</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
