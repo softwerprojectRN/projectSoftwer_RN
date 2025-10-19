@@ -61,3 +61,4 @@ public class BorrowingService {
     public static int getBorrowDays() { return BORROW_DAYS; }
     public static double getFinePerDay() { return FINE_PER_DAY;}
 }
+

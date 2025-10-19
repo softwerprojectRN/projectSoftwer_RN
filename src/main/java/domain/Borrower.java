@@ -266,4 +266,53 @@ public class Borrower extends User {
 
     public void setFineBalance(double fineBalance) { this.fineBalance = fineBalance;
     }
+
+
+
+    // Method to get all users with overdue books
+    public static List<UserWithOverdueBooks> getUsersWithOverdueBooks() {
+        List<UserWithOverdueBooks> usersWithOverdueBooks = new ArrayList<>();
+        Connection conn = connect();
+        if (conn == null) return usersWithOverdueBooks;
+
+        String sql = "SELECT u.id, u.username, COUNT(br.id) as overdue_count FROM users u " +
+                "JOIN borrow_records br ON u.id = br.user_id " +
+                "WHERE br.returned = 0 AND br.due_date < date('now') " +
+                "GROUP BY u.id, u.username";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int userId = rs.getInt("id");
+                String username = rs.getString("username");
+                int overdueCount = rs.getInt("overdue_count");
+
+                usersWithOverdueBooks.add(new UserWithOverdueBooks(userId, username, overdueCount));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting users with overdue books: " + e.getMessage());
+        }
+
+        return usersWithOverdueBooks;
+    }
+
+    // Inner class to represent a user with overdue books
+    public static class UserWithOverdueBooks {
+        private int userId;
+        private String username;
+        private int overdueCount;
+
+        public UserWithOverdueBooks(int userId, String username, int overdueCount) {
+            this.userId = userId;
+            this.username = username;
+            this.overdueCount = overdueCount;
+        }
+
+        public int getUserId() { return userId; }
+        public String getUsername() { return username; }
+        public int getOverdueCount() { return overdueCount; }
+    }
+
+    // ... (rest of the existing code)
 }

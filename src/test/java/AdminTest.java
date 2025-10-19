@@ -1,5 +1,6 @@
 import domain.*;
 
+
 import org.junit.jupiter.api.*;
 import org.mockito.MockedStatic;
 
@@ -10,6 +11,8 @@ import java.sql.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.UUID;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminTest {
@@ -19,6 +22,12 @@ public class AdminTest {
     private ResultSet mockRs;
     private Statement mockStmt;
 
+
+    private EmailServer mockEmailServer;
+
+
+
+
     @BeforeEach
     void setUp() throws Exception {
         mockConn = mock(Connection.class);
@@ -26,7 +35,21 @@ public class AdminTest {
         mockPstmtInsert = mock(PreparedStatement.class);
         mockRs = mock(ResultSet.class);
         mockStmt = mock(Statement.class);
+
+        // تعيين EmailServer مزيّف (Mock) للاختبار
+        mockEmailServer = new EmailServer();
+        Admin.setEmailServer(mockEmailServer);
+
+        // تنظيف أي رسائل سابقة
+        mockEmailServer.clearSentEmails();
+
+        // تأكد من أن قاعدة البيانات نظيفة (اختياري حسب البيئة)
+        // يمكنك تنفيذ SQL لمسح الجداول مؤقتًا لو لزم الأمر
+
     }
+
+
+
 
     // -------------------------------------------------
     // اختبار الكتلة الـ static (يجب أن يكون الأول)
@@ -227,7 +250,8 @@ public class AdminTest {
     void testRegister_ConnectReturnsNull() {
         try (MockedStatic<Admin> mocked = mockStatic(Admin.class, CALLS_REAL_METHODS)) {
             mocked.when(Admin::connect).thenReturn(null);
-            assertThrows(NullPointerException.class, () -> Admin.register("testUser", "password"));
+            Admin result = Admin.register("testUser", "password");
+            assertNull(result, "يجب أن ترجع register null عند فشل الاتصال");
         }
     }
 
@@ -235,9 +259,11 @@ public class AdminTest {
     void testLogin_ConnectReturnsNull() {
         try (MockedStatic<Admin> mocked = mockStatic(Admin.class, CALLS_REAL_METHODS)) {
             mocked.when(Admin::connect).thenReturn(null);
-            assertThrows(NullPointerException.class, () -> Admin.login("testUser", "password"));
+            Admin result = Admin.login("testUser", "password");
+            assertNull(result, "يجب أن ترجع login null عند فشل الاتصال");
         }
     }
+
 
     // -------------------------------------------------------------------------
     // Helper Class لاختبار الدوال الخاصة (private) باستخدام Reflection
@@ -277,4 +303,13 @@ public class AdminTest {
             }
         }
     }
+
+
+
+
+
+
+
+
+
 }
