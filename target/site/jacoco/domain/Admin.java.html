@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Admin.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=٤;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">Admin.java</span></div><h1>Admin.java</h1><pre class="source lang-java linenums">//package domain;
+//
+//import java.security.MessageDigest;
+//import java.security.NoSuchAlgorithmException;
+//import java.security.SecureRandom;
+//import java.sql.*;
+//import java.util.Base64;
+//
+//public class Admin extends User {
+//
+//    // دالة للاتصال بالداتابيز (SQLite) - نسخة خاصة بـ Admin
+//    public static Connection connect() {
+//        String url = &quot;jdbc:sqlite:database.db&quot;;
+//        Connection conn = null;
+//        try {
+//            conn = DriverManager.getConnection(url);
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
+//        return conn;
+//    }
+//
+//    // كتلة static لإنشاء جدول admins تلقائياً أول مرة
+//    static {
+//        Connection conn = connect();
+//        String sql = &quot;CREATE TABLE IF NOT EXISTS admins (\n&quot;
+//                + &quot; id integer PRIMARY KEY AUTOINCREMENT,\n&quot;
+//                + &quot; username text NOT NULL UNIQUE,\n&quot;
+//                + &quot; password_hash text NOT NULL,\n&quot;
+//                + &quot; salt text NOT NULL\n&quot;
+//                + &quot;);&quot;;
+//        try (Statement stmt = conn.createStatement()) {
+//            stmt.execute(sql);
+//            System.out.println(&quot;تم إنشاء جدول admins بنجاح.&quot;);
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
+//    }
+//
+//    // دالة لتوليد salt عشوائي
+//    public static String generateSalt() {
+//        SecureRandom random = new SecureRandom();
+//        byte[] salt = new byte[16];
+//        random.nextBytes(salt);
+//        return Base64.getEncoder().encodeToString(salt);
+//    }
+//
+//    // دالة لتشفير كلمة المرور باستخدام SHA-256 مع salt
+//    public static String hashPassword(String password, String salt) {
+//        try {
+//            MessageDigest md = MessageDigest.getInstance(&quot;SHA-256&quot;);
+//            md.update(salt.getBytes());
+//            byte[] hashedBytes = md.digest(password.getBytes());
+//            return Base64.getEncoder().encodeToString(hashedBytes);
+//        } catch (NoSuchAlgorithmException e) {
+//            throw new RuntimeException(&quot;خطأ في الـ hashing: &quot; + e.getMessage());
+//        }
+//    }
+//
+//    // تسجيل أدمن جديد
+//    public static Admin register(String username, String password) {
+//        Connection conn = connect();
+//        String checkSql = &quot;SELECT * FROM admins WHERE username = ?&quot;;
+//        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
+//            pstmt.setString(1, username);
+//            ResultSet rs = pstmt.executeQuery();
+//            if (rs.next()) {
+//                System.out.println(&quot;الأدمن موجود بالفعل: &quot; + username);
+//                return null;
+//            }
+//        } catch (SQLException e) {
+//            System.out.println(&quot;خطأ في التحقق: &quot; + e.getMessage());
+//            return null;
+//        }
+//
+//        String salt = generateSalt();
+//        String passwordHash = hashPassword(password, salt);
+//
+//        String sql = &quot;INSERT INTO admins (username, password_hash, salt) VALUES (?, ?, ?)&quot;;
+//        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//            pstmt.setString(1, username);
+//            pstmt.setString(2, passwordHash);
+//            pstmt.setString(3, salt);
+//            pstmt.executeUpdate();
+//            System.out.println(&quot;تم تسجيل الأدمن بنجاح: &quot; + username);
+//            return new Admin(username, passwordHash, salt);
+//        } catch (SQLException e) {
+//            System.out.println(&quot;خطأ في التسجيل: &quot; + e.getMessage());
+//            return null;
+//        }
+//    }
+//
+//    // constructor خاص
+//    public Admin(String username, String passwordHash, String salt) {
+//        super(username, passwordHash, salt);
+//        this.setLoggedIn(false);
+//    }
+//
+//    // تسجيل الدخول للأدمن
+//    public static Admin login(String username, String password) {
+//        Connection conn = connect();
+//        String sql = &quot;SELECT password_hash, salt FROM admins WHERE username = ?&quot;;
+//        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//            pstmt.setString(1, username);
+//            ResultSet rs = pstmt.executeQuery();
+//
+//            if (rs.next()) {
+//                String storedHash = rs.getString(&quot;password_hash&quot;);
+//                String salt = rs.getString(&quot;salt&quot;);
+//                String inputHash = hashPassword(password, salt);
+//                if (storedHash.equals(inputHash)) {
+//                    Admin admin = new Admin(username, storedHash, salt);
+//                    admin.setLoggedIn(true);
+//                    return admin;
+//                } else {
+//                    return null;
+//                }
+//            } else {
+//                return null;
+//            }
+//        } catch (SQLException e) {
+//            return null;
+//        }
+//    }
+//
+//    public void showAdminInfo() {
+//        System.out.println(&quot;Admin username: &quot; + getUsername());
+//    }
+//}
+
+
+
+
+package domain;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.sql.*;
+import java.util.Base64;
+
+public class Admin extends User {
+
+    public static Connection connect() {
+<span class="fc" id="L145">        String url = &quot;jdbc:sqlite:database.db&quot;;</span>
+        try {
+<span class="fc" id="L147">            return DriverManager.getConnection(url);</span>
+<span class="fc" id="L148">        } catch (SQLException e) {</span>
+<span class="fc" id="L149">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L150">            return null;</span>
+        }
+    }
+
+    static {
+<span class="fc" id="L155">        Connection conn = connect();</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (conn != null) {</span>
+<span class="fc" id="L157">            String sql = &quot;CREATE TABLE IF NOT EXISTS admins (\n&quot;</span>
+                    + &quot; id integer PRIMARY KEY AUTOINCREMENT,\n&quot;
+                    + &quot; username text NOT NULL UNIQUE,\n&quot;
+                    + &quot; password_hash text NOT NULL,\n&quot;
+                    + &quot; salt text NOT NULL\n&quot;
+                    + &quot;);&quot;;
+<span class="fc" id="L163">            try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L164">                stmt.execute(sql);</span>
+<span class="fc" id="L165">                System.out.println(&quot;تم إنشاء جدول admins بنجاح.&quot;);</span>
+<span class="nc" id="L166">            } catch (SQLException e) {</span>
+<span class="nc" id="L167">                System.out.println(e.getMessage());</span>
+<span class="fc" id="L168">            }</span>
+<span class="fc" id="L169">        } else {</span>
+<span class="nc" id="L170">            System.out.println(&quot;لم يتم إنشاء جدول admins لأن الاتصال فشل.&quot;);</span>
+        }
+<span class="fc" id="L172">    }</span>
+
+    public static String generateSalt() {
+<span class="fc" id="L175">        SecureRandom random = new SecureRandom();</span>
+<span class="fc" id="L176">        byte[] salt = new byte[16];</span>
+<span class="fc" id="L177">        random.nextBytes(salt);</span>
+<span class="fc" id="L178">        return Base64.getEncoder().encodeToString(salt);</span>
+    }
+
+    public static String hashPassword(String password, String salt) {
+        try {
+<span class="fc" id="L183">            MessageDigest md = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
+<span class="fc" id="L184">            md.update(salt.getBytes());</span>
+<span class="fc" id="L185">            byte[] hashedBytes = md.digest(password.getBytes());</span>
+<span class="fc" id="L186">            return Base64.getEncoder().encodeToString(hashedBytes);</span>
+<span class="fc" id="L187">        } catch (NoSuchAlgorithmException e) {</span>
+<span class="fc" id="L188">            throw new RuntimeException(&quot;خطأ في الـ hashing: &quot; + e.getMessage());</span>
+        }
+    }
+
+    public static Admin register(String username, String password) {
+<span class="fc" id="L193">        Connection conn = connect();</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (conn == null) return null; // تغطية فرع conn == null</span>
+
+<span class="fc" id="L196">        String checkSql = &quot;SELECT * FROM admins WHERE username = ?&quot;;</span>
+<span class="fc" id="L197">        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {</span>
+<span class="fc" id="L198">            pstmt.setString(1, username);</span>
+<span class="fc" id="L199">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L201">                System.out.println(&quot;الأدمن موجود بالفعل: &quot; + username);</span>
+<span class="fc" id="L202">                return null;</span>
+            }
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L205">            System.out.println(&quot;خطأ في التحقق: &quot; + e.getMessage());</span>
+<span class="fc" id="L206">            return null;</span>
+<span class="fc" id="L207">        }</span>
+
+<span class="fc" id="L209">        String salt = generateSalt();</span>
+<span class="fc" id="L210">        String passwordHash = hashPassword(password, salt);</span>
+
+<span class="fc" id="L212">        String sql = &quot;INSERT INTO admins (username, password_hash, salt) VALUES (?, ?, ?)&quot;;</span>
+<span class="fc" id="L213">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L214">            pstmt.setString(1, username);</span>
+<span class="fc" id="L215">            pstmt.setString(2, passwordHash);</span>
+<span class="fc" id="L216">            pstmt.setString(3, salt);</span>
+<span class="fc" id="L217">            pstmt.executeUpdate();</span>
+<span class="fc" id="L218">            System.out.println(&quot;تم تسجيل الأدمن بنجاح: &quot; + username);</span>
+<span class="fc" id="L219">            return new Admin(username, passwordHash, salt);</span>
+<span class="fc" id="L220">        } catch (SQLException e) {</span>
+<span class="fc" id="L221">            System.out.println(&quot;خطأ في التسجيل: &quot; + e.getMessage());</span>
+<span class="fc" id="L222">            return null;</span>
+        }
+    }
+
+    public Admin(String username, String passwordHash, String salt) {
+<span class="fc" id="L227">        super(username, passwordHash, salt);</span>
+<span class="fc" id="L228">        this.setLoggedIn(false);</span>
+<span class="fc" id="L229">    }</span>
+
+    public static Admin login(String username, String password) {
+<span class="fc" id="L232">        Connection conn = connect();</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (conn == null) return null; // تغطية فرع conn == null</span>
+
+<span class="fc" id="L235">        String sql = &quot;SELECT password_hash, salt FROM admins WHERE username = ?&quot;;</span>
+<span class="fc" id="L236">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L237">            pstmt.setString(1, username);</span>
+<span class="fc" id="L238">            ResultSet rs = pstmt.executeQuery();</span>
+
+<span class="fc bfc" id="L240" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L241">                String storedHash = rs.getString(&quot;password_hash&quot;);</span>
+<span class="fc" id="L242">                String salt = rs.getString(&quot;salt&quot;);</span>
+<span class="fc" id="L243">                String inputHash = hashPassword(password, salt);</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">                if (storedHash.equals(inputHash)) {</span>
+<span class="fc" id="L245">                    Admin admin = new Admin(username, storedHash, salt);</span>
+<span class="fc" id="L246">                    admin.setLoggedIn(true);</span>
+<span class="fc" id="L247">                    return admin;</span>
+                } else {
+<span class="fc" id="L249">                    return null;</span>
+                }
+            } else {
+<span class="fc" id="L252">                return null;</span>
+            }
+<span class="pc bpc" id="L254" title="2 of 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L255">            return null;</span>
+        }
+    }
+
+    public void showAdminInfo() {
+<span class="fc" id="L260">        System.out.println(&quot;Admin username: &quot; + getUsername());</span>
+<span class="fc" id="L261">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

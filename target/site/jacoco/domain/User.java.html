@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=٤;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package domain;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.sql.*;
+import java.util.Base64;
+
+public class User {
+
+    private String username;
+    private String passwordHash;  // سنحفظ الـ hash هون للكائن الحالي
+    private String salt;          // الملح المستخدم للـ hashing
+    private boolean loggedIn;
+
+    // دالة للاتصال بالداتابيز (SQLite)
+    public static Connection connect() {
+<span class="fc" id="L18">        String url = &quot;jdbc:sqlite:database.db&quot;;  // اسم ملف الداتابيز</span>
+<span class="fc" id="L19">        Connection conn = null;</span>
+        try {
+<span class="fc" id="L21">            conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L22">        } catch (SQLException e) {</span>
+<span class="nc" id="L23">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L24">        }</span>
+<span class="fc" id="L25">        return conn;</span>
+    }
+
+    // كتلة static لإنشاء الجدول تلقائياً أول مرة
+    // أضفنا حقل salt للأمان
+    static {
+<span class="fc" id="L31">        Connection conn = connect();</span>
+<span class="fc" id="L32">        String sql = &quot;CREATE TABLE IF NOT EXISTS users (\n&quot;</span>
+                + &quot; id integer PRIMARY KEY AUTOINCREMENT,\n&quot;
+                + &quot; username text NOT NULL UNIQUE,\n&quot;
+                + &quot; password_hash text NOT NULL,\n&quot;
+                + &quot; salt text NOT NULL\n&quot;
+                + &quot;);&quot;;
+<span class="fc" id="L38">        try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L39">            stmt.execute(sql);</span>
+<span class="fc" id="L40">            System.out.println(&quot;The table has been created successfully.&quot;);</span>
+<span class="nc" id="L41">        } catch (SQLException e) {</span>
+<span class="nc" id="L42">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L43">        }</span>
+<span class="fc" id="L44">    }</span>
+
+    // دالة لتوليد salt عشوائي (للأمان)
+    public static String generateSalt() {
+<span class="fc" id="L48">        SecureRandom random = new SecureRandom();</span>
+<span class="fc" id="L49">        byte[] salt = new byte[16];</span>
+<span class="fc" id="L50">        random.nextBytes(salt);</span>
+<span class="fc" id="L51">        return Base64.getEncoder().encodeToString(salt);</span>
+    }
+
+    // دالة لتشفير كلمة المرور باستخدام SHA-256 مع salt
+    // (الـ hashing غير قابل للفك، بس نقارن الـ hash الجديد مع المخزن)
+    public static String hashPassword(String password, String salt) {
+        try {
+<span class="fc" id="L58">            MessageDigest md = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
+<span class="fc" id="L59">            md.update(salt.getBytes());</span>
+<span class="fc" id="L60">            byte[] hashedBytes = md.digest(password.getBytes());</span>
+<span class="fc" id="L61">            return Base64.getEncoder().encodeToString(hashedBytes);</span>
+<span class="fc" id="L62">        } catch (NoSuchAlgorithmException e) {</span>
+<span class="fc" id="L63">            throw new RuntimeException(&quot;Hashing error: &quot; + e.getMessage());</span>
+        }
+    }
+
+    // دالة static لتسجيل مستخدم جديد (Sign Up)
+    // ترجع User object إذا نجح، أو null إذا كان المستخدم موجود
+    public static User register(String username, String password) {
+        // تحقق إذا المستخدم موجود بالفعل
+<span class="fc" id="L71">        Connection conn = connect();</span>
+<span class="fc" id="L72">        String checkSql = &quot;SELECT * FROM users WHERE username = ?&quot;;</span>
+<span class="fc" id="L73">        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {</span>
+<span class="fc" id="L74">            pstmt.setString(1, username);</span>
+<span class="fc" id="L75">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L77">                System.out.println(&quot;The user is already exist: &quot; + username);</span>
+<span class="fc" id="L78">                return null;  // فشل التسجيل</span>
+            }
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L81">            System.out.println(&quot;Error in verifying whether the user already exists or not: &quot; + e.getMessage());</span>
+<span class="fc" id="L82">            return null;</span>
+<span class="fc" id="L83">        }</span>
+
+        // توليد salt و hashing
+<span class="fc" id="L86">        String salt = generateSalt();</span>
+<span class="fc" id="L87">        String passwordHash = hashPassword(password, salt);</span>
+
+        // حفظ في الداتابيز
+<span class="fc" id="L90">        String sql = &quot;INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)&quot;;</span>
+<span class="fc" id="L91">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L92">            pstmt.setString(1, username);</span>
+<span class="fc" id="L93">            pstmt.setString(2, passwordHash);</span>
+<span class="fc" id="L94">            pstmt.setString(3, salt);</span>
+<span class="fc" id="L95">            pstmt.executeUpdate();</span>
+<span class="fc" id="L96">            System.out.println(&quot;The user has been successfully registered: &quot; + username);</span>
+            // إرجاع كائن User جديد
+<span class="fc" id="L98">            return new User(username, passwordHash, salt);</span>
+<span class="fc" id="L99">        } catch (SQLException e) {</span>
+<span class="fc" id="L100">            System.out.println(&quot;Registration error: &quot; + e.getMessage());</span>
+<span class="fc" id="L101">            return null;</span>
+        }
+    }
+
+    // constructor خاص (private) للاستخدام الداخلي بعد الـ login
+<span class="fc" id="L106">    public User(String username, String passwordHash, String salt) {</span>
+<span class="fc" id="L107">        this.username = username;</span>
+<span class="fc" id="L108">        this.passwordHash = passwordHash;</span>
+<span class="fc" id="L109">        this.salt = salt;</span>
+<span class="fc" id="L110">        this.loggedIn = false;  // سيتم تحديثه في الـ login</span>
+<span class="fc" id="L111">    }</span>
+
+<span class="fc" id="L113">    public User(String username, String password) {</span>
+<span class="fc" id="L114">        this.username = username;</span>
+<span class="fc" id="L115">        this.passwordHash = password; // مؤقتًا، أو يمكنك عمل hash هنا</span>
+<span class="fc" id="L116">        this.salt = &quot;&quot;;               // تركها فارغة أو توليد salt جديد</span>
+<span class="fc" id="L117">        this.loggedIn = false;</span>
+<span class="fc" id="L118">    }</span>
+
+
+    // دالة static لتسجيل الدخول (Login)
+    // ترجع User object إذا نجح، أو null إذا فشل
+    public static User login(String username, String password) {
+<span class="fc" id="L124">        Connection conn = connect();</span>
+<span class="fc" id="L125">        String sql = &quot;SELECT password_hash, salt FROM users WHERE username = ?&quot;;</span>
+<span class="fc" id="L126">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L127">            pstmt.setString(1, username);</span>
+<span class="fc" id="L128">            ResultSet rs = pstmt.executeQuery();</span>
+
+<span class="fc bfc" id="L130" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L131">                String storedHash = rs.getString(&quot;password_hash&quot;);</span>
+<span class="fc" id="L132">                String salt = rs.getString(&quot;salt&quot;);</span>
+
+                // hashing كلمة المرور المدخلة ومقارنتها
+<span class="fc" id="L135">                String inputHash = hashPassword(password, salt);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">                if (storedHash.equals(inputHash)) {</span>
+<span class="fc" id="L137">                    System.out.println(&quot;Login successful, welcome &quot; + username + &quot;!&quot;);</span>
+<span class="fc" id="L138">                    User user = new User(username, storedHash, salt);</span>
+<span class="fc" id="L139">                    user.loggedIn = true;</span>
+<span class="fc" id="L140">                    return user;</span>
+                } else {
+<span class="fc" id="L142">                    System.out.println(&quot;Invalid username or password.&quot;);</span>
+<span class="fc" id="L143">                    return null;</span>
+                }
+            } else {
+<span class="fc" id="L146">                System.out.println(&quot;The user is not available.&quot;);</span>
+<span class="fc" id="L147">                return null;</span>
+            }
+<span class="pc bpc" id="L149" title="2 of 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L150">            System.out.println(&quot;Login error: &quot; + e.getMessage());</span>
+<span class="fc" id="L151">            return null;</span>
+        }
+    }
+
+    public String getUsername() {
+<span class="fc" id="L156">        return username;</span>
+    }
+
+    // لا نرجع كلمة المرور الأصلية، بس الـ hash إذا لزم
+    public String getPasswordHash() {
+<span class="fc" id="L161">        return passwordHash;</span>
+    }
+
+    public void setUsername(String username) {
+<span class="fc" id="L165">        this.username = username;</span>
+<span class="fc" id="L166">    }</span>
+
+    public boolean isLoggedIn() {
+<span class="fc" id="L169">        return loggedIn;</span>
+    }
+
+    public void logout() {
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (this.loggedIn) {</span>
+<span class="fc" id="L174">            this.loggedIn = false;</span>
+<span class="fc" id="L175">            System.out.println(&quot;Logged out successfully.&quot;);</span>
+        } else {
+<span class="fc" id="L177">            System.out.println(&quot;You are not logged in yet.&quot;);</span>
+        }
+<span class="fc" id="L179">    }</span>
+
+    public void setLoggedIn(boolean loggedIn) {
+<span class="fc" id="L182">        this.loggedIn = loggedIn;</span>
+<span class="fc" id="L183">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
