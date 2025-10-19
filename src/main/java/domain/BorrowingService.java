@@ -31,7 +31,7 @@ public class BorrowingService {
             System.out.println("ادفع غرامتك (" + borrower.getFineBalance() + ") أولاً.");
             return false;
         }
-        if (!borrower.getOverdueBooks().isEmpty()) {
+        if (!borrower.getOverdueMedia().isEmpty()) {
             System.out.println("يجب إرجاع المواد المتأخرة أولاً.");
             return false;
         }

@@ -277,18 +277,54 @@ public class Borrower extends User {
             if (!isOverdue()) return 0;
             return java.time.temporal.ChronoUnit.DAYS.between(dueDate, LocalDate.now());
         }
+
+        public void setDueDate(LocalDate dueDate) {
+            this.dueDate = dueDate;
+        }
     }
+
+
+
+    public void generateOverdueReport() {
+        List<MediaRecord> overdueItems = getOverdueMedia(); // استخدم الدالة المعدّلة
+        if (overdueItems.isEmpty()) {
+            System.out.println("ليس لديك مواد متأخرة.");
+            return;
+        }
+
+        System.out.println("--- تقرير المواد المتأخرة ---");
+        double totalFine = 0.0;
+
+        for (MediaRecord record : overdueItems) {
+            Media media = record.getMedia();
+            long overdueDays = record.getOverdueDays();
+            double finePerDay = BorrowingService.getFinePerDay(media.getMediaType());
+            double itemFine = overdueDays * finePerDay;
+            totalFine += itemFine;
+
+            String mediaTypeArabic = media.getMediaType().equals("book") ? "كتاب" : "قرص مدمج";
+            System.out.printf("- العنوان: '%s', النوع: %s, أيام التأخير: %d, الغرامة: %.2f\n",
+                    media.getTitle(), mediaTypeArabic, overdueDays, itemFine);
+        }
+
+        System.out.println("---------------------------------");
+        System.out.printf("إجمالي الغرامات المتأخرة: %.2f\n", totalFine);
+    }
+
 
     // =================== Getters ===================
     public List<MediaRecord> getBorrowedMedia() { return new ArrayList<>(borrowedMedia); }
 
-    public List<MediaRecord> getOverdueBooks() {
+    public List<MediaRecord> getOverdueMedia() { //
         List<MediaRecord> overdue = new ArrayList<>();
         for (MediaRecord record : borrowedMedia) {
             if (record.isOverdue()) overdue.add(record);
         }
         return overdue;
     }
+
+
+
 
     public double getFineBalance() { return fineBalance; }
 
