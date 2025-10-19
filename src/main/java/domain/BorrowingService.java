@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 public class BorrowingService {
 
-    private static final int MAX_BORROWED_BOOKS = 1;  // القيد: 1 كتاب فقط
     private static final int BORROW_DAYS = 28;        // 28 يوم للاستحقاق
     private static final double FINE_PER_DAY = 1.0;   // 1 دولار لكل يوم تأخير
 
@@ -15,12 +14,13 @@ public class BorrowingService {
             System.out.println("يجب تسجيل الدخول أولاً.");
             return false;
         }
-        if (borrower.getBorrowedBooks().size() >= MAX_BORROWED_BOOKS) {
-            System.out.println("لديك " + MAX_BORROWED_BOOKS + " كتاب مستعار بالفعل. ارجع واحداً أولاً.");
-            return false;
-        }
         if (borrower.getFineBalance() > 0) {
             System.out.println("ادفع غرامتك (" + borrower.getFineBalance() + ") أولاً.");
+            return false;
+        }
+        // Add this check for overdue books
+        if (!borrower.getOverdueBooks().isEmpty()) {
+            System.out.println("يجب إرجاع الكتب المتأخرة أولاً.");
             return false;
         }
         if (!book.isAvailable()) {
@@ -57,7 +57,6 @@ public class BorrowingService {
     }
 
     // getters للثوابت (لو عايز تغيّرها)
-    public static int getMaxBorrowedBooks() { return MAX_BORROWED_BOOKS; }
     public static int getBorrowDays() { return BORROW_DAYS; }
     public static double getFinePerDay() { return FINE_PER_DAY;}
 }
