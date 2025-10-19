@@ -7,13 +7,13 @@ import java.util.List;
 
 public class Borrower extends User {
 
-    private List<BookRecord> borrowedBooks = new ArrayList<>();
+    private List<MediaRecord> borrowedMedia = new ArrayList<>();
     private double fineBalance = 0.0;
 
-    // constructor خاص (protected) للاستخدام الداخلي بعد الـ login (يتوافق مع User)
+    // constructor خاص (protected) للاستخدام الداخلي بعد الـ login
     public Borrower(String username, String passwordHash, String salt) {
         super(username, passwordHash, salt);
-        loadBorrowedBooks();  // تحميل الكتب المستعارة من الداتابيز
+        loadBorrowedMedia();  // تحميل المواد المستعارة من الداتابيز
         loadFineBalance();    // تحميل رصيد الغرامات الكلي
     }
 
@@ -37,16 +37,16 @@ public class Borrower extends User {
             String borrowSql = "CREATE TABLE IF NOT EXISTS borrow_records (\n"
                     + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                     + " user_id INTEGER NOT NULL,\n"
-                    + " book_id INTEGER NOT NULL,\n"
-                    + " book_title TEXT NOT NULL,\n"
-                    + " book_isbn TEXT NOT NULL,\n"
+                    + " media_id INTEGER NOT NULL,\n"
+                    + " media_type TEXT NOT NULL,\n"
+                    + " media_title TEXT NOT NULL,\n"
                     + " borrow_date TEXT NOT NULL,\n"
                     + " due_date TEXT NOT NULL,\n"
                     + " returned INTEGER DEFAULT 0,\n"
                     + " return_date TEXT,\n"
                     + " fine REAL DEFAULT 0.0,\n"
                     + " FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,\n"
-                    + " FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE\n"
+                    + " FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE\n"
                     + ");";
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute(borrowSql);
@@ -86,32 +86,59 @@ public class Borrower extends User {
         return -1;
     }
 
-    public void loadBorrowedBooks() {
+    public void loadBorrowedMedia() {
         int userId = getUserId();
         if (userId == -1) return;
 
         Connection conn = connect();
         if (conn == null) return;
 
-        String sql = "SELECT br.*, b.id as book_id, b.title, b.isbn FROM borrow_records br "
-                + "JOIN books b ON br.book_id = b.id "
+        String sql = "SELECT br.*, m.media_type FROM borrow_records br "
+                + "JOIN media m ON br.media_id = m.id "
                 + "WHERE br.user_id = ? AND br.returned = 0";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                int bookId = rs.getInt("book_id");
-                String title = rs.getString("book_title");
-                String isbn = rs.getString("book_isbn");
+                int mediaId = rs.getInt("media_id");
+                String mediaType = rs.getString("media_type");
+                String title = rs.getString("media_title");
                 LocalDate dueDate = LocalDate.parse(rs.getString("due_date"));
-                Book book = new Book(bookId, title, null, isbn, false);
-                BookRecord record = new BookRecord(book, dueDate, rs.getInt("id"));
-                borrowedBooks.add(record);
+
+                Media media = null;
+                if (mediaType.equals("book")) {
+                    // استعلام عن تفاصيل الكتاب
+                    String bookSql = "SELECT b.author, b.isbn FROM books b WHERE b.id = ?";
+                    try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {
+                        bookStmt.setInt(1, mediaId);
+                        ResultSet bookRs = bookStmt.executeQuery();
+                        if (bookRs.next()) {
+                            media = new Book(mediaId, title, bookRs.getString("author"),
+                                    bookRs.getString("isbn"), false);
+                        }
+                    }
+                } else if (mediaType.equals("cd")) {
+                    // استعلام عن تفاصيل القرص المدمج
+                    String cdSql = "SELECT c.artist, c.genre, c.duration FROM cds c WHERE c.id = ?";
+                    try (PreparedStatement cdStmt = conn.prepareStatement(cdSql)) {
+                        cdStmt.setInt(1, mediaId);
+                        ResultSet cdRs = cdStmt.executeQuery();
+                        if (cdRs.next()) {
+                            media = new CD(mediaId, title, cdRs.getString("artist"),
+                                    cdRs.getString("genre"), cdRs.getInt("duration"), false);
+                        }
+                    }
+                }
+
+                if (media != null) {
+                    MediaRecord record = new MediaRecord(media, dueDate, rs.getInt("id"));
+                    borrowedMedia.add(record);
+                }
             }
-            System.out.println("تم تحميل " + borrowedBooks.size() + " كتب مستعارة للمستخدم " + getUsername());
+            System.out.println("تم تحميل " + borrowedMedia.size() + " مواد مستعارة للمستخدم " + getUsername());
         } catch (SQLException e) {
-            System.out.println("Error loading borrowed books: " + e.getMessage());
+            System.out.println("Error loading borrowed media: " + e.getMessage());
         }
     }
 
@@ -170,19 +197,19 @@ public class Borrower extends User {
         }
     }
 
-    // =================== Book Borrow/Return ===================
-    public void addBorrowRecord(Book book, LocalDate dueDate) {
-        BookRecord record = new BookRecord(book, dueDate, 0);
+    // =================== Media Borrow/Return ===================
+    public void addBorrowRecord(Media media, LocalDate dueDate) {
+        MediaRecord record = new MediaRecord(media, dueDate, 0);
 
         Connection conn = connect();
         if (conn == null) return;
 
-        String sql = "INSERT INTO borrow_records (user_id, book_id, book_title, book_isbn, borrow_date, due_date) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO borrow_records (user_id, media_id, media_type, media_title, borrow_date, due_date) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, getUserId());
-            pstmt.setInt(2, book.getId());
-            pstmt.setString(3, book.getTitle());
-            pstmt.setString(4, book.getIsbn());
+            pstmt.setInt(2, media.getId());
+            pstmt.setString(3, media.getMediaType());
+            pstmt.setString(4, media.getTitle());
             pstmt.setString(5, LocalDate.now().toString());
             pstmt.setString(6, dueDate.toString());
             pstmt.executeUpdate();
@@ -190,25 +217,25 @@ public class Borrower extends User {
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 record.setRecordId(generatedKeys.getInt(1));
-                borrowedBooks.add(record);
+                borrowedMedia.add(record);
             }
         } catch (SQLException e) {
             System.out.println("Error saving borrow record: " + e.getMessage());
         }
     }
 
-    public void removeBorrowRecord(BookRecord record, double bookFine) {
+    public void removeBorrowRecord(MediaRecord record, double mediaFine) {
         Connection conn = connect();
         if (conn == null) return;
 
         String sql = "UPDATE borrow_records SET returned = 1, return_date = ?, fine = ? WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, LocalDate.now().toString());
-            pstmt.setDouble(2, bookFine);
+            pstmt.setDouble(2, mediaFine);
             pstmt.setInt(3, record.getRecordId());
             if (pstmt.executeUpdate() > 0) {
-                borrowedBooks.remove(record);
-                fineBalance += bookFine;
+                borrowedMedia.remove(record);
+                fineBalance += mediaFine;
                 saveFineBalance();
             }
         } catch (SQLException e) {
@@ -227,19 +254,19 @@ public class Borrower extends User {
         return true;
     }
 
-    // =================== BookRecord Inner Class ===================
-    public class BookRecord {
-        private Book book;
+    // =================== MediaRecord Inner Class ===================
+    public class MediaRecord {
+        private Media media;
         private LocalDate dueDate;
         private int recordId;
 
-        public BookRecord(Book book, LocalDate dueDate, int recordId) {
-            this.book = book;
+        public MediaRecord(Media media, LocalDate dueDate, int recordId) {
+            this.media = media;
             this.dueDate = dueDate;
             this.recordId = recordId;
         }
 
-        public Book getBook() { return book; }
+        public Media getMedia() { return media; }
         public LocalDate getDueDate() { return dueDate; }
         public int getRecordId() { return recordId; }
         public void setRecordId(int recordId) { this.recordId = recordId; }
@@ -253,17 +280,17 @@ public class Borrower extends User {
     }
 
     // =================== Getters ===================
-    public List<BookRecord> getBorrowedBooks() { return new ArrayList<>(borrowedBooks); }
+    public List<MediaRecord> getBorrowedMedia() { return new ArrayList<>(borrowedMedia); }
 
-    public List<BookRecord> getOverdueBooks() {
-        List<BookRecord> overdue = new ArrayList<>();
-        for (BookRecord record : borrowedBooks) {
+    public List<MediaRecord> getOverdueBooks() {
+        List<MediaRecord> overdue = new ArrayList<>();
+        for (MediaRecord record : borrowedMedia) {
             if (record.isOverdue()) overdue.add(record);
         }
         return overdue;
     }
+
     public double getFineBalance() { return fineBalance; }
 
-    public void setFineBalance(double fineBalance) { this.fineBalance = fineBalance;
-    }
+    public void setFineBalance(double fineBalance) { this.fineBalance = fineBalance; }
 }

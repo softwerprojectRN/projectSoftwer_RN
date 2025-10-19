@@ -4,35 +4,18 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Book {
-
-    private int id;  // معرف الكتاب في الداتابيز
-    private String title;
+public class Book extends Media {
     private String author;
     private String isbn;
-    private boolean isAvailable;
 
-    // دالة للاتصال بالداتابيز (SQLite)
-    public static Connection connect() {
-        String url = "jdbc:sqlite:database.db";  // نفس ملف الداتابيز
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(url);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return conn;
-    }
-
-    // كتلة static لإنشاء الجدول تلقائياً أول مرة
+    // كتلة static لإنشاء جدول الكتب
     static {
         Connection conn = connect();
         String sql = "CREATE TABLE IF NOT EXISTS books (\n"
-                + " id integer PRIMARY KEY AUTOINCREMENT,\n"
-                + " title text NOT NULL,\n"
+                + " id integer PRIMARY KEY,\n"
                 + " author text NOT NULL,\n"
                 + " isbn text NOT NULL UNIQUE,\n"
-                + " available integer NOT NULL DEFAULT 1\n"  // 1 للمتاح، 0 للغير متاح
+                + " FOREIGN KEY (id) REFERENCES media(id) ON DELETE CASCADE\n"
                 + ");";
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
@@ -42,62 +25,67 @@ public class Book {
         }
     }
 
-    // constructor خاص (public) للاستخدام الداخلي (بعد الإضافة أو الاستعلام)
+    // Constructor
     public Book(int id, String title, String author, String isbn, boolean isAvailable) {
-        this.id = id;
-        this.title = title;
+        super(id, title, isAvailable, "book");
         this.author = author;
         this.isbn = isbn;
-        this.isAvailable = isAvailable;
     }
 
-    // دالة static لإضافة كتاب جديد (Create)
-    // ترجع Book object إذا نجح، أو null إذا كان الـ ISBN موجود
+    // دالة static لإضافة كتاب جديد
     public static Book addBook(String title, String author, String isbn) {
         // تحقق إذا الـ ISBN موجود بالفعل
         Connection conn = connect();
-        String checkSql = "SELECT * FROM books WHERE isbn = ?";
+        String checkSql = "SELECT b.* FROM books b JOIN media m ON b.id = m.id WHERE b.isbn = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
             pstmt.setString(1, isbn);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                System.out.println("The book is already available (ISBN:" + isbn + ")");
-                return null;  // فشل الإضافة
-            }
-        } catch (SQLException e) {
-            System.out.println("Error in ISBN verification" + e.getMessage());
-            return null;
-        }
-
-        // إدراج الكتاب الجديد
-        String sql = "INSERT INTO books (title, author, isbn, available) VALUES (?, ?, ?, 1)";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setString(1, title);
-            pstmt.setString(2, author);
-            pstmt.setString(3, isbn);
-            pstmt.executeUpdate();
-
-            // الحصول على الـ ID المنشأ
-            ResultSet generatedKeys = pstmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                int newId = generatedKeys.getInt(1);
-                System.out.println("The book has been added successfully: " + title);
-                return new Book(newId, title, author, isbn, true);
-            } else {
-                System.out.println("Error in retrieving the book ID.");
+                System.out.println("Book already exists (ISBN:" + isbn + ")");
                 return null;
             }
         } catch (SQLException e) {
-            System.out.println("Error in adding the book: " + e.getMessage());
+            System.out.println("Error checking ISBN: " + e.getMessage());
+            return null;
+        }
+
+        // إدراج في جدول media أولاً
+        String mediaSql = "INSERT INTO media (title, media_type, available) VALUES (?, 'book', 1)";
+        try (PreparedStatement pstmt = conn.prepareStatement(mediaSql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, title);
+            pstmt.executeUpdate();
+
+            ResultSet generatedKeys = pstmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int newId = generatedKeys.getInt(1);
+
+                // ثم إدراج في جدول books
+                String bookSql = "INSERT INTO books (id, author, isbn) VALUES (?, ?, ?)";
+                try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {
+                    bookStmt.setInt(1, newId);
+                    bookStmt.setString(2, author);
+                    bookStmt.setString(3, isbn);
+                    bookStmt.executeUpdate();
+
+                    System.out.println("Book added successfully: " + title);
+                    return new Book(newId, title, author, isbn, true);
+                }
+            } else {
+                System.out.println("Error retrieving media ID.");
+                return null;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error adding book: " + e.getMessage());
             return null;
         }
     }
 
-    // دالة static للحصول على جميع الكتب (Read)
+    // دالة static للحصول على جميع الكتب
     public static List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
         Connection conn = connect();
-        String sql = "SELECT * FROM books";
+        String sql = "SELECT m.id, m.title, m.available, b.author, b.isbn " +
+                "FROM media m JOIN books b ON m.id = b.id WHERE m.media_type = 'book'";
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -109,68 +97,19 @@ public class Book {
                 boolean available = rs.getInt("available") == 1;
                 books.add(new Book(id, title, author, isbn, available));
             }
-            System.out.println("Books were retrieved from the database: " + books.size());
+            System.out.println("Retrieved " + books.size() + " books from database.");
         } catch (SQLException e) {
-            System.out.println("Error in fetching books: " + e.getMessage());
+            System.out.println("Error fetching books: " + e.getMessage());
         }
         return books;
     }
 
-    // دالة لتحديث حالة التوافر (استخدمها في borrow و returnBook)
-    public void updateAvailability(boolean available) {
-        if (id == 0) {
-            System.out.println("A book cannot be updated without an ID (not saved in the database).");
-            return;
-        }
-        Connection conn = connect();
-        String sql = "UPDATE books SET available = ? WHERE id = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, available ? 1 : 0);
-            pstmt.setInt(2, id);
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                this.isAvailable = available;
-                System.out.println("The book's status has been updated: " + title);
-            } else {
-                System.out.println("The book has not been updated (ID not found).");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error in updating the book status:  " + e.getMessage());
-        }
-    }
-
-    public String getTitle() { return title; }
+    // Getters
     public String getAuthor() { return author; }
     public String getIsbn() { return isbn; }
-    public boolean isAvailable() { return isAvailable; }
-    public int getId() { return id; }  // getter للـ ID
 
-    public void borrow() {
-        if (isAvailable) {
-            updateAvailability(false);
-        } else {
-            System.out.println("The book is not available for borrow.");
-        }
-    }
-
-    public void returnBook() {
-        if (!isAvailable) {
-            updateAvailability(true);
-        } else {
-            System.out.println("The book is already available.");
-        }
-    }
-
-    /**
-     * Provides a user-friendly string representation of the book.
-     * @return A string with book details.
-     */
     @Override
     public String toString() {
-        String available = isAvailable ? "Yes" : "No";
-        return "ID: " + id + ", Title: '" + title + "', Author: '" + author + "', ISBN: " + isbn + ", Available: " + available;
+        return super.toString() + ", Author: '" + author + "', ISBN: " + isbn;
     }
-
-
-
 }
