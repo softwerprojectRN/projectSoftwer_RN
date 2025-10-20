@@ -11,7 +11,7 @@ import java.util.List;
 public class Admin extends User {
     //بدونهم بعمل ايرور
     private static EmailServer emailServer = new EmailServer();
-    private static EmailNotifier emailNotifier = new EmailNotifier(emailServer);
+    public static EmailNotifier emailNotifier = new EmailNotifier(emailServer);
 //
     public static Connection connect() {
         String url = "jdbc:sqlite:database.db";
@@ -23,7 +23,7 @@ public class Admin extends User {
         }
     }
 
-    static {
+    public static void initializeAdminTable() {
         Connection conn = connect();
         if (conn != null) {
             String sql = "CREATE TABLE IF NOT EXISTS admins (\n"
@@ -127,6 +127,9 @@ public class Admin extends User {
             return null;
         }
     }
+
+
+
 
     public void showAdminInfo() {
         System.out.println("Admin username: " + getUsername());
@@ -246,6 +249,17 @@ public class Admin extends User {
     }
 
     // ... (rest of the existing code)
+    // new code
+
+
+
+
+
+
+
+
+
+
 }
 
 

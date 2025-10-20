@@ -1,6 +1,14 @@
+domain\Book.class
 domain\Borrower.class
+domain\CD.class
+domain\EmailNotifier.class
+domain\Observer.class
+domain\Media.class
+domain\EmailServer.class
 domain\Admin.class
+domain\EmailServer$Email.class
+domain\Borrower$UserWithOverdueBooks.class
+domain\Borrower$MediaRecord.class
 domain\User.class
 domain\BorrowingService.class
-domain\Book.class
-domain\Borrower$BookRecord.class
+domain\AdminMenu.class
