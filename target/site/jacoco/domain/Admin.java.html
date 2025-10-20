@@ -1,136 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Admin.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=٤;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">Admin.java</span></div><h1>Admin.java</h1><pre class="source lang-java linenums">//package domain;
-//
-//import java.security.MessageDigest;
-//import java.security.NoSuchAlgorithmException;
-//import java.security.SecureRandom;
-//import java.sql.*;
-//import java.util.Base64;
-//
-//public class Admin extends User {
-//
-//    // دالة للاتصال بالداتابيز (SQLite) - نسخة خاصة بـ Admin
-//    public static Connection connect() {
-//        String url = &quot;jdbc:sqlite:database.db&quot;;
-//        Connection conn = null;
-//        try {
-//            conn = DriverManager.getConnection(url);
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//        return conn;
-//    }
-//
-//    // كتلة static لإنشاء جدول admins تلقائياً أول مرة
-//    static {
-//        Connection conn = connect();
-//        String sql = &quot;CREATE TABLE IF NOT EXISTS admins (\n&quot;
-//                + &quot; id integer PRIMARY KEY AUTOINCREMENT,\n&quot;
-//                + &quot; username text NOT NULL UNIQUE,\n&quot;
-//                + &quot; password_hash text NOT NULL,\n&quot;
-//                + &quot; salt text NOT NULL\n&quot;
-//                + &quot;);&quot;;
-//        try (Statement stmt = conn.createStatement()) {
-//            stmt.execute(sql);
-//            System.out.println(&quot;تم إنشاء جدول admins بنجاح.&quot;);
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-//
-//    // دالة لتوليد salt عشوائي
-//    public static String generateSalt() {
-//        SecureRandom random = new SecureRandom();
-//        byte[] salt = new byte[16];
-//        random.nextBytes(salt);
-//        return Base64.getEncoder().encodeToString(salt);
-//    }
-//
-//    // دالة لتشفير كلمة المرور باستخدام SHA-256 مع salt
-//    public static String hashPassword(String password, String salt) {
-//        try {
-//            MessageDigest md = MessageDigest.getInstance(&quot;SHA-256&quot;);
-//            md.update(salt.getBytes());
-//            byte[] hashedBytes = md.digest(password.getBytes());
-//            return Base64.getEncoder().encodeToString(hashedBytes);
-//        } catch (NoSuchAlgorithmException e) {
-//            throw new RuntimeException(&quot;خطأ في الـ hashing: &quot; + e.getMessage());
-//        }
-//    }
-//
-//    // تسجيل أدمن جديد
-//    public static Admin register(String username, String password) {
-//        Connection conn = connect();
-//        String checkSql = &quot;SELECT * FROM admins WHERE username = ?&quot;;
-//        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
-//            pstmt.setString(1, username);
-//            ResultSet rs = pstmt.executeQuery();
-//            if (rs.next()) {
-//                System.out.println(&quot;الأدمن موجود بالفعل: &quot; + username);
-//                return null;
-//            }
-//        } catch (SQLException e) {
-//            System.out.println(&quot;خطأ في التحقق: &quot; + e.getMessage());
-//            return null;
-//        }
-//
-//        String salt = generateSalt();
-//        String passwordHash = hashPassword(password, salt);
-//
-//        String sql = &quot;INSERT INTO admins (username, password_hash, salt) VALUES (?, ?, ?)&quot;;
-//        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//            pstmt.setString(1, username);
-//            pstmt.setString(2, passwordHash);
-//            pstmt.setString(3, salt);
-//            pstmt.executeUpdate();
-//            System.out.println(&quot;تم تسجيل الأدمن بنجاح: &quot; + username);
-//            return new Admin(username, passwordHash, salt);
-//        } catch (SQLException e) {
-//            System.out.println(&quot;خطأ في التسجيل: &quot; + e.getMessage());
-//            return null;
-//        }
-//    }
-//
-//    // constructor خاص
-//    public Admin(String username, String passwordHash, String salt) {
-//        super(username, passwordHash, salt);
-//        this.setLoggedIn(false);
-//    }
-//
-//    // تسجيل الدخول للأدمن
-//    public static Admin login(String username, String password) {
-//        Connection conn = connect();
-//        String sql = &quot;SELECT password_hash, salt FROM admins WHERE username = ?&quot;;
-//        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//            pstmt.setString(1, username);
-//            ResultSet rs = pstmt.executeQuery();
-//
-//            if (rs.next()) {
-//                String storedHash = rs.getString(&quot;password_hash&quot;);
-//                String salt = rs.getString(&quot;salt&quot;);
-//                String inputHash = hashPassword(password, salt);
-//                if (storedHash.equals(inputHash)) {
-//                    Admin admin = new Admin(username, storedHash, salt);
-//                    admin.setLoggedIn(true);
-//                    return admin;
-//                } else {
-//                    return null;
-//                }
-//            } else {
-//                return null;
-//            }
-//        } catch (SQLException e) {
-//            return null;
-//        }
-//    }
-//
-//    public void showAdminInfo() {
-//        System.out.println(&quot;Admin username: &quot; + getUsername());
-//    }
-//}
-
-
-
-
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Admin.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">Admin.java</span></div><h1>Admin.java</h1><pre class="source lang-java linenums">
 package domain;
 
 import java.security.MessageDigest;
@@ -138,126 +6,250 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.util.Base64;
+import java.util.List;
 
 public class Admin extends User {
-
+    //بدونهم بعمل ايرور
+<span class="fc" id="L13">    private static EmailServer emailServer = new EmailServer();</span>
+<span class="fc" id="L14">    private static EmailNotifier emailNotifier = new EmailNotifier(emailServer);</span>
+//
     public static Connection connect() {
-<span class="fc" id="L145">        String url = &quot;jdbc:sqlite:database.db&quot;;</span>
+<span class="fc" id="L17">        String url = &quot;jdbc:sqlite:database.db&quot;;</span>
         try {
-<span class="fc" id="L147">            return DriverManager.getConnection(url);</span>
-<span class="fc" id="L148">        } catch (SQLException e) {</span>
-<span class="fc" id="L149">            System.out.println(e.getMessage());</span>
-<span class="fc" id="L150">            return null;</span>
+<span class="fc" id="L19">            return DriverManager.getConnection(url);</span>
+<span class="fc" id="L20">        } catch (SQLException e) {</span>
+<span class="fc" id="L21">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L22">            return null;</span>
         }
     }
 
     static {
-<span class="fc" id="L155">        Connection conn = connect();</span>
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (conn != null) {</span>
-<span class="fc" id="L157">            String sql = &quot;CREATE TABLE IF NOT EXISTS admins (\n&quot;</span>
+<span class="fc" id="L27">        Connection conn = connect();</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        if (conn != null) {</span>
+<span class="fc" id="L29">            String sql = &quot;CREATE TABLE IF NOT EXISTS admins (\n&quot;</span>
                     + &quot; id integer PRIMARY KEY AUTOINCREMENT,\n&quot;
                     + &quot; username text NOT NULL UNIQUE,\n&quot;
                     + &quot; password_hash text NOT NULL,\n&quot;
                     + &quot; salt text NOT NULL\n&quot;
                     + &quot;);&quot;;
-<span class="fc" id="L163">            try (Statement stmt = conn.createStatement()) {</span>
-<span class="fc" id="L164">                stmt.execute(sql);</span>
-<span class="fc" id="L165">                System.out.println(&quot;تم إنشاء جدول admins بنجاح.&quot;);</span>
-<span class="nc" id="L166">            } catch (SQLException e) {</span>
-<span class="nc" id="L167">                System.out.println(e.getMessage());</span>
-<span class="fc" id="L168">            }</span>
-<span class="fc" id="L169">        } else {</span>
-<span class="nc" id="L170">            System.out.println(&quot;لم يتم إنشاء جدول admins لأن الاتصال فشل.&quot;);</span>
+<span class="fc" id="L35">            try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L36">                stmt.execute(sql);</span>
+<span class="fc" id="L37">                System.out.println(&quot;تم إنشاء جدول admins بنجاح.&quot;);</span>
+<span class="nc" id="L38">            } catch (SQLException e) {</span>
+<span class="nc" id="L39">                System.out.println(e.getMessage());</span>
+<span class="fc" id="L40">            }</span>
+<span class="fc" id="L41">        } else {</span>
+<span class="nc" id="L42">            System.out.println(&quot;لم يتم إنشاء جدول admins لأن الاتصال فشل.&quot;);</span>
         }
-<span class="fc" id="L172">    }</span>
+<span class="fc" id="L44">    }</span>
 
     public static String generateSalt() {
-<span class="fc" id="L175">        SecureRandom random = new SecureRandom();</span>
-<span class="fc" id="L176">        byte[] salt = new byte[16];</span>
-<span class="fc" id="L177">        random.nextBytes(salt);</span>
-<span class="fc" id="L178">        return Base64.getEncoder().encodeToString(salt);</span>
+<span class="fc" id="L47">        SecureRandom random = new SecureRandom();</span>
+<span class="fc" id="L48">        byte[] salt = new byte[16];</span>
+<span class="fc" id="L49">        random.nextBytes(salt);</span>
+<span class="fc" id="L50">        return Base64.getEncoder().encodeToString(salt);</span>
     }
 
     public static String hashPassword(String password, String salt) {
         try {
-<span class="fc" id="L183">            MessageDigest md = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
-<span class="fc" id="L184">            md.update(salt.getBytes());</span>
-<span class="fc" id="L185">            byte[] hashedBytes = md.digest(password.getBytes());</span>
-<span class="fc" id="L186">            return Base64.getEncoder().encodeToString(hashedBytes);</span>
-<span class="fc" id="L187">        } catch (NoSuchAlgorithmException e) {</span>
-<span class="fc" id="L188">            throw new RuntimeException(&quot;خطأ في الـ hashing: &quot; + e.getMessage());</span>
+<span class="fc" id="L55">            MessageDigest md = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
+<span class="fc" id="L56">            md.update(salt.getBytes());</span>
+<span class="fc" id="L57">            byte[] hashedBytes = md.digest(password.getBytes());</span>
+<span class="fc" id="L58">            return Base64.getEncoder().encodeToString(hashedBytes);</span>
+<span class="fc" id="L59">        } catch (NoSuchAlgorithmException e) {</span>
+<span class="fc" id="L60">            throw new RuntimeException(&quot;خطأ في الـ hashing: &quot; + e.getMessage());</span>
         }
     }
 
     public static Admin register(String username, String password) {
-<span class="fc" id="L193">        Connection conn = connect();</span>
-<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (conn == null) return null; // تغطية فرع conn == null</span>
+<span class="fc" id="L65">        Connection conn = connect();</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (conn == null) return null; // تغطية فرع conn == null</span>
 
-<span class="fc" id="L196">        String checkSql = &quot;SELECT * FROM admins WHERE username = ?&quot;;</span>
-<span class="fc" id="L197">        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {</span>
-<span class="fc" id="L198">            pstmt.setString(1, username);</span>
-<span class="fc" id="L199">            ResultSet rs = pstmt.executeQuery();</span>
-<span class="fc bfc" id="L200" title="All 2 branches covered.">            if (rs.next()) {</span>
-<span class="fc" id="L201">                System.out.println(&quot;الأدمن موجود بالفعل: &quot; + username);</span>
-<span class="fc" id="L202">                return null;</span>
+<span class="fc" id="L68">        String checkSql = &quot;SELECT * FROM admins WHERE username = ?&quot;;</span>
+<span class="fc" id="L69">        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {</span>
+<span class="fc" id="L70">            pstmt.setString(1, username);</span>
+<span class="fc" id="L71">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L73">                System.out.println(&quot;الأدمن موجود بالفعل: &quot; + username);</span>
+<span class="fc" id="L74">                return null;</span>
             }
-<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="fc" id="L205">            System.out.println(&quot;خطأ في التحقق: &quot; + e.getMessage());</span>
-<span class="fc" id="L206">            return null;</span>
-<span class="fc" id="L207">        }</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L77">            System.out.println(&quot;خطأ في التحقق: &quot; + e.getMessage());</span>
+<span class="fc" id="L78">            return null;</span>
+<span class="fc" id="L79">        }</span>
 
-<span class="fc" id="L209">        String salt = generateSalt();</span>
-<span class="fc" id="L210">        String passwordHash = hashPassword(password, salt);</span>
+<span class="fc" id="L81">        String salt = generateSalt();</span>
+<span class="fc" id="L82">        String passwordHash = hashPassword(password, salt);</span>
 
-<span class="fc" id="L212">        String sql = &quot;INSERT INTO admins (username, password_hash, salt) VALUES (?, ?, ?)&quot;;</span>
-<span class="fc" id="L213">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L214">            pstmt.setString(1, username);</span>
-<span class="fc" id="L215">            pstmt.setString(2, passwordHash);</span>
-<span class="fc" id="L216">            pstmt.setString(3, salt);</span>
-<span class="fc" id="L217">            pstmt.executeUpdate();</span>
-<span class="fc" id="L218">            System.out.println(&quot;تم تسجيل الأدمن بنجاح: &quot; + username);</span>
-<span class="fc" id="L219">            return new Admin(username, passwordHash, salt);</span>
-<span class="fc" id="L220">        } catch (SQLException e) {</span>
-<span class="fc" id="L221">            System.out.println(&quot;خطأ في التسجيل: &quot; + e.getMessage());</span>
-<span class="fc" id="L222">            return null;</span>
+<span class="fc" id="L84">        String sql = &quot;INSERT INTO admins (username, password_hash, salt) VALUES (?, ?, ?)&quot;;</span>
+<span class="fc" id="L85">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L86">            pstmt.setString(1, username);</span>
+<span class="fc" id="L87">            pstmt.setString(2, passwordHash);</span>
+<span class="fc" id="L88">            pstmt.setString(3, salt);</span>
+<span class="fc" id="L89">            pstmt.executeUpdate();</span>
+<span class="fc" id="L90">            System.out.println(&quot;تم تسجيل الأدمن بنجاح: &quot; + username);</span>
+<span class="fc" id="L91">            return new Admin(username, passwordHash, salt);</span>
+<span class="fc" id="L92">        } catch (SQLException e) {</span>
+<span class="fc" id="L93">            System.out.println(&quot;خطأ في التسجيل: &quot; + e.getMessage());</span>
+<span class="fc" id="L94">            return null;</span>
         }
     }
 
     public Admin(String username, String passwordHash, String salt) {
-<span class="fc" id="L227">        super(username, passwordHash, salt);</span>
-<span class="fc" id="L228">        this.setLoggedIn(false);</span>
-<span class="fc" id="L229">    }</span>
+<span class="fc" id="L99">        super(username, passwordHash, salt);</span>
+<span class="fc" id="L100">        this.setLoggedIn(false);</span>
+<span class="fc" id="L101">    }</span>
 
     public static Admin login(String username, String password) {
-<span class="fc" id="L232">        Connection conn = connect();</span>
-<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (conn == null) return null; // تغطية فرع conn == null</span>
+<span class="fc" id="L104">        Connection conn = connect();</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (conn == null) return null; // تغطية فرع conn == null</span>
 
-<span class="fc" id="L235">        String sql = &quot;SELECT password_hash, salt FROM admins WHERE username = ?&quot;;</span>
-<span class="fc" id="L236">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L237">            pstmt.setString(1, username);</span>
-<span class="fc" id="L238">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc" id="L107">        String sql = &quot;SELECT password_hash, salt FROM admins WHERE username = ?&quot;;</span>
+<span class="fc" id="L108">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L109">            pstmt.setString(1, username);</span>
+<span class="fc" id="L110">            ResultSet rs = pstmt.executeQuery();</span>
 
-<span class="fc bfc" id="L240" title="All 2 branches covered.">            if (rs.next()) {</span>
-<span class="fc" id="L241">                String storedHash = rs.getString(&quot;password_hash&quot;);</span>
-<span class="fc" id="L242">                String salt = rs.getString(&quot;salt&quot;);</span>
-<span class="fc" id="L243">                String inputHash = hashPassword(password, salt);</span>
-<span class="fc bfc" id="L244" title="All 2 branches covered.">                if (storedHash.equals(inputHash)) {</span>
-<span class="fc" id="L245">                    Admin admin = new Admin(username, storedHash, salt);</span>
-<span class="fc" id="L246">                    admin.setLoggedIn(true);</span>
-<span class="fc" id="L247">                    return admin;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L113">                String storedHash = rs.getString(&quot;password_hash&quot;);</span>
+<span class="fc" id="L114">                String salt = rs.getString(&quot;salt&quot;);</span>
+<span class="fc" id="L115">                String inputHash = hashPassword(password, salt);</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                if (storedHash.equals(inputHash)) {</span>
+<span class="fc" id="L117">                    Admin admin = new Admin(username, storedHash, salt);</span>
+<span class="fc" id="L118">                    admin.setLoggedIn(true);</span>
+<span class="fc" id="L119">                    return admin;</span>
                 } else {
-<span class="fc" id="L249">                    return null;</span>
+<span class="fc" id="L121">                    return null;</span>
                 }
             } else {
-<span class="fc" id="L252">                return null;</span>
+<span class="fc" id="L124">                return null;</span>
             }
-<span class="pc bpc" id="L254" title="2 of 4 branches missed.">        } catch (SQLException e) {</span>
-<span class="fc" id="L255">            return null;</span>
+<span class="pc bpc" id="L126" title="2 of 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L127">            return null;</span>
         }
     }
 
     public void showAdminInfo() {
-<span class="fc" id="L260">        System.out.println(&quot;Admin username: &quot; + getUsername());</span>
-<span class="fc" id="L261">    }</span>
+<span class="fc" id="L132">        System.out.println(&quot;Admin username: &quot; + getUsername());</span>
+<span class="fc" id="L133">    }</span>
+
+
+
+
+
+
+
+
+
+
+    // Method to send reminder emails to users with overdue books
+
+
+    // Method to unregister a user
+    public static boolean unregisterUser(String username) {
+<span class="nc" id="L149">        Connection conn = connect();</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (conn == null) return false;</span>
+
+        try {
+            // Start transaction
+<span class="nc" id="L154">            conn.setAutoCommit(false);</span>
+
+            // First, check if user exists
+<span class="nc" id="L157">            String checkSql = &quot;SELECT id FROM users WHERE username = ?&quot;;</span>
+<span class="nc" id="L158">            int userId = -1;</span>
+
+<span class="nc" id="L160">            try (PreparedStatement checkPstmt = conn.prepareStatement(checkSql)) {</span>
+<span class="nc" id="L161">                checkPstmt.setString(1, username);</span>
+<span class="nc" id="L162">                ResultSet rs = checkPstmt.executeQuery();</span>
+
+<span class="nc bnc" id="L164" title="All 2 branches missed.">                if (rs.next()) {</span>
+<span class="nc" id="L165">                    userId = rs.getInt(&quot;id&quot;);</span>
+                } else {
+<span class="nc" id="L167">                    System.out.println(&quot;User not found: &quot; + username);</span>
+<span class="nc" id="L168">                    conn.rollback();</span>
+<span class="nc" id="L169">                    return false;</span>
+                }
+<span class="nc bnc" id="L171" title="All 2 branches missed.">            }</span>
+
+            // Delete borrow records for this user
+<span class="nc" id="L174">            String deleteBorrowSql = &quot;DELETE FROM borrow_records WHERE user_id = ?&quot;;</span>
+<span class="nc" id="L175">            try (PreparedStatement deleteBorrowPstmt = conn.prepareStatement(deleteBorrowSql)) {</span>
+<span class="nc" id="L176">                deleteBorrowPstmt.setInt(1, userId);</span>
+<span class="nc" id="L177">                deleteBorrowPstmt.executeUpdate();</span>
+            }
+
+            // Delete user fines
+<span class="nc" id="L181">            String deleteFinesSql = &quot;DELETE FROM user_fines WHERE user_id = ?&quot;;</span>
+<span class="nc" id="L182">            try (PreparedStatement deleteFinesPstmt = conn.prepareStatement(deleteFinesSql)) {</span>
+<span class="nc" id="L183">                deleteFinesPstmt.setInt(1, userId);</span>
+<span class="nc" id="L184">                deleteFinesPstmt.executeUpdate();</span>
+            }
+
+            // Delete the user
+<span class="nc" id="L188">            String deleteUserSql = &quot;DELETE FROM users WHERE id = ?&quot;;</span>
+<span class="nc" id="L189">            try (PreparedStatement deleteUserPstmt = conn.prepareStatement(deleteUserSql)) {</span>
+<span class="nc" id="L190">                deleteUserPstmt.setInt(1, userId);</span>
+<span class="nc" id="L191">                int affectedRows = deleteUserPstmt.executeUpdate();</span>
+
+<span class="nc bnc" id="L193" title="All 2 branches missed.">                if (affectedRows &gt; 0) {</span>
+<span class="nc" id="L194">                    conn.commit();</span>
+<span class="nc" id="L195">                    System.out.println(&quot;User unregistered successfully: &quot; + username);</span>
+<span class="nc" id="L196">                    return true;</span>
+                } else {
+<span class="nc" id="L198">                    conn.rollback();</span>
+<span class="nc" id="L199">                    System.out.println(&quot;Failed to unregister user: &quot; + username);</span>
+<span class="nc" id="L200">                    return false;</span>
+                }
+<span class="nc bnc" id="L202" title="All 2 branches missed.">            }</span>
+<span class="nc" id="L203">        } catch (SQLException e) {</span>
+            try {
+<span class="nc" id="L205">                conn.rollback();</span>
+<span class="nc" id="L206">            } catch (SQLException ex) {</span>
+<span class="nc" id="L207">                System.out.println(&quot;Error rolling back transaction: &quot; + ex.getMessage());</span>
+<span class="nc" id="L208">            }</span>
+<span class="nc" id="L209">            System.out.println(&quot;Error unregistering user: &quot; + e.getMessage());</span>
+<span class="nc" id="L210">            return false;</span>
+        } finally {
+            try {
+<span class="nc" id="L213">                conn.setAutoCommit(true);</span>
+<span class="nc" id="L214">            } catch (SQLException e) {</span>
+<span class="nc" id="L215">                System.out.println(&quot;Error resetting auto-commit: &quot; + e.getMessage());</span>
+<span class="nc" id="L216">            }</span>
+        }
+    }
+
+    // Method to get the email server for testing purposes
+    public static EmailServer getEmailServer() {
+<span class="nc" id="L222">        return emailServer;</span>
+    }
+
+    // Method to set a custom email server for testing
+    public static void setEmailServer(EmailServer server) {
+<span class="fc" id="L227">        emailServer = server;</span>
+<span class="fc" id="L228">        emailNotifier = new EmailNotifier(emailServer);</span>
+<span class="fc" id="L229">    }</span>
+
+
+    // Updated method to send reminder emails to users with overdue books
+    public static void sendOverdueReminders() {
+<span class="nc" id="L234">        List&lt;Borrower.UserWithOverdueBooks&gt; usersWithOverdueBooks = Borrower.getUsersWithOverdueBooks();</span>
+
+<span class="nc bnc" id="L236" title="All 2 branches missed.">        for (Borrower.UserWithOverdueBooks userWithOverdueBooks : usersWithOverdueBooks) {</span>
+<span class="nc" id="L237">            String username = userWithOverdueBooks.getUsername();</span>
+<span class="nc" id="L238">            int overdueCount = userWithOverdueBooks.getOverdueCount();</span>
+
+<span class="nc" id="L240">            String message = &quot;You have &quot; + overdueCount + &quot; overdue book(s).&quot;;</span>
+
+            // Create a user object for notification
+<span class="nc" id="L243">            User user = new User(username, &quot;&quot;, &quot;&quot;);</span>
+<span class="nc" id="L244">            emailNotifier.notify(user, message);</span>
+<span class="nc" id="L245">        }</span>
+<span class="nc" id="L246">    }</span>
+
+    // ... (rest of the existing code)
 }
+
+
+
+
+
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

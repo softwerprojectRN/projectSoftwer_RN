@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmailServer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">EmailServer.java</span></div><h1>EmailServer.java</h1><pre class="source lang-java linenums">package domain;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// Mock Email Server for testing
+<span class="fc" id="L7"> public class EmailServer {</span>
+<span class="fc" id="L8">    private List&lt;Email&gt; sentEmails = new ArrayList&lt;&gt;();</span>
+
+    public void sendEmail(String to, String subject, String body) {
+<span class="nc" id="L11">        Email email = new Email(to, subject, body);</span>
+<span class="nc" id="L12">        sentEmails.add(email);</span>
+<span class="nc" id="L13">        System.out.println(&quot;Email sent to: &quot; + to);</span>
+<span class="nc" id="L14">        System.out.println(&quot;Subject: &quot; + subject);</span>
+<span class="nc" id="L15">        System.out.println(&quot;Body: &quot; + body);</span>
+<span class="nc" id="L16">    }</span>
+
+    public List&lt;Email&gt; getSentEmails() {
+<span class="nc" id="L19">        return new ArrayList&lt;&gt;(sentEmails);</span>
+    }
+
+    public void clearSentEmails() {
+<span class="fc" id="L23">        sentEmails.clear();</span>
+<span class="fc" id="L24">    }</span>
+
+    // Inner class to represent an email
+    public static class Email {
+        private String to;
+        private String subject;
+        private String body;
+
+<span class="nc" id="L32">        public Email(String to, String subject, String body) {</span>
+<span class="nc" id="L33">            this.to = to;</span>
+<span class="nc" id="L34">            this.subject = subject;</span>
+<span class="nc" id="L35">            this.body = body;</span>
+<span class="nc" id="L36">        }</span>
+
+<span class="nc" id="L38">        public String getTo() { return to; }</span>
+<span class="nc" id="L39">        public String getSubject() { return subject; }</span>
+<span class="nc" id="L40">        public String getBody() { return body; }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

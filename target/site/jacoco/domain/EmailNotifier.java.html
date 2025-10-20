@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmailNotifier.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">EmailNotifier.java</span></div><h1>EmailNotifier.java</h1><pre class="source lang-java linenums">package domain;
+
+import java.util.ArrayList;
+import java.util.List;
+//Observer هي واجهة Interface تحدد ما الذي يجب أن يفعله أي كائن مراقب (مثل البريد الإلكتروني أو SMS أو إشعارات الهاتف).
+//
+//فيها دالة واحدة اسمها notify:
+//معناها: عندما نريد أن نرسل إشعارًا، نمرر المستخدم (User) والرسالة (message).
+
+// Observer interface for notifications
+ interface Observer {
+    void notify(User user, String message);
+}
+
+//الشرح:
+//
+//هذا الكلاس يُنفذ الواجهة Observer، يعني هو نوع من أنواع المراقبين.
+//
+//هنا المراقب هو مرسل البريد الإلكتروني.
+
+// EmailNotifier implementation of Observer
+public class EmailNotifier implements Observer {
+    private EmailServer emailServer;
+
+<span class="fc" id="L25">    public EmailNotifier(EmailServer emailServer) {</span>
+<span class="fc" id="L26">        this.emailServer = emailServer;</span>
+<span class="fc" id="L27">    }</span>
+
+    @Override
+    public void notify(User user, String message) {
+<span class="nc" id="L31">        String email = user.getUsername() + &quot;@example.com&quot;; // Assuming username is email</span>
+<span class="nc" id="L32">        emailServer.sendEmail(email, &quot;part 3 Library Notification&quot;, message);</span>
+<span class="nc" id="L33">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

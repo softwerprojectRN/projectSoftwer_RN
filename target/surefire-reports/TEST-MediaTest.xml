@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="BookTest" time="0.386" tests="23" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="MediaTest" time="0.173" tests="12" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,94 +58,43 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testGetAllBooksSuccess" classname="BookTest" time="0.028">
-    <system-out><![CDATA[The media table has been created successfully.
-The books table has been created successfully.
-Retrieved 2 books from database.
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBookWithEmptyIsbn" classname="BookTest" time="0.004">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WithValidInputs_ShouldProceedToDatabaseOperations" classname="BookTest" time="0.062">
-    <system-out><![CDATA[Book added successfully: Valid Title
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenIsbnIsWhitespace_ShouldReturnNull" classname="BookTest" time="0.003">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testInheritedMethods" classname="BookTest" time="0.032">
+  <testcase name="testUpdateAvailabilitySuccess" classname="MediaTest" time="0.009">
     <system-out><![CDATA[Media status updated: Test Book
-Media status updated: Test Book
-Media status updated: Test Book
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBookWithNoGeneratedKeys" classname="BookTest" time="0.009">
-    <system-out><![CDATA[Error retrieving media ID.
+  <testcase name="testReturnMediaWhenNotAvailable" classname="MediaTest" time="0.04">
+    <system-out><![CDATA[Media status updated: Test Book
 ]]></system-out>
   </testcase>
-  <testcase name="testToString" classname="BookTest" time="0.024"/>
-  <testcase name="testAddBookWithSQLExceptionInCheck" classname="BookTest" time="0.005">
-    <system-out><![CDATA[Error checking ISBN: Test exception
+  <testcase name="testUpdateAvailabilityFailure" classname="MediaTest" time="0.021">
+    <system-out><![CDATA[Media not found (ID not found).
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBook_WhenTitleIsNull_ShouldReturnNull" classname="BookTest" time="0.002">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
+  <testcase name="testToStringFalse" classname="MediaTest" time="0.001"/>
+  <testcase name="testUpdateAvailabilityWithZeroId" classname="MediaTest" time="0.002">
+    <system-out><![CDATA[Cannot update media without an ID.
 ]]></system-out>
   </testcase>
-  <testcase name="testGetAllBooksWithSQLException" classname="BookTest" time="0.005">
-    <system-out><![CDATA[Error fetching books: Test exception
+  <testcase name="testBorrowWhenNotAvailable" classname="MediaTest" time="0.003">
+    <system-out><![CDATA[This media is not available for borrowing.
 ]]></system-out>
   </testcase>
-  <testcase name="testBookConstructor" classname="BookTest" time="0.001"/>
-  <testcase name="testAddBookWithNullAuthor" classname="BookTest" time="0.001">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
+  <testcase name="testBorrowWhenAvailable" classname="MediaTest" time="0.005">
+    <system-out><![CDATA[Media status updated: Test Book
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBook_WhenTitleIsEmpty_ShouldReturnNull" classname="BookTest" time="0.002">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
+  <testcase name="testConnect" classname="MediaTest" time="0.002"/>
+  <testcase name="testConnectWithException" classname="MediaTest" time="0.046">
+    <system-out><![CDATA[Connection failed
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBookWithSQLExceptionInInsert" classname="BookTest" time="0.006">
-    <system-out><![CDATA[Error adding book: Test exception
+  <testcase name="testReturnMediaWhenAvailable" classname="MediaTest" time="0.004">
+    <system-out><![CDATA[This media is already available.
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBook_WhenAuthorIsWhitespace_ShouldReturnNull" classname="BookTest" time="0.004">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenIsbnIsNull_ShouldReturnNull" classname="BookTest" time="0.004">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBookWithDuplicateIsbn" classname="BookTest" time="0.07">
-    <system-out><![CDATA[Book already exists (ISBN:1234567890)
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenAuthorIsEmpty_ShouldReturnNull" classname="BookTest" time="0.003">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenAuthorIsNull_ShouldReturnNull" classname="BookTest" time="0.002">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenTitleIsWhitespace_ShouldReturnNull" classname="BookTest" time="0.002">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBookWithEmptyTitle" classname="BookTest" time="0.002">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBookSuccess" classname="BookTest" time="0.041">
-    <system-out><![CDATA[Book added successfully: Test Book
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenIsbnIsEmpty_ShouldReturnNull" classname="BookTest" time="0.007">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
+  <testcase name="testToStringTrue" classname="MediaTest" time="0.001"/>
+  <testcase name="testUpdateAvailabilityWithException" classname="MediaTest" time="0.005">
+    <system-out><![CDATA[Error updating media status: Update failed
 ]]></system-out>
   </testcase>
 </testsuite>

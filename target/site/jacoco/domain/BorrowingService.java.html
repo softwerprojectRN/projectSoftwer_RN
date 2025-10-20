@@ -1,64 +1,83 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BorrowingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=٤;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">BorrowingService.java</span></div><h1>BorrowingService.java</h1><pre class="source lang-java linenums">package domain;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BorrowingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">BorrowingService.java</span></div><h1>BorrowingService.java</h1><pre class="source lang-java linenums">package domain;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
-<span class="nc" id="L5">public class BorrowingService {</span>
+<span class="nc" id="L7">public class BorrowingService {</span>
 
-    private static final int MAX_BORROWED_BOOKS = 1;  // القيد: 1 كتاب فقط
-    private static final int BORROW_DAYS = 28;        // 28 يوم للاستحقاق
-    private static final double FINE_PER_DAY = 1.0;   // 1 دولار لكل يوم تأخير
+    // تعريف فترات الاستعارة والغرامات لكل نوع من المواد
+<span class="nc" id="L10">    private static final Map&lt;String, Integer&gt; BORROW_DAYS = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L11">    private static final Map&lt;String, Double&gt; FINE_PER_DAY = new HashMap&lt;&gt;();</span>
 
-    // دالة رئيسية للاستعارة (مع كل الشيكات والمنطق)
-    public static boolean borrowBook(Borrower borrower, Book book) {
+    static {
+        // تهيئة القيم للكتب
+<span class="nc" id="L15">        BORROW_DAYS.put(&quot;book&quot;, 28);        // 28 يوم للاستحقاق</span>
+<span class="nc" id="L16">        FINE_PER_DAY.put(&quot;book&quot;, 10.0);     // 10 شيكل لكل يوم تأخير</span>
+
+        // تهيئة القيم للأقراص المدمجة
+<span class="nc" id="L19">        BORROW_DAYS.put(&quot;cd&quot;, 7);           // 7 أيام للاستحقاق</span>
+<span class="nc" id="L20">        FINE_PER_DAY.put(&quot;cd&quot;, 20.0);       // 20 شيكل لكل يوم تأخير</span>
+<span class="nc" id="L21">    }</span>
+
+    // دالة رئيسية للاستعارة (تعمل مع أي نوع من المواد)
+    public static boolean borrowMedia(Borrower borrower, Media media) {
         // الشيكات الأساسية
-<span class="nc bnc" id="L14" title="All 2 branches missed.">        if (!borrower.isLoggedIn()) {</span>
-<span class="nc" id="L15">            System.out.println(&quot;يجب تسجيل الدخول أولاً.&quot;);</span>
-<span class="nc" id="L16">            return false;</span>
-        }
-<span class="nc bnc" id="L18" title="All 2 branches missed.">        if (borrower.getBorrowedBooks().size() &gt;= MAX_BORROWED_BOOKS) {</span>
-<span class="nc" id="L19">            System.out.println(&quot;لديك &quot; + MAX_BORROWED_BOOKS + &quot; كتاب مستعار بالفعل. ارجع واحداً أولاً.&quot;);</span>
-<span class="nc" id="L20">            return false;</span>
-        }
-<span class="nc bnc" id="L22" title="All 2 branches missed.">        if (borrower.getFineBalance() &gt; 0) {</span>
-<span class="nc" id="L23">            System.out.println(&quot;ادفع غرامتك (&quot; + borrower.getFineBalance() + &quot;) أولاً.&quot;);</span>
-<span class="nc" id="L24">            return false;</span>
-        }
-<span class="nc bnc" id="L26" title="All 2 branches missed.">        if (!book.isAvailable()) {</span>
-<span class="nc" id="L27">            System.out.println(&quot;الكتاب '&quot; + book.getTitle() + &quot;' غير متاح.&quot;);</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        if (!borrower.isLoggedIn()) {</span>
+<span class="nc" id="L27">            System.out.println(&quot;يجب تسجيل الدخول أولاً.&quot;);</span>
 <span class="nc" id="L28">            return false;</span>
+        }
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        if (borrower.getFineBalance() &gt; 0) {</span>
+<span class="nc" id="L31">            System.out.println(&quot;ادفع غرامتك (&quot; + borrower.getFineBalance() + &quot;) أولاً.&quot;);</span>
+<span class="nc" id="L32">            return false;</span>
+        }
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (!borrower.getOverdueMedia().isEmpty()) {</span>
+<span class="nc" id="L35">            System.out.println(&quot;يجب إرجاع المواد المتأخرة أولاً.&quot;);</span>
+<span class="nc" id="L36">            return false;</span>
+        }
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (!media.isAvailable()) {</span>
+<span class="nc" id="L39">            System.out.println(&quot;المادة '&quot; + media.getTitle() + &quot;' غير متاحة.&quot;);</span>
+<span class="nc" id="L40">            return false;</span>
         }
 
         // تنفيذ الاستعارة
-<span class="nc" id="L32">        book.borrow();  // تحديث حالة الكتاب</span>
-<span class="nc" id="L33">        LocalDate dueDate = LocalDate.now().plusDays(BORROW_DAYS);</span>
-<span class="nc" id="L34">        borrower.addBorrowRecord(book, dueDate);  // حفظ السجل في Borrower</span>
-<span class="nc" id="L35">        System.out.println(&quot;تم استعارة الكتاب '&quot; + book.getTitle() + &quot;'. تاريخ الاستحقاق: &quot; + dueDate);</span>
-<span class="nc" id="L36">        return true;</span>
+<span class="nc" id="L44">        media.borrow();  // تحديث حالة المادة</span>
+<span class="nc" id="L45">        LocalDate dueDate = LocalDate.now().plusDays(BORROW_DAYS.get(media.getMediaType()));</span>
+<span class="nc" id="L46">        borrower.addBorrowRecord(media, dueDate);  // حفظ السجل في Borrower</span>
+
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        String mediaTypeArabic = media.getMediaType().equals(&quot;book&quot;) ? &quot;الكتاب&quot; : &quot;القرص المدمج&quot;;</span>
+<span class="nc" id="L49">        System.out.println(&quot;تم استعارة &quot; + mediaTypeArabic + &quot; '&quot; + media.getTitle() + &quot;'. تاريخ الاستحقاق: &quot; + dueDate);</span>
+<span class="nc" id="L50">        return true;</span>
     }
 
-    // دالة للإرجاع (مع حساب الغرامة)
-    public static boolean returnBook(Borrower borrower, Book book) {
-<span class="nc bnc" id="L41" title="All 2 branches missed.">        for (Borrower.BookRecord record : borrower.getBorrowedBooks()) {</span>
-<span class="nc bnc" id="L42" title="All 2 branches missed.">            if (record.getBook().getIsbn().equals(book.getIsbn())) {</span>
-<span class="nc" id="L43">                book.returnBook();  // تحديث حالة الكتاب</span>
-<span class="nc" id="L44">                double bookFine = 0.0;</span>
-<span class="nc bnc" id="L45" title="All 2 branches missed.">                if (record.isOverdue()) {</span>
-<span class="nc" id="L46">                    long overdueDays = record.getOverdueDays();</span>
-<span class="nc" id="L47">                    bookFine = overdueDays * FINE_PER_DAY;</span>
-<span class="nc" id="L48">                    System.out.println(&quot;الكتاب متأخر بـ &quot; + overdueDays + &quot; أيام. غرامة الكتاب: &quot; + bookFine);</span>
+    // دالة للإرجاع (مع حساب الغرامة المناسبة لنوع المادة)
+    public static boolean returnMedia(Borrower borrower, Media media) {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        for (Borrower.MediaRecord record : borrower.getBorrowedMedia()) {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">            if (record.getMedia().getId() == media.getId()) {</span>
+<span class="nc" id="L57">                media.returnMedia();  // تحديث حالة المادة</span>
+<span class="nc" id="L58">                double mediaFine = 0.0;</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                if (record.isOverdue()) {</span>
+<span class="nc" id="L60">                    long overdueDays = record.getOverdueDays();</span>
+<span class="nc" id="L61">                    mediaFine = overdueDays * FINE_PER_DAY.get(media.getMediaType());</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                    String mediaTypeArabic = media.getMediaType().equals(&quot;book&quot;) ? &quot;الكتاب&quot; : &quot;القرص المدمج&quot;;</span>
+<span class="nc" id="L63">                    System.out.println(mediaTypeArabic + &quot; متأخر بـ &quot; + overdueDays + &quot; أيام. غرامة: &quot; + mediaFine);</span>
                 }
-<span class="nc" id="L50">                borrower.removeBorrowRecord(record, bookFine);  // إزالة السجل وإضافة الغرامة</span>
-<span class="nc" id="L51">                System.out.println(&quot;تم إرجاع الكتاب '&quot; + book.getTitle() + &quot;' بنجاح. الرصيد الكلي: &quot; + borrower.getFineBalance());</span>
-<span class="nc" id="L52">                return true;</span>
+<span class="nc" id="L65">                borrower.removeBorrowRecord(record, mediaFine);  // إزالة السجل وإضافة الغرامة</span>
+<span class="nc" id="L66">                System.out.println(&quot;تم إرجاع '&quot; + media.getTitle() + &quot;' بنجاح. الرصيد الكلي: &quot; + borrower.getFineBalance());</span>
+<span class="nc" id="L67">                return true;</span>
             }
-<span class="nc" id="L54">        }</span>
-<span class="nc" id="L55">        System.out.println(&quot;هذا الكتاب غير مستعار منك.&quot;);</span>
-<span class="nc" id="L56">        return false;</span>
+<span class="nc" id="L69">        }</span>
+<span class="nc" id="L70">        System.out.println(&quot;هذه المادة غير مستعارة منك.&quot;);</span>
+<span class="nc" id="L71">        return false;</span>
     }
 
-    // getters للثوابت (لو عايز تغيّرها)
-<span class="nc" id="L60">    public static int getMaxBorrowedBooks() { return MAX_BORROWED_BOOKS; }</span>
-<span class="nc" id="L61">    public static int getBorrowDays() { return BORROW_DAYS; }</span>
-<span class="nc" id="L62">    public static double getFinePerDay() { return FINE_PER_DAY;}</span>
+    // دوال مساعدة للحصول على فترات الاستعارة والغرامات
+    public static int getBorrowDays(String mediaType) {
+<span class="nc" id="L76">        return BORROW_DAYS.getOrDefault(mediaType, 0);</span>
+    }
+
+    public static double getFinePerDay(String mediaType) {
+<span class="nc" id="L80">        return FINE_PER_DAY.getOrDefault(mediaType, 0.0);</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
