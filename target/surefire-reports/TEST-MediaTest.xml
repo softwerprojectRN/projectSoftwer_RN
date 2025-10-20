@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="UserTest" time="0.892" tests="40" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="MediaTest" time="0.173" tests="12" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,102 +58,43 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testRegister_EmptyUsername" classname="UserTest" time="0.061">
-    <system-out><![CDATA[The user has been successfully registered: 
+  <testcase name="testUpdateAvailabilitySuccess" classname="MediaTest" time="0.009">
+    <system-out><![CDATA[Media status updated: Test Book
 ]]></system-out>
   </testcase>
-  <testcase name="testSetUsername_NullInput" classname="UserTest" time="0.006"/>
-  <testcase name="testLogin_NullUsername" classname="UserTest" time="0.004">
-    <system-out><![CDATA[The user is not available.
+  <testcase name="testReturnMediaWhenNotAvailable" classname="MediaTest" time="0.04">
+    <system-out><![CDATA[Media status updated: Test Book
 ]]></system-out>
   </testcase>
-  <testcase name="testLogin_NonExistentUser_Failure" classname="UserTest" time="0.007">
-    <system-out><![CDATA[The user is not available.
+  <testcase name="testUpdateAvailabilityFailure" classname="MediaTest" time="0.021">
+    <system-out><![CDATA[Media not found (ID not found).
 ]]></system-out>
   </testcase>
-  <testcase name="testRegister_NullPassword" classname="UserTest" time="0.011"/>
-  <testcase name="testHashPassword_NullPassword" classname="UserTest" time="0.006"/>
-  <testcase name="testHashPassword_DifferentSaltsProduceDifferentHashes" classname="UserTest" time="0.169"/>
-  <testcase name="testGenerateSalt_NotEmpty" classname="UserTest" time="0.044"/>
-  <testcase name="testLogin_DatabaseReturnsNullHash" classname="UserTest" time="0.045"/>
-  <testcase name="testLogin_DatabaseReturnsNullSalt" classname="UserTest" time="0.012"/>
-  <testcase name="testLogin_DatabaseError_Failure" classname="UserTest" time="0.01">
-    <system-out><![CDATA[Login error: Login Error
+  <testcase name="testToStringFalse" classname="MediaTest" time="0.001"/>
+  <testcase name="testUpdateAvailabilityWithZeroId" classname="MediaTest" time="0.002">
+    <system-out><![CDATA[Cannot update media without an ID.
 ]]></system-out>
   </testcase>
-  <testcase name="testRegister_EmptyPassword" classname="UserTest" time="0.011">
-    <system-out><![CDATA[The user has been successfully registered: testuser
+  <testcase name="testBorrowWhenNotAvailable" classname="MediaTest" time="0.003">
+    <system-out><![CDATA[This media is not available for borrowing.
 ]]></system-out>
   </testcase>
-  <testcase name="testRegister_NewUser_Success" classname="UserTest" time="0.088">
-    <system-out><![CDATA[The user has been successfully registered: testuser
+  <testcase name="testBorrowWhenAvailable" classname="MediaTest" time="0.005">
+    <system-out><![CDATA[Media status updated: Test Book
 ]]></system-out>
   </testcase>
-  <testcase name="testLogin_NullPassword" classname="UserTest" time="0.012"/>
-  <testcase name="testConnect_DatabaseError_ReturnsNull" classname="UserTest" time="0.006"/>
-  <testcase name="testGenerateSalt_Uniqueness" classname="UserTest" time="0.018"/>
-  <testcase name="testLogout_LoggedInUser_Success" classname="UserTest" time="0.005">
-    <system-out><![CDATA[Logged out successfully.
+  <testcase name="testConnect" classname="MediaTest" time="0.002"/>
+  <testcase name="testConnectWithException" classname="MediaTest" time="0.046">
+    <system-out><![CDATA[Connection failed
 ]]></system-out>
   </testcase>
-  <testcase name="testLogin_ResultSetClosed" classname="UserTest" time="0.009">
-    <system-out><![CDATA[Login error: ResultSet closed
+  <testcase name="testReturnMediaWhenAvailable" classname="MediaTest" time="0.004">
+    <system-out><![CDATA[This media is already available.
 ]]></system-out>
   </testcase>
-  <testcase name="testIsLoggedIn" classname="UserTest" time="0.004"/>
-  <testcase name="testConstructor_Protected" classname="UserTest" time="0.004"/>
-  <testcase name="testLogin_ValidCredentials_Success" classname="UserTest" time="0.015">
-    <system-out><![CDATA[Login successful, welcome validuser!
+  <testcase name="testToStringTrue" classname="MediaTest" time="0.001"/>
+  <testcase name="testUpdateAvailabilityWithException" classname="MediaTest" time="0.005">
+    <system-out><![CDATA[Error updating media status: Update failed
 ]]></system-out>
   </testcase>
-  <testcase name="testHashPassword_SameInputsProduceSameHash" classname="UserTest" time="0.059"/>
-  <testcase name="testRegister_SelectQueryFails" classname="UserTest" time="0.006">
-    <system-out><![CDATA[Error in verifying whether the user already exists or not: Select failed
-]]></system-out>
-  </testcase>
-  <testcase name="testHashPassword_NullSalt" classname="UserTest" time="0.003"/>
-  <testcase name="testLogin_DatabaseReturnsEmptyHash" classname="UserTest" time="0.007">
-    <system-out><![CDATA[Invalid username or password.
-]]></system-out>
-  </testcase>
-  <testcase name="testLogin_DatabaseReturnsEmptySalt" classname="UserTest" time="0.01">
-    <system-out><![CDATA[Invalid username or password.
-]]></system-out>
-  </testcase>
-  <testcase name="testRegister_ExistingUser_Failure" classname="UserTest" time="0.007">
-    <system-out><![CDATA[The user is already exist: existinguser
-]]></system-out>
-  </testcase>
-  <testcase name="testSetUsername" classname="UserTest" time="0.006"/>
-  <testcase name="testLogout_MultipleCalls" classname="UserTest" time="0.004">
-    <system-out><![CDATA[Logged out successfully.
-You are not logged in yet.
-]]></system-out>
-  </testcase>
-  <testcase name="testGetUsername" classname="UserTest" time="0.017"/>
-  <testcase name="testRegister_DatabaseError_Failure" classname="UserTest" time="0.005">
-    <system-out><![CDATA[Error in verifying whether the user already exists or not: DB Error
-]]></system-out>
-  </testcase>
-  <testcase name="testRegister_InsertDatabaseError_Failure" classname="UserTest" time="0.009">
-    <system-out><![CDATA[Registration error: Insert DB Error
-]]></system-out>
-  </testcase>
-  <testcase name="testRegister_NullUsername" classname="UserTest" time="0.006">
-    <system-out><![CDATA[The user has been successfully registered: null
-]]></system-out>
-  </testcase>
-  <testcase name="testPublicConstructor" classname="UserTest" time="0.006"/>
-  <testcase name="testLogin_InvalidPassword_Failure" classname="UserTest" time="0.006">
-    <system-out><![CDATA[Invalid username or password.
-]]></system-out>
-  </testcase>
-  <testcase name="testLogout_NotLoggedIn_NoOp" classname="UserTest" time="0.005">
-    <system-out><![CDATA[You are not logged in yet.
-]]></system-out>
-  </testcase>
-  <testcase name="testHashPassword_WithSalt" classname="UserTest" time="0.006"/>
-  <testcase name="testHashPassword_NoSuchAlgorithmException_ThrowsRuntimeException" classname="UserTest" time="0.005"/>
-  <testcase name="testSetUsername_EmptyInput" classname="UserTest" time="0.004"/>
-  <testcase name="testGetPasswordHash" classname="UserTest" time="0.005"/>
 </testsuite>

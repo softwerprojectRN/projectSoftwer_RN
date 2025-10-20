@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Borrower.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=٤;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">Borrower.java</span></div><h1>Borrower.java</h1><pre class="source lang-java linenums">package domain;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Borrower.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">Borrower.java</span></div><h1>Borrower.java</h1><pre class="source lang-java linenums">package domain;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -19,9 +19,9 @@ public class Borrower extends User {
 
     // دالة للاتصال بالداتابيز
     public static Connection connect() {
-<span class="fc" id="L22">        String url = &quot;jdbc:sqlite:database.db&quot;;</span>
+<span class="nc" id="L22">        String url = &quot;jdbc:sqlite:database.db&quot;;</span>
         try {
-<span class="fc" id="L24">            return DriverManager.getConnection(url);</span>
+<span class="nc" id="L24">            return DriverManager.getConnection(url);</span>
 <span class="nc" id="L25">        } catch (SQLException e) {</span>
 <span class="nc" id="L26">            System.out.println(&quot;Database connection error: &quot; + e.getMessage());</span>
 <span class="nc" id="L27">            return null;</span>
@@ -30,11 +30,11 @@ public class Borrower extends User {
 
     // إنشاء جدول borrow_records و user_fines تلقائياً إذا لم يكن موجود
     static {
-<span class="fc" id="L33">        Connection conn = connect();</span>
-<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if (conn == null) {</span>
+<span class="nc" id="L33">        Connection conn = connect();</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (conn == null) {</span>
 <span class="nc" id="L35">            System.out.println(&quot;Database not available, tables not created.&quot;);</span>
         } else {
-<span class="fc" id="L37">            String borrowSql = &quot;CREATE TABLE IF NOT EXISTS borrow_records (\n&quot;</span>
+<span class="nc" id="L37">            String borrowSql = &quot;CREATE TABLE IF NOT EXISTS borrow_records (\n&quot;</span>
                     + &quot; id INTEGER PRIMARY KEY AUTOINCREMENT,\n&quot;
                     + &quot; user_id INTEGER NOT NULL,\n&quot;
                     + &quot; media_id INTEGER NOT NULL,\n&quot;
@@ -48,26 +48,26 @@ public class Borrower extends User {
                     + &quot; FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,\n&quot;
                     + &quot; FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE\n&quot;
                     + &quot;);&quot;;
-<span class="fc" id="L51">            try (Statement stmt = conn.createStatement()) {</span>
-<span class="fc" id="L52">                stmt.execute(borrowSql);</span>
-<span class="fc" id="L53">                System.out.println(&quot;جدول borrow_records تم إنشاؤه بنجاح.&quot;);</span>
+<span class="nc" id="L51">            try (Statement stmt = conn.createStatement()) {</span>
+<span class="nc" id="L52">                stmt.execute(borrowSql);</span>
+<span class="nc" id="L53">                System.out.println(&quot;جدول borrow_records تم إنشاؤه بنجاح.&quot;);</span>
 <span class="nc" id="L54">            } catch (SQLException e) {</span>
 <span class="nc" id="L55">                System.out.println(&quot;خطأ في إنشاء جدول borrow_records: &quot; + e.getMessage());</span>
-<span class="fc" id="L56">            }</span>
+<span class="nc" id="L56">            }</span>
 
-<span class="fc" id="L58">            String fineSql = &quot;CREATE TABLE IF NOT EXISTS user_fines (\n&quot;</span>
+<span class="nc" id="L58">            String fineSql = &quot;CREATE TABLE IF NOT EXISTS user_fines (\n&quot;</span>
                     + &quot; user_id INTEGER PRIMARY KEY,\n&quot;
                     + &quot; total_fine REAL DEFAULT 0.0,\n&quot;
                     + &quot; FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE\n&quot;
                     + &quot;);&quot;;
-<span class="fc" id="L63">            try (Statement stmt = conn.createStatement()) {</span>
-<span class="fc" id="L64">                stmt.execute(fineSql);</span>
-<span class="fc" id="L65">                System.out.println(&quot;جدول user_fines تم إنشاؤه بنجاح.&quot;);</span>
+<span class="nc" id="L63">            try (Statement stmt = conn.createStatement()) {</span>
+<span class="nc" id="L64">                stmt.execute(fineSql);</span>
+<span class="nc" id="L65">                System.out.println(&quot;جدول user_fines تم إنشاؤه بنجاح.&quot;);</span>
 <span class="nc" id="L66">            } catch (SQLException e) {</span>
 <span class="nc" id="L67">                System.out.println(&quot;خطأ في إنشاء جدول user_fines: &quot; + e.getMessage());</span>
-<span class="fc" id="L68">            }</span>
+<span class="nc" id="L68">            }</span>
         }
-<span class="fc" id="L70">    }</span>
+<span class="nc" id="L70">    }</span>
 
     // =================== دوال المساعدة ===================
     public int getUserId() {
@@ -332,19 +332,19 @@ public class Borrower extends User {
 
     // Method to get all users with overdue books
     public static List&lt;UserWithOverdueBooks&gt; getUsersWithOverdueBooks() {
-<span class="fc" id="L335">        List&lt;UserWithOverdueBooks&gt; usersWithOverdueBooks = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L336">        Connection conn = connect();</span>
-<span class="pc bpc" id="L337" title="1 of 2 branches missed.">        if (conn == null) return usersWithOverdueBooks;</span>
+<span class="nc" id="L335">        List&lt;UserWithOverdueBooks&gt; usersWithOverdueBooks = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L336">        Connection conn = connect();</span>
+<span class="nc bnc" id="L337" title="All 2 branches missed.">        if (conn == null) return usersWithOverdueBooks;</span>
 
-<span class="fc" id="L339">        String sql = &quot;SELECT u.id, u.username, COUNT(br.id) as overdue_count FROM users u &quot; +</span>
+<span class="nc" id="L339">        String sql = &quot;SELECT u.id, u.username, COUNT(br.id) as overdue_count FROM users u &quot; +</span>
                 &quot;JOIN borrow_records br ON u.id = br.user_id &quot; +
                 &quot;WHERE br.returned = 0 AND br.due_date &lt; date('now') &quot; +
                 &quot;GROUP BY u.id, u.username&quot;;
 
-<span class="fc" id="L344">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L345">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="nc" id="L344">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L345">            ResultSet rs = pstmt.executeQuery();</span>
 
-<span class="pc bpc" id="L347" title="1 of 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">            while (rs.next()) {</span>
 <span class="nc" id="L348">                int userId = rs.getInt(&quot;id&quot;);</span>
 <span class="nc" id="L349">                String username = rs.getString(&quot;username&quot;);</span>
 <span class="nc" id="L350">                int overdueCount = rs.getInt(&quot;overdue_count&quot;);</span>
@@ -353,9 +353,9 @@ public class Borrower extends User {
 <span class="nc" id="L353">            }</span>
 <span class="nc" id="L354">        } catch (SQLException e) {</span>
 <span class="nc" id="L355">            System.out.println(&quot;Error getting users with overdue books: &quot; + e.getMessage());</span>
-<span class="fc" id="L356">        }</span>
+<span class="nc" id="L356">        }</span>
 
-<span class="fc" id="L358">        return usersWithOverdueBooks;</span>
+<span class="nc" id="L358">        return usersWithOverdueBooks;</span>
     }
 
     // Inner class to represent a user with overdue books

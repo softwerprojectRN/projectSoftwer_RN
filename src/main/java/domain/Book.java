@@ -32,8 +32,64 @@ public class Book extends Media {
         this.isbn = isbn;
     }
 
+//    // دالة static لإضافة كتاب جديد
+//    public static Book addBook(String title, String author, String isbn) {
+//        // تحقق إذا الـ ISBN موجود بالفعل
+//        Connection conn = connect();
+//        String checkSql = "SELECT b.* FROM books b JOIN media m ON b.id = m.id WHERE b.isbn = ?";
+//        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
+//            pstmt.setString(1, isbn);
+//            ResultSet rs = pstmt.executeQuery();
+//            if (rs.next()) {
+//                System.out.println("Book already exists (ISBN:" + isbn + ")");
+//                return null;
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("Error checking ISBN: " + e.getMessage());
+//            return null;
+//        }
+//
+//        // إدراج في جدول media أولاً
+//        String mediaSql = "INSERT INTO media (title, media_type, available) VALUES (?, 'book', 1)";
+//        try (PreparedStatement pstmt = conn.prepareStatement(mediaSql, Statement.RETURN_GENERATED_KEYS)) {
+//            pstmt.setString(1, title);
+//            pstmt.executeUpdate();
+//
+//            ResultSet generatedKeys = pstmt.getGeneratedKeys();
+//            if (generatedKeys.next()) {
+//                int newId = generatedKeys.getInt(1);
+//
+//                // ثم إدراج في جدول books
+//                String bookSql = "INSERT INTO books (id, author, isbn) VALUES (?, ?, ?)";
+//                try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {
+//                    bookStmt.setInt(1, newId);
+//                    bookStmt.setString(2, author);
+//                    bookStmt.setString(3, isbn);
+//                    bookStmt.executeUpdate();
+//
+//                    System.out.println("Book added successfully: " + title);
+//                    return new Book(newId, title, author, isbn, true);
+//                }
+//            } else {
+//                System.out.println("Error retrieving media ID.");
+//                return null;
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("Error adding book: " + e.getMessage());
+//            return null;
+//        }
+//    }
+
     // دالة static لإضافة كتاب جديد
     public static Book addBook(String title, String author, String isbn) {
+        // التحقق من صحة المدخلات
+        if (title == null || title.trim().isEmpty() ||
+                author == null || author.trim().isEmpty() ||
+                isbn == null || isbn.trim().isEmpty()) {
+            System.out.println("Error: All fields (title, author, isbn) must be non-empty");
+            return null;
+        }
+
         // تحقق إذا الـ ISBN موجود بالفعل
         Connection conn = connect();
         String checkSql = "SELECT b.* FROM books b JOIN media m ON b.id = m.id WHERE b.isbn = ?";
@@ -52,21 +108,18 @@ public class Book extends Media {
         // إدراج في جدول media أولاً
         String mediaSql = "INSERT INTO media (title, media_type, available) VALUES (?, 'book', 1)";
         try (PreparedStatement pstmt = conn.prepareStatement(mediaSql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setString(1, title);
+            pstmt.setString(1, title.trim());
             pstmt.executeUpdate();
-
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 int newId = generatedKeys.getInt(1);
-
                 // ثم إدراج في جدول books
                 String bookSql = "INSERT INTO books (id, author, isbn) VALUES (?, ?, ?)";
                 try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {
                     bookStmt.setInt(1, newId);
-                    bookStmt.setString(2, author);
-                    bookStmt.setString(3, isbn);
+                    bookStmt.setString(2, author.trim());
+                    bookStmt.setString(3, isbn.trim());
                     bookStmt.executeUpdate();
-
                     System.out.println("Book added successfully: " + title);
                     return new Book(newId, title, author, isbn, true);
                 }

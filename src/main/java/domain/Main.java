@@ -1,506 +1,435 @@
-//
-//package domain;
-//import java.util.List;
-//import java.util.Scanner;
-//
-//public class Main {
-//    private static Scanner scanner = new Scanner(System.in);
-//    private static User currentUser = null;
-//    private static Admin currentAdmin = null;
-//
-//    public static void main(String[] args) {
-//        // Initialize the system with some sample data
-//        initializeSystem();
-//
-//        // Main menu loop
-//        while (true) {
-//            System.out.println("\n===== LIBRARY MANAGEMENT SYSTEM =====");
-//            if (currentAdmin != null) {
-//                System.out.println("Logged in as Admin: " + currentAdmin.getUsername());
-//                System.out.println("1. Add Book");
-//                System.out.println("2. Search Book");
-//                System.out.println("3. Send Overdue Reminders");
-//                System.out.println("4. Unregister User");
-//                System.out.println("5. Logout");
-//            } else if (currentUser != null) {
-//                System.out.println("Logged in as User: " + currentUser.getUsername());
-//                System.out.println("1. Search Book");
-//                System.out.println("2. View Available Books");
-//                System.out.println("3. Borrow Book");
-//                System.out.println("4. Return Book");
-//                System.out.println("5. Pay Fine");
-//                System.out.println("6. View My Borrowed Books");
-//                System.out.println("7. Logout");
-//            } else {
-//                System.out.println("1. Admin Login");
-//                System.out.println("2. User Login");
-//                System.out.println("3. Register New User");
-//                System.out.println("4. Exit");
-//            }
-//
-//            System.out.print("Enter your choice: ");
-//            int choice = scanner.nextInt();
-//            scanner.nextLine(); // Consume newline
-//
-//            if (currentAdmin != null) {
-//                handleAdminMenu(choice);
-//            } else if (currentUser != null) {
-//                handleUserMenu(choice);
-//            } else {
-//                handleMainMenu(choice);
-//            }
-//        }
-//    }
-//
-//    private static void initializeSystem() {
-//        // Create an admin if not exists
-//        Admin admin = Admin.register("admin", "admin123");
-//        if (admin == null) {
-//            System.out.println("Admin already exists or registration failed");
-//        }
-//
-//        // Add some sample books
-//        Book.addBook("The Great Gatsby", "F. Scott Fitzgerald", "9780743273565");
-//        Book.addBook("To Kill a Mockingbird", "Harper Lee", "9780061120084");
-//        Book.addBook("1984", "George Orwell", "9780451524935");
-//
-//        // Create a sample user
-//        User user = User.register("user1", "password123");
-//        if (user == null) {
-//            System.out.println("User already exists or registration failed");
-//        }
-//    }
-//
-//    private static void handleMainMenu(int choice) {
-//        switch (choice) {
-//            case 1:
-//                adminLogin();
-//                break;
-//            case 2:
-//                userLogin();
-//                break;
-//            case 3:
-//                registerUser();
-//                break;
-//            case 4:
-//                System.out.println("Exiting the system. Goodbye!");
-//                System.exit(0);
-//                break;
-//            default:
-//                System.out.println("Invalid choice. Please try again.");
-//        }
-//    }
-//
-//    private static void handleAdminMenu(int choice) {
-//        switch (choice) {
-//            case 1:
-//                addBook();
-//                break;
-//            case 2:
-//                searchBook();
-//                break;
-//            case 3:
-//                sendOverdueReminders();
-//                break;
-//            case 4:
-//                unregisterUser();
-//                break;
-//            case 5:
-//                adminLogout();
-//                break;
-//            default:
-//                System.out.println("Invalid choice. Please try again.");
-//        }
-//    }
-//
-//    private static void handleUserMenu(int choice) {
-//        switch (choice) {
-//            case 1:
-//                searchBook();
-//                break;
-//            case 2:
-//                viewAvailableBooks();
-//                break;
-//            case 3:
-//                borrowBook();
-//                break;
-//            case 4:
-//                returnBook();
-//                break;
-//            case 5:
-//                payFine();
-//                break;
-//            case 6:
-//                viewBorrowedBooks();
-//                break;
-//            case 7:
-//                userLogout();
-//                break;
-//            default:
-//                System.out.println("Invalid choice. Please try again.");
-//        }
-//    }
-//
-//    // US1.1 Admin login
-//    private static void adminLogin() {
-//        System.out.print("Enter username: ");
-//        String username = scanner.nextLine();
-//        System.out.print("Enter password: ");
-//        String password = scanner.nextLine();
-//
-//        Admin admin = Admin.login(username, password);
-//        if (admin != null) {
-//            currentAdmin = admin;
-//            System.out.println("Admin login successful!");
-//        } else {
-//            System.out.println("Invalid credentials. Please try again.");
-//        }
-//    }
-//
-//    // US1.2 Admin logout
-//    private static void adminLogout() {
-//        if (currentAdmin != null) {
-//            currentAdmin.logout();
-//            currentAdmin = null;
-//            System.out.println("Admin logged out successfully.");
-//        }
-//    }
-//
-//    // User login
-//    // User login
-//    private static void userLogin() {
-//        System.out.print("Enter username: ");
-//        String username = scanner.nextLine();
-//        System.out.print("Enter password: ");
-//        String password = scanner.nextLine();
-//
-//        User user = User.login(username, password);
-//        if (user != null) {
-//            currentUser = user;
-//            // Ensure the logged-in status is set
-//            currentUser.setLoggedIn(true);
-//            System.out.println("User login successful!");
-//        } else {
-//            System.out.println("Invalid credentials. Please try again.");
-//        }
-//    }
-//
-//    // User logout
-//    private static void userLogout() {
-//        if (currentUser != null) {
-//            currentUser.logout();
-//            currentUser = null;
-//            System.out.println("User logged out successfully.");
-//        }
-//    }
-//
-//    // Register new user
-//    private static void registerUser() {
-//        System.out.print("Enter username: ");
-//        String username = scanner.nextLine();
-//        System.out.print("Enter password: ");
-//        String password = scanner.nextLine();
-//
-//        User user = User.register(username, password);
-//        if (user != null) {
-//            System.out.println("User registered successfully!");
-//        } else {
-//            System.out.println("Registration failed. Username might already exist.");
-//        }
-//    }
-//
-//    // US1.3 Add book
-//    private static void addBook() {
-//        System.out.print("Enter book title: ");
-//        String title = scanner.nextLine();
-//        System.out.print("Enter book author: ");
-//        String author = scanner.nextLine();
-//        System.out.print("Enter book ISBN: ");
-//        String isbn = scanner.nextLine();
-//
-//        Book book = Book.addBook(title, author, isbn);
-//        if (book != null) {
-//            System.out.println("Book added successfully!");
-//            System.out.println(book.toString());
-//        } else {
-//            System.out.println("Failed to add book. ISBN might already exist.");
-//        }
-//    }
-//
-//    // US1.4 Search book
-//    private static void searchBook() {
-//        System.out.print("Enter search term (title/author/ISBN): ");
-//        String searchTerm = scanner.nextLine().toLowerCase();
-//
-//        List<Book> allBooks = Book.getAllBooks();
-//        boolean found = false;
-//
-//        System.out.println("\nSearch Results:");
-//        System.out.println("----------------------------------------");
-//        for (Book book : allBooks) {
-//            if (book.getTitle().toLowerCase().contains(searchTerm) ||
-//                    book.getAuthor().toLowerCase().contains(searchTerm) ||
-//                    book.getIsbn().toLowerCase().contains(searchTerm)) {
-//                System.out.println(book.toString());
-//                found = true;
-//            }
-//        }
-//
-//        if (!found) {
-//            System.out.println("No books found matching your search.");
-//        }
-//    }
-//
-//    // View available books
-//    private static void viewAvailableBooks() {
-//        List<Book> allBooks = Book.getAllBooks();
-//        boolean found = false;
-//
-//        System.out.println("\nAvailable Books:");
-//        System.out.println("----------------------------------------");
-//        for (Book book : allBooks) {
-//            if (book.isAvailable()) {
-//                System.out.println(book.toString());
-//                found = true;
-//            }
-//        }
-//
-//        if (!found) {
-//            System.out.println("No available books at the moment.");
-//        }
-//    }
-//
-//    // US2.1 Borrow book
-//
-//    private static void borrowBook() {
-//        if (!(currentUser instanceof Borrower)) {
-//            // Create a Borrower object from the current user
-//            currentUser = new Borrower(currentUser.getUsername(), currentUser.getPasswordHash(), "");
-//            // Set the logged in status
-//            currentUser.setLoggedIn(true);
-//        }
-//
-//        Borrower borrower = (Borrower) currentUser;
-//
-//        // Check if user has already borrowed the maximum number of books
-//        if (borrower.getBorrowedBooks().size() >= BorrowingService.getMaxBorrowedBooks()) {
-//            System.out.println("You have already borrowed the maximum number of books (" +
-//                    BorrowingService.getMaxBorrowedBooks() + ").");
-//            System.out.println("Please return a book before borrowing another one.");
-//            return;
-//        }
-//
-//        // Check if user has outstanding fines
-//        if (borrower.getFineBalance() > 0) {
-//            System.out.println("You have outstanding fines of $" + borrower.getFineBalance());
-//            System.out.println("Please pay your fines before borrowing a book.");
-//            return;
-//        }
-//
-//        // Display available books
-//        viewAvailableBooks();
-//
-//        System.out.print("\nEnter book ISBN to borrow: ");
-//        String isbn = scanner.nextLine();
-//
-//        List<Book> allBooks = Book.getAllBooks();
-//        Book bookToBorrow = null;
-//
-//        for (Book book : allBooks) {
-//            if (book.getIsbn().equals(isbn)) {
-//                bookToBorrow = book;
-//                break;
-//            }
-//        }
-//
-//        if (bookToBorrow != null) {
-//            if (!bookToBorrow.isAvailable()) {
-//                System.out.println("This book is not available for borrowing.");
-//                return;
-//            }
-//
-//            // Display book details
-//            System.out.println("\nBook Details:");
-//            System.out.println("Title: " + bookToBorrow.getTitle());
-//            System.out.println("Author: " + bookToBorrow.getAuthor());
-//            System.out.println("ISBN: " + bookToBorrow.getIsbn());
-//            System.out.println("Borrow Period: " + BorrowingService.getBorrowDays() + " days");
-//            System.out.println("Fine per day: $" + BorrowingService.getFinePerDay());
-//
-//            System.out.print("\nConfirm borrowing this book? (Y/N): ");
-//            String confirm = scanner.nextLine();
-//
-//            if (confirm.equalsIgnoreCase("Y")) {
-//                boolean success = BorrowingService.borrowBook(borrower, bookToBorrow);
-//                if (success) {
-//                    System.out.println("Book borrowed successfully!");
-//                    System.out.println("Due date: " + java.time.LocalDate.now().plusDays(BorrowingService.getBorrowDays()));
-//                } else {
-//                    System.out.println("Failed to borrow book.");
-//                }
-//            } else {
-//                System.out.println("Borrowing cancelled.");
-//            }
-//        } else {
-//            System.out.println("Book not found.");
-//        }
-//    }
-//
-//    // Return book
-//
-//    private static void returnBook() {
-//        if (!(currentUser instanceof Borrower)) {
-//            // Create a Borrower object from the current user
-//            currentUser = new Borrower(currentUser.getUsername(), currentUser.getPasswordHash(), "");
-//            // Set the logged in status
-//            currentUser.setLoggedIn(true);
-//        }
-//
-//        Borrower borrower = (Borrower) currentUser;
-//
-//        // Display borrowed books
-//        List<Borrower.BookRecord> borrowedBooks = borrower.getBorrowedBooks();
-//        if (borrowedBooks.isEmpty()) {
-//            System.out.println("You have no borrowed books to return.");
-//            return;
-//        }
-//
-//        System.out.println("\nYour Borrowed Books:");
-//        System.out.println("----------------------------------------");
-//        for (int i = 0; i < borrowedBooks.size(); i++) {
-//            Borrower.BookRecord record = borrowedBooks.get(i);
-//            System.out.println((i + 1) + ". " + record.getBook().getTitle());
-//            System.out.println("   ISBN: " + record.getBook().getIsbn());
-//            System.out.println("   Due Date: " + record.getDueDate());
-//            System.out.println("   Status: " + (record.isOverdue() ? "OVERDUE" : "On Time"));
-//            if (record.isOverdue()) {
-//                System.out.println("   Overdue Days: " + record.getOverdueDays());
-//                System.out.println("   Fine: $" + (record.getOverdueDays() * BorrowingService.getFinePerDay()));
-//            }
-//            System.out.println("----------------------------------------");
-//        }
-//
-//        System.out.print("\nEnter the ISBN of the book to return: ");
-//        String isbn = scanner.nextLine();
-//
-//        List<Book> allBooks = Book.getAllBooks();
-//        Book bookToReturn = null;
-//
-//        for (Book book : allBooks) {
-//            if (book.getIsbn().equals(isbn)) {
-//                bookToReturn = book;
-//                break;
-//            }
-//        }
-//
-//        if (bookToReturn != null) {
-//            boolean success = BorrowingService.returnBook(borrower, bookToReturn);
-//            if (success) {
-//                System.out.println("Book returned successfully!");
-//            } else {
-//                System.out.println("Failed to return book.");
-//            }
-//        } else {
-//            System.out.println("Book not found or not borrowed by you.");
-//        }
-//    }
-//
-//    // US2.2 Overdue book detection
-//    // US2.2 Overdue book detection
-//    private static void viewBorrowedBooks() {
-//        if (!(currentUser instanceof Borrower)) {
-//            // Create a Borrower object from the current user
-//            currentUser = new Borrower(currentUser.getUsername(), currentUser.getPasswordHash(), "");
-//            // Set the logged in status
-//            currentUser.setLoggedIn(true);
-//        }
-//
-//        Borrower borrower = (Borrower) currentUser;
-//
-//        System.out.println("\nYour Borrowed Books:");
-//        System.out.println("----------------------------------------");
-//
-//        List<Borrower.BookRecord> borrowedBooks = borrower.getBorrowedBooks();
-//        if (borrowedBooks.isEmpty()) {
-//            System.out.println("You have no borrowed books.");
-//        } else {
-//            for (Borrower.BookRecord record : borrowedBooks) {
-//                System.out.println("Book: " + record.getBook().getTitle());
-//                System.out.println("ISBN: " + record.getBook().getIsbn());
-//                System.out.println("Due Date: " + record.getDueDate());
-//                System.out.println("Status: " + (record.isOverdue() ? "OVERDUE" : "On Time"));
-//                if (record.isOverdue()) {
-//                    System.out.println("Overdue Days: " + record.getOverdueDays());
-//                    System.out.println("Fine: $" + (record.getOverdueDays() * BorrowingService.getFinePerDay()));
-//                }
-//                System.out.println("----------------------------------------");
-//            }
-//        }
-//
-//        System.out.println("Your Fine Balance: $" + borrower.getFineBalance());
-//    }
-//    // US2.3 Pay fine
-//    // US2.3 Pay fine
-//    private static void payFine() {
-//        if (!(currentUser instanceof Borrower)) {
-//            // Create a Borrower object from the current user
-//            currentUser = new Borrower(currentUser.getUsername(), currentUser.getPasswordHash(), "");
-//            // Set the logged in status
-//            currentUser.setLoggedIn(true);
-//        }
-//
-//        Borrower borrower = (Borrower) currentUser;
-//
-//        System.out.println("Your current fine balance: $" + borrower.getFineBalance());
-//
-//        if (borrower.getFineBalance() > 0) {
-//            System.out.print("Enter amount to pay: ");
-//            double amount = scanner.nextDouble();
-//            scanner.nextLine(); // Consume newline
-//
-//            boolean success = borrower.payFine(amount);
-//            if (success) {
-//                System.out.println("Payment successful!");
-//                System.out.println("Your new fine balance: $" + borrower.getFineBalance());
-//            } else {
-//                System.out.println("Payment failed. Please check the amount and try again.");
-//            }
-//        } else {
-//            System.out.println("You have no fines to pay.");
-//        }
-//    }
-//
-//    // US3.1 Send reminder
-//    private static void sendOverdueReminders() {
-//        Admin.sendOverdueReminders();
-//        System.out.println("Overdue reminders sent successfully!");
-//
-//        // Display sent emails for verification
-//        List<EmailServer.Email> sentEmails = Admin.getEmailServer().getSentEmails();
-//        if (!sentEmails.isEmpty()) {
-//            System.out.println("\nSent Emails:");
-//            System.out.println("----------------------------------------");
-//            for (EmailServer.Email email : sentEmails) {
-//                System.out.println("To: " + email.getTo());
-//                System.out.println("Subject: " + email.getSubject());
-//                System.out.println("Body: " + email.getBody());
-//                System.out.println("----------------------------------------");
-//            }
-//        } else {
-//            System.out.println("No overdue books found. No emails sent.");
-//        }
-//    }
-//
-//    // US4.2 Unregister user
-//    private static void unregisterUser() {
-//        System.out.print("Enter username of user to unregister: ");
-//        String username = scanner.nextLine();
-//
-//        boolean success = Admin.unregisterUser(username);
-//        if (success) {
-//            System.out.println("User unregistered successfully!");
-//        } else {
-//            System.out.println("Failed to unregister user. User might not exist.");
-//        }
-//    }
-//}
+package domain;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    private static Scanner scanner = new Scanner(System.in);
+    private static User currentUser = null;
+    private static Admin currentAdmin = null;
+
+    public static void main(String[] args) {
+        // Initialize database tables
+        initializeDatabase();
+
+        // Create a default admin if not exists
+        createDefaultAdmin();
+
+        boolean running = true;
+        while (running) {
+            if (currentUser != null) {
+                userMenu();
+            } else if (currentAdmin != null) {
+                adminMenu();
+            } else {
+                mainMenu();
+            }
+        }
+    }
+
+    // --- Helper Methods for Safe Input ---
+
+    private static int readInt(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a whole number.");
+            }
+        }
+    }
+
+    private static double readDouble(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                return Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+            }
+        }
+    }
+
+    // --- End Helper Methods ---
+
+    private static void initializeDatabase() {
+        // Tables are created automatically in static blocks of each class
+        System.out.println("Database initialized successfully.");
+    }
+
+    private static void createDefaultAdmin() {
+        Admin admin = Admin.login("admin", "admin123");
+        if (admin == null) {
+            Admin.register("admin", "admin123");
+            System.out.println("Default admin created (username: admin, password: admin123)");
+        }
+    }
+
+    private static void mainMenu() {
+        System.out.println("\n=== Library Management System ===");
+        System.out.println("1. User Login");
+        System.out.println("2. User Registration");
+        System.out.println("3. Admin Login");
+        System.out.println("4. Exit");
+        int choice = readInt(scanner, "Select an option: ");
+
+        switch (choice) {
+            case 1:
+                userLogin();
+                break;
+            case 2:
+                userRegistration();
+                break;
+            case 3:
+                adminLogin();
+                break;
+            case 4:
+                System.out.println("Exiting system...");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid option!");
+        }
+    }
+
+    private static void userLogin() {
+        System.out.println("\n=== User Login ===");
+        System.out.print("Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+
+        User user = User.login(username, password);
+        if (user != null) {
+            currentUser = new Borrower(username, user.getPasswordHash(), user.getPasswordHash());
+            currentUser.setLoggedIn(true);
+            System.out.println("Login successful! Welcome, " + username);
+        } else {
+            System.out.println("Invalid username or password!");
+        }
+    }
+
+    private static void userRegistration() {
+        System.out.println("\n=== User Registration ===");
+        System.out.print("Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+
+        User user = User.register(username, password);
+        if (user != null) {
+            System.out.println("Registration successful! You can now login.");
+        } else {
+            System.out.println("Registration failed! Username might already exist.");
+        }
+    }
+
+    private static void adminLogin() {
+        System.out.println("\n=== Admin Login ===");
+        System.out.print("Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+
+        Admin admin = Admin.login(username, password);
+        if (admin != null) {
+            currentAdmin = admin;
+            currentAdmin.setLoggedIn(true);
+            System.out.println("Admin login successful! Welcome, " + username);
+        } else {
+            System.out.println("Invalid admin credentials!");
+        }
+    }
+
+    private static void userMenu() {
+        System.out.println("\n=== User Menu ===");
+        System.out.println("1. View Available Books");
+        System.out.println("2. View Available CDs");
+        System.out.println("3. Borrow Media");
+        System.out.println("4. Return Media");
+        System.out.println("5. View Borrowed Media");
+        System.out.println("6. View Overdue Report");
+        System.out.println("7. Pay Fine");
+        System.out.println("8. Logout");
+        int choice = readInt(scanner, "Select an option: ");
+
+        switch (choice) {
+            case 1:
+                viewAvailableBooks();
+                break;
+            case 2:
+                viewAvailableCDs();
+                break;
+            case 3:
+                borrowMedia();
+                break;
+            case 4:
+                returnMedia();
+                break;
+            case 5:
+                viewBorrowedMedia();
+                break;
+            case 6:
+                viewOverdueReport();
+                break;
+            case 7:
+                payFine();
+                break;
+            case 8:
+                currentUser.logout();
+                currentUser = null;
+                break;
+            default:
+                System.out.println("Invalid option!");
+        }
+    }
+
+    private static void viewAvailableBooks() {
+        System.out.println("\n=== Available Books ===");
+        List<Book> books = Book.getAllBooks();
+        for (Book book : books) {
+            if (book.isAvailable()) {
+                System.out.println(book);
+            }
+        }
+    }
+
+    private static void viewAvailableCDs() {
+        System.out.println("\n=== Available CDs ===");
+        List<CD> cds = CD.getAllCDs();
+        for (CD cd : cds) {
+            if (cd.isAvailable()) {
+                System.out.println(cd);
+            }
+        }
+    }
+
+    private static void borrowMedia() {
+        System.out.println("\n=== Borrow Media ===");
+        int mediaType = readInt(scanner, "1. Borrow Book\n2. Borrow CD\nSelect media type: ");
+        int mediaId = readInt(scanner, "Enter media ID: ");
+
+        Media media = null;
+        if (mediaType == 1) {
+            List<Book> books = Book.getAllBooks();
+            for (Book book : books) {
+                if (book.getId() == mediaId) {
+                    media = book;
+                    break;
+                }
+            }
+        } else if (mediaType == 2) {
+            List<CD> cds = CD.getAllCDs();
+            for (CD cd : cds) {
+                if (cd.getId() == mediaId) {
+                    media = cd;
+                    break;
+                }
+            }
+        }
+
+        if (media != null) {
+            Borrower borrower = (Borrower) currentUser;
+            BorrowingService.borrowMedia(borrower, media);
+        } else {
+            System.out.println("Media not found!");
+        }
+    }
+
+    private static void returnMedia() {
+        System.out.println("\n=== Return Media ===");
+        int mediaId = readInt(scanner, "Enter media ID: ");
+
+        Media media = null;
+        List<Book> books = Book.getAllBooks();
+        for (Book book : books) {
+            if (book.getId() == mediaId) {
+                media = book;
+                break;
+            }
+        }
+
+        if (media == null) {
+            List<CD> cds = CD.getAllCDs();
+            for (CD cd : cds) {
+                if (cd.getId() == mediaId) {
+                    media = cd;
+                    break;
+                }
+            }
+        }
+
+        if (media != null) {
+            Borrower borrower = (Borrower) currentUser;
+            BorrowingService.returnMedia(borrower, media);
+        } else {
+            System.out.println("Media not found!");
+        }
+    }
+
+    private static void viewBorrowedMedia() {
+        System.out.println("\n=== Borrowed Media ===");
+        Borrower borrower = (Borrower) currentUser;
+        List<Borrower.MediaRecord> borrowedMedia = borrower.getBorrowedMedia();
+
+        if (borrowedMedia.isEmpty()) {
+            System.out.println("You haven't borrowed any media.");
+        } else {
+            for (Borrower.MediaRecord record : borrowedMedia) {
+                Media media = record.getMedia();
+                System.out.println(media + ", Due Date: " + record.getDueDate());
+            }
+        }
+    }
+
+    private static void viewOverdueReport() {
+        System.out.println("\n=== Overdue Report ===");
+        Borrower borrower = (Borrower) currentUser;
+        borrower.generateOverdueReport();
+    }
+
+    private static void payFine() {
+        System.out.println("\n=== Pay Fine ===");
+        Borrower borrower = (Borrower) currentUser;
+        System.out.println("Current fine balance: " + borrower.getFineBalance());
+        double amount = readDouble(scanner, "Enter amount to pay: ");
+        borrower.payFine(amount);
+    }
+
+    private static void adminMenu() {
+        System.out.println("\n=== Admin Menu ===");
+        System.out.println("1. Add Book");
+        System.out.println("2. Add CD");
+        System.out.println("3. View All Books");
+        System.out.println("4. View All CDs");
+        System.out.println("5. Send Overdue Reminders");
+        System.out.println("6. Unregister User");
+        System.out.println("7. View Users with Overdue Books");
+        System.out.println("8. Logout");
+        int choice = readInt(scanner, "Select an option: ");
+
+        switch (choice) {
+            case 1:
+                addBook();
+                break;
+            case 2:
+                addCD();
+                break;
+            case 3:
+                viewAllBooks();
+                break;
+            case 4:
+                viewAllCDs();
+                break;
+            case 5:
+                sendOverdueReminders();
+                break;
+            case 6:
+                unregisterUser();
+                break;
+            case 7:
+                viewUsersWithOverdueBooks();
+                break;
+            case 8:
+                currentAdmin.logout();
+                currentAdmin = null;
+                break;
+            default:
+                System.out.println("Invalid option!");
+        }
+    }
+
+    private static void addBook() {
+        System.out.println("\n=== Add Book ===");
+        System.out.print("Title: ");
+        String title = scanner.nextLine();
+        System.out.print("Author: ");
+        String author = scanner.nextLine();
+        System.out.print("ISBN: ");
+        String isbn = scanner.nextLine();
+
+        Book book = Book.addBook(title, author, isbn);
+        if (book != null) {
+            System.out.println("Book added successfully!");
+        } else {
+            System.out.println("Failed to add book!");
+        }
+    }
+
+    private static void addCD() {
+        System.out.println("\n=== Add CD ===");
+        System.out.print("Title: ");
+        String title = scanner.nextLine();
+        System.out.print("Artist: ");
+        String artist = scanner.nextLine();
+        System.out.print("Genre: ");
+        String genre = scanner.nextLine();
+        int duration = readInt(scanner, "Duration (minutes): ");
+
+        CD cd = CD.addCD(title, artist, genre, duration);
+        if (cd != null) {
+            System.out.println("CD added successfully!");
+        } else {
+            System.out.println("Failed to add CD!");
+        }
+    }
+
+    private static void viewAllBooks() {
+        System.out.println("\n=== All Books ===");
+        List<Book> books = Book.getAllBooks();
+        for (Book book : books) {
+            System.out.println(book);
+        }
+    }
+
+    private static void viewAllCDs() {
+        System.out.println("\n=== All CDs ===");
+        List<CD> cds = CD.getAllCDs();
+        for (CD cd : cds) {
+            System.out.println(cd);
+        }
+    }
+
+    private static void sendOverdueReminders() {
+        System.out.println("\n=== Send Overdue Reminders ===");
+        Admin.sendOverdueReminders();
+        System.out.println("Reminders sent successfully!");
+
+        List<EmailServer.Email> sentEmails = Admin.getEmailServer().getSentEmails();
+        System.out.println("Sent " + sentEmails.size() + " email(s):");
+        for (EmailServer.Email email : sentEmails) {
+            System.out.println("To: " + email.getTo());
+            System.out.println("Subject: " + email.getSubject());
+            System.out.println("Body: " + email.getBody());
+            System.out.println("---");
+        }
+    }
+
+    private static void unregisterUser() {
+        System.out.println("\n=== Unregister User ===");
+        System.out.print("Enter username to unregister: ");
+        String username = scanner.nextLine();
+
+        boolean success = Admin.unregisterUser(username);
+        if (success) {
+            System.out.println("User unregistered successfully!");
+        } else {
+            System.out.println("Failed to unregister user!");
+        }
+    }
+
+    private static void viewUsersWithOverdueBooks() {
+        System.out.println("\n=== Users with Overdue Books ===");
+        List<Borrower.UserWithOverdueBooks> usersWithOverdueBooks = Borrower.getUsersWithOverdueBooks();
+
+        if (usersWithOverdueBooks.isEmpty()) {
+            System.out.println("No users with overdue books.");
+        } else {
+            for (Borrower.UserWithOverdueBooks user : usersWithOverdueBooks) {
+                System.out.println("Username: " + user.getUsername() +
+                        ", Overdue Books: " + user.getOverdueCount());
+            }
+        }
+    }
+}

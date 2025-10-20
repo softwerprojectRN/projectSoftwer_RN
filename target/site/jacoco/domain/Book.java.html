@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Book.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=٤;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">Book.java</span></div><h1>Book.java</h1><pre class="source lang-java linenums">package domain;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Book.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">domain</a> &gt; <span class="el_source">Book.java</span></div><h1>Book.java</h1><pre class="source lang-java linenums">package domain;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,107 +10,160 @@ public class Book extends Media {
 
     // كتلة static لإنشاء جدول الكتب
     static {
-<span class="nc" id="L13">        Connection conn = connect();</span>
-<span class="nc" id="L14">        String sql = &quot;CREATE TABLE IF NOT EXISTS books (\n&quot;</span>
+<span class="fc" id="L13">        Connection conn = connect();</span>
+<span class="fc" id="L14">        String sql = &quot;CREATE TABLE IF NOT EXISTS books (\n&quot;</span>
                 + &quot; id integer PRIMARY KEY,\n&quot;
                 + &quot; author text NOT NULL,\n&quot;
                 + &quot; isbn text NOT NULL UNIQUE,\n&quot;
                 + &quot; FOREIGN KEY (id) REFERENCES media(id) ON DELETE CASCADE\n&quot;
                 + &quot;);&quot;;
-<span class="nc" id="L20">        try (Statement stmt = conn.createStatement()) {</span>
-<span class="nc" id="L21">            stmt.execute(sql);</span>
-<span class="nc" id="L22">            System.out.println(&quot;The books table has been created successfully.&quot;);</span>
+<span class="fc" id="L20">        try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L21">            stmt.execute(sql);</span>
+<span class="fc" id="L22">            System.out.println(&quot;The books table has been created successfully.&quot;);</span>
 <span class="nc" id="L23">        } catch (SQLException e) {</span>
 <span class="nc" id="L24">            System.out.println(e.getMessage());</span>
-<span class="nc" id="L25">        }</span>
-<span class="nc" id="L26">    }</span>
+<span class="fc" id="L25">        }</span>
+<span class="fc" id="L26">    }</span>
 
     // Constructor
     public Book(int id, String title, String author, String isbn, boolean isAvailable) {
-<span class="nc" id="L30">        super(id, title, isAvailable, &quot;book&quot;);</span>
-<span class="nc" id="L31">        this.author = author;</span>
-<span class="nc" id="L32">        this.isbn = isbn;</span>
-<span class="nc" id="L33">    }</span>
+<span class="fc" id="L30">        super(id, title, isAvailable, &quot;book&quot;);</span>
+<span class="fc" id="L31">        this.author = author;</span>
+<span class="fc" id="L32">        this.isbn = isbn;</span>
+<span class="fc" id="L33">    }</span>
+
+//    // دالة static لإضافة كتاب جديد
+//    public static Book addBook(String title, String author, String isbn) {
+//        // تحقق إذا الـ ISBN موجود بالفعل
+//        Connection conn = connect();
+//        String checkSql = &quot;SELECT b.* FROM books b JOIN media m ON b.id = m.id WHERE b.isbn = ?&quot;;
+//        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
+//            pstmt.setString(1, isbn);
+//            ResultSet rs = pstmt.executeQuery();
+//            if (rs.next()) {
+//                System.out.println(&quot;Book already exists (ISBN:&quot; + isbn + &quot;)&quot;);
+//                return null;
+//            }
+//        } catch (SQLException e) {
+//            System.out.println(&quot;Error checking ISBN: &quot; + e.getMessage());
+//            return null;
+//        }
+//
+//        // إدراج في جدول media أولاً
+//        String mediaSql = &quot;INSERT INTO media (title, media_type, available) VALUES (?, 'book', 1)&quot;;
+//        try (PreparedStatement pstmt = conn.prepareStatement(mediaSql, Statement.RETURN_GENERATED_KEYS)) {
+//            pstmt.setString(1, title);
+//            pstmt.executeUpdate();
+//
+//            ResultSet generatedKeys = pstmt.getGeneratedKeys();
+//            if (generatedKeys.next()) {
+//                int newId = generatedKeys.getInt(1);
+//
+//                // ثم إدراج في جدول books
+//                String bookSql = &quot;INSERT INTO books (id, author, isbn) VALUES (?, ?, ?)&quot;;
+//                try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {
+//                    bookStmt.setInt(1, newId);
+//                    bookStmt.setString(2, author);
+//                    bookStmt.setString(3, isbn);
+//                    bookStmt.executeUpdate();
+//
+//                    System.out.println(&quot;Book added successfully: &quot; + title);
+//                    return new Book(newId, title, author, isbn, true);
+//                }
+//            } else {
+//                System.out.println(&quot;Error retrieving media ID.&quot;);
+//                return null;
+//            }
+//        } catch (SQLException e) {
+//            System.out.println(&quot;Error adding book: &quot; + e.getMessage());
+//            return null;
+//        }
+//    }
 
     // دالة static لإضافة كتاب جديد
     public static Book addBook(String title, String author, String isbn) {
+        // التحقق من صحة المدخلات
+<span class="fc bfc" id="L86" title="All 6 branches covered.">        if (title == null || title.trim().isEmpty() ||</span>
+<span class="fc bfc" id="L87" title="All 4 branches covered.">                author == null || author.trim().isEmpty() ||</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">                isbn == null || isbn.trim().isEmpty()) {</span>
+<span class="fc" id="L89">            System.out.println(&quot;Error: All fields (title, author, isbn) must be non-empty&quot;);</span>
+<span class="fc" id="L90">            return null;</span>
+        }
+
         // تحقق إذا الـ ISBN موجود بالفعل
-<span class="nc" id="L38">        Connection conn = connect();</span>
-<span class="nc" id="L39">        String checkSql = &quot;SELECT b.* FROM books b JOIN media m ON b.id = m.id WHERE b.isbn = ?&quot;;</span>
-<span class="nc" id="L40">        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {</span>
-<span class="nc" id="L41">            pstmt.setString(1, isbn);</span>
-<span class="nc" id="L42">            ResultSet rs = pstmt.executeQuery();</span>
-<span class="nc bnc" id="L43" title="All 2 branches missed.">            if (rs.next()) {</span>
-<span class="nc" id="L44">                System.out.println(&quot;Book already exists (ISBN:&quot; + isbn + &quot;)&quot;);</span>
-<span class="nc" id="L45">                return null;</span>
+<span class="fc" id="L94">        Connection conn = connect();</span>
+<span class="fc" id="L95">        String checkSql = &quot;SELECT b.* FROM books b JOIN media m ON b.id = m.id WHERE b.isbn = ?&quot;;</span>
+<span class="fc" id="L96">        try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {</span>
+<span class="fc" id="L97">            pstmt.setString(1, isbn);</span>
+<span class="fc" id="L98">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L100">                System.out.println(&quot;Book already exists (ISBN:&quot; + isbn + &quot;)&quot;);</span>
+<span class="fc" id="L101">                return null;</span>
             }
-<span class="nc bnc" id="L47" title="All 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="nc" id="L48">            System.out.println(&quot;Error checking ISBN: &quot; + e.getMessage());</span>
-<span class="nc" id="L49">            return null;</span>
-<span class="nc" id="L50">        }</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L104">            System.out.println(&quot;Error checking ISBN: &quot; + e.getMessage());</span>
+<span class="fc" id="L105">            return null;</span>
+<span class="fc" id="L106">        }</span>
 
         // إدراج في جدول media أولاً
-<span class="nc" id="L53">        String mediaSql = &quot;INSERT INTO media (title, media_type, available) VALUES (?, 'book', 1)&quot;;</span>
-<span class="nc" id="L54">        try (PreparedStatement pstmt = conn.prepareStatement(mediaSql, Statement.RETURN_GENERATED_KEYS)) {</span>
-<span class="nc" id="L55">            pstmt.setString(1, title);</span>
-<span class="nc" id="L56">            pstmt.executeUpdate();</span>
-
-<span class="nc" id="L58">            ResultSet generatedKeys = pstmt.getGeneratedKeys();</span>
-<span class="nc bnc" id="L59" title="All 2 branches missed.">            if (generatedKeys.next()) {</span>
-<span class="nc" id="L60">                int newId = generatedKeys.getInt(1);</span>
-
+<span class="fc" id="L109">        String mediaSql = &quot;INSERT INTO media (title, media_type, available) VALUES (?, 'book', 1)&quot;;</span>
+<span class="fc" id="L110">        try (PreparedStatement pstmt = conn.prepareStatement(mediaSql, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="fc" id="L111">            pstmt.setString(1, title.trim());</span>
+<span class="fc" id="L112">            pstmt.executeUpdate();</span>
+<span class="fc" id="L113">            ResultSet generatedKeys = pstmt.getGeneratedKeys();</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">            if (generatedKeys.next()) {</span>
+<span class="fc" id="L115">                int newId = generatedKeys.getInt(1);</span>
                 // ثم إدراج في جدول books
-<span class="nc" id="L63">                String bookSql = &quot;INSERT INTO books (id, author, isbn) VALUES (?, ?, ?)&quot;;</span>
-<span class="nc" id="L64">                try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {</span>
-<span class="nc" id="L65">                    bookStmt.setInt(1, newId);</span>
-<span class="nc" id="L66">                    bookStmt.setString(2, author);</span>
-<span class="nc" id="L67">                    bookStmt.setString(3, isbn);</span>
-<span class="nc" id="L68">                    bookStmt.executeUpdate();</span>
-
-<span class="nc" id="L70">                    System.out.println(&quot;Book added successfully: &quot; + title);</span>
-<span class="nc" id="L71">                    return new Book(newId, title, author, isbn, true);</span>
+<span class="fc" id="L117">                String bookSql = &quot;INSERT INTO books (id, author, isbn) VALUES (?, ?, ?)&quot;;</span>
+<span class="fc" id="L118">                try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {</span>
+<span class="fc" id="L119">                    bookStmt.setInt(1, newId);</span>
+<span class="fc" id="L120">                    bookStmt.setString(2, author.trim());</span>
+<span class="fc" id="L121">                    bookStmt.setString(3, isbn.trim());</span>
+<span class="fc" id="L122">                    bookStmt.executeUpdate();</span>
+<span class="fc" id="L123">                    System.out.println(&quot;Book added successfully: &quot; + title);</span>
+<span class="fc" id="L124">                    return new Book(newId, title, author, isbn, true);</span>
                 }
             } else {
-<span class="nc" id="L74">                System.out.println(&quot;Error retrieving media ID.&quot;);</span>
-<span class="nc" id="L75">                return null;</span>
+<span class="fc" id="L127">                System.out.println(&quot;Error retrieving media ID.&quot;);</span>
+<span class="fc" id="L128">                return null;</span>
             }
-<span class="nc bnc" id="L77" title="All 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="nc" id="L78">            System.out.println(&quot;Error adding book: &quot; + e.getMessage());</span>
-<span class="nc" id="L79">            return null;</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L131">            System.out.println(&quot;Error adding book: &quot; + e.getMessage());</span>
+<span class="fc" id="L132">            return null;</span>
         }
     }
 
     // دالة static للحصول على جميع الكتب
     public static List&lt;Book&gt; getAllBooks() {
-<span class="nc" id="L85">        List&lt;Book&gt; books = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L86">        Connection conn = connect();</span>
-<span class="nc" id="L87">        String sql = &quot;SELECT m.id, m.title, m.available, b.author, b.isbn &quot; +</span>
+<span class="fc" id="L138">        List&lt;Book&gt; books = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L139">        Connection conn = connect();</span>
+<span class="fc" id="L140">        String sql = &quot;SELECT m.id, m.title, m.available, b.author, b.isbn &quot; +</span>
                 &quot;FROM media m JOIN books b ON m.id = b.id WHERE m.media_type = 'book'&quot;;
-<span class="nc" id="L89">        try (Statement stmt = conn.createStatement();</span>
-<span class="nc" id="L90">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+<span class="fc" id="L142">        try (Statement stmt = conn.createStatement();</span>
+<span class="fc" id="L143">             ResultSet rs = stmt.executeQuery(sql)) {</span>
 
-<span class="nc bnc" id="L92" title="All 2 branches missed.">            while (rs.next()) {</span>
-<span class="nc" id="L93">                int id = rs.getInt(&quot;id&quot;);</span>
-<span class="nc" id="L94">                String title = rs.getString(&quot;title&quot;);</span>
-<span class="nc" id="L95">                String author = rs.getString(&quot;author&quot;);</span>
-<span class="nc" id="L96">                String isbn = rs.getString(&quot;isbn&quot;);</span>
-<span class="nc bnc" id="L97" title="All 2 branches missed.">                boolean available = rs.getInt(&quot;available&quot;) == 1;</span>
-<span class="nc" id="L98">                books.add(new Book(id, title, author, isbn, available));</span>
-<span class="nc" id="L99">            }</span>
-<span class="nc" id="L100">            System.out.println(&quot;Retrieved &quot; + books.size() + &quot; books from database.&quot;);</span>
-<span class="nc" id="L101">        } catch (SQLException e) {</span>
-<span class="nc" id="L102">            System.out.println(&quot;Error fetching books: &quot; + e.getMessage());</span>
-<span class="nc" id="L103">        }</span>
-<span class="nc" id="L104">        return books;</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L146">                int id = rs.getInt(&quot;id&quot;);</span>
+<span class="fc" id="L147">                String title = rs.getString(&quot;title&quot;);</span>
+<span class="fc" id="L148">                String author = rs.getString(&quot;author&quot;);</span>
+<span class="fc" id="L149">                String isbn = rs.getString(&quot;isbn&quot;);</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">                boolean available = rs.getInt(&quot;available&quot;) == 1;</span>
+<span class="fc" id="L151">                books.add(new Book(id, title, author, isbn, available));</span>
+<span class="fc" id="L152">            }</span>
+<span class="fc" id="L153">            System.out.println(&quot;Retrieved &quot; + books.size() + &quot; books from database.&quot;);</span>
+<span class="fc" id="L154">        } catch (SQLException e) {</span>
+<span class="fc" id="L155">            System.out.println(&quot;Error fetching books: &quot; + e.getMessage());</span>
+<span class="fc" id="L156">        }</span>
+<span class="fc" id="L157">        return books;</span>
     }
 
     // Getters
-<span class="nc" id="L108">    public String getAuthor() { return author; }</span>
-<span class="nc" id="L109">    public String getIsbn() { return isbn; }</span>
+<span class="fc" id="L161">    public String getAuthor() { return author; }</span>
+<span class="fc" id="L162">    public String getIsbn() { return isbn; }</span>
 
     @Override
     public String toString() {
-<span class="nc" id="L113">        return super.toString() + &quot;, Author: '&quot; + author + &quot;', ISBN: &quot; + isbn;</span>
+<span class="fc" id="L166">        return super.toString() + &quot;, Author: '&quot; + author + &quot;', ISBN: &quot; + isbn;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

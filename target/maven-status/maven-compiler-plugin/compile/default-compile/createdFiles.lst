@@ -11,4 +11,5 @@ domain\Borrower$UserWithOverdueBooks.class
 domain\Borrower$MediaRecord.class
 domain\User.class
 domain\BorrowingService.class
+domain\Main.class
 domain\AdminMenu.class
