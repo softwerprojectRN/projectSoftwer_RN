@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="MediaTest" time="0.04" tests="12" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="BorrowingServiceTest" time="0.645" tests="16" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,43 +58,57 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testUpdateAvailabilitySuccess" classname="MediaTest" time="0.005">
-    <system-out><![CDATA[Media status updated: Test Book
+  <testcase name="testReturnMedia_Success_OverdueCD" classname="BorrowingServiceTest" time="0.469">
+    <system-out><![CDATA[جدول borrow_records تم إنشاؤه بنجاح.
+جدول user_fines تم إنشاؤه بنجاح.
+القرص المدمج متأخر بـ 3 أيام. غرامة: 60.0
+تم إرجاع 'Best of Mozart' بنجاح. الرصيد الكلي: 0.0
 ]]></system-out>
   </testcase>
-  <testcase name="testReturnMediaWhenNotAvailable" classname="MediaTest" time="0.004">
-    <system-out><![CDATA[Media status updated: Test Book
+  <testcase name="testBorrowMedia_Fail_UserHasFines" classname="BorrowingServiceTest" time="0.009">
+    <system-out><![CDATA[ادفع غرامتك (50.0) أولاً.
 ]]></system-out>
   </testcase>
-  <testcase name="testUpdateAvailabilityFailure" classname="MediaTest" time="0.003">
-    <system-out><![CDATA[Media not found (ID not found).
+  <testcase name="testReturnMedia_Fail_UserHasNoBorrowedMedia" classname="BorrowingServiceTest" time="0.009">
+    <system-out><![CDATA[هذه المادة غير مستعارة منك.
 ]]></system-out>
   </testcase>
-  <testcase name="testToStringFalse" classname="MediaTest" time="0.005"/>
-  <testcase name="testUpdateAvailabilityWithZeroId" classname="MediaTest" time="0.002">
-    <system-out><![CDATA[Cannot update media without an ID.
+  <testcase name="testGetBorrowDays_InvalidMediaType" classname="BorrowingServiceTest" time="0.01"/>
+  <testcase name="testReturnMedia_Success_OverdueBook" classname="BorrowingServiceTest" time="0.009">
+    <system-out><![CDATA[الكتاب متأخر بـ 5 أيام. غرامة: 50.0
+تم إرجاع 'Clean Code' بنجاح. الرصيد الكلي: 0.0
 ]]></system-out>
   </testcase>
-  <testcase name="testBorrowWhenNotAvailable" classname="MediaTest" time="0.001">
-    <system-out><![CDATA[This media is not available for borrowing.
+  <testcase name="testReturnMedia_Fail_MediaNotBorrowedByUser" classname="BorrowingServiceTest" time="0.008">
+    <system-out><![CDATA[هذه المادة غير مستعارة منك.
 ]]></system-out>
   </testcase>
-  <testcase name="testBorrowWhenAvailable" classname="MediaTest" time="0.002">
-    <system-out><![CDATA[Media status updated: Test Book
+  <testcase name="testBorrowMedia_Fail_MediaNotAvailable" classname="BorrowingServiceTest" time="0.005">
+    <system-out><![CDATA[المادة 'Clean Code' غير متاحة.
 ]]></system-out>
   </testcase>
-  <testcase name="testConnect" classname="MediaTest" time="0.003"/>
-  <testcase name="testConnectWithException" classname="MediaTest" time="0.002">
-    <system-out><![CDATA[Connection failed
+  <testcase name="testBorrowMedia_Fail_UserHasOverdueItems" classname="BorrowingServiceTest" time="0.017">
+    <system-out><![CDATA[يجب إرجاع المواد المتأخرة أولاً.
 ]]></system-out>
   </testcase>
-  <testcase name="testReturnMediaWhenAvailable" classname="MediaTest" time="0.001">
-    <system-out><![CDATA[This media is already available.
+  <testcase name="testGetBorrowDays_EmptyStringMediaType" classname="BorrowingServiceTest" time="0.006"/>
+  <testcase name="testReturnMedia_Success_OnTime" classname="BorrowingServiceTest" time="0.006">
+    <system-out><![CDATA[تم إرجاع 'Clean Code' بنجاح. الرصيد الكلي: 0.0
 ]]></system-out>
   </testcase>
-  <testcase name="testToStringTrue" classname="MediaTest" time="0.001"/>
-  <testcase name="testUpdateAvailabilityWithException" classname="MediaTest" time="0.004">
-    <system-out><![CDATA[Error updating media status: Update failed
+  <testcase name="testBorrowMedia_Success_Book" classname="BorrowingServiceTest" time="0.018">
+    <system-out><![CDATA[تم استعارة الكتاب 'Clean Code'. تاريخ الاستحقاق: 2025-11-24
 ]]></system-out>
   </testcase>
+  <testcase name="testGetBorrowDays_ValidCD" classname="BorrowingServiceTest" time="0.004"/>
+  <testcase name="testBorrowMedia_Success_CD" classname="BorrowingServiceTest" time="0.007">
+    <system-out><![CDATA[تم استعارة القرص المدمج 'Best of Mozart'. تاريخ الاستحقاق: 2025-11-03
+]]></system-out>
+  </testcase>
+  <testcase name="testGetBorrowDays_NullMediaType" classname="BorrowingServiceTest" time="0.003"/>
+  <testcase name="testBorrowMedia_Fail_UserNotLoggedIn" classname="BorrowingServiceTest" time="0.004">
+    <system-out><![CDATA[يجب تسجيل الدخول أولاً.
+]]></system-out>
+  </testcase>
+  <testcase name="testGetBorrowDays_ValidBook" classname="BorrowingServiceTest" time="0.005"/>
 </testsuite>
