@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="BorrowingServiceTest" time="0.593" tests="16" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="BorrowingServiceTest" time="0.645" tests="16" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire14476802813300399778\surefirebooter-20251027220420878_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire14476802813300399778 2025-10-27T22-04-20_642-jvmRun1 surefire-20251027220420878_1tmp surefire_0-20251027220420878_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire2239642416920305514\surefirebooter-20251027221908083_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire2239642416920305514 2025-10-27T22-19-07_823-jvmRun1 surefire-20251027221908083_1tmp surefire_0-20251027221908083_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\lenovo\projectSoftwer_RN\target\test-classes;C:\Users\lenovo\projectSoftwer_RN\target\classes;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\xerial\sqlite-jdbc\3.50.3.0\sqlite-jdbc-3.50.3.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-core\5.8.0\mockito-core-5.8.0.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy\1.14.10\byte-buddy-1.14.10.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.10\byte-buddy-agent-1.14.10.jar;C:\Users\lenovo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-junit-jupiter\5.8.0\mockito-junit-jupiter-5.8.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -31,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire14476802813300399778\surefirebooter-20251027220420878_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire2239642416920305514\surefirebooter-20251027221908083_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -58,7 +58,7 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testReturnMedia_Success_OverdueCD" classname="BorrowingServiceTest" time="0.348">
+  <testcase name="testReturnMedia_Success_OverdueCD" classname="BorrowingServiceTest" time="0.469">
     <system-out><![CDATA[جدول borrow_records تم إنشاؤه بنجاح.
 جدول user_fines تم إنشاؤه بنجاح.
 القرص المدمج متأخر بـ 3 أيام. غرامة: 60.0
@@ -69,46 +69,46 @@
     <system-out><![CDATA[ادفع غرامتك (50.0) أولاً.
 ]]></system-out>
   </testcase>
-  <testcase name="testReturnMedia_Fail_UserHasNoBorrowedMedia" classname="BorrowingServiceTest" time="0.017">
+  <testcase name="testReturnMedia_Fail_UserHasNoBorrowedMedia" classname="BorrowingServiceTest" time="0.009">
     <system-out><![CDATA[هذه المادة غير مستعارة منك.
 ]]></system-out>
   </testcase>
-  <testcase name="testGetBorrowDays_InvalidMediaType" classname="BorrowingServiceTest" time="0.018"/>
+  <testcase name="testGetBorrowDays_InvalidMediaType" classname="BorrowingServiceTest" time="0.01"/>
   <testcase name="testReturnMedia_Success_OverdueBook" classname="BorrowingServiceTest" time="0.009">
     <system-out><![CDATA[الكتاب متأخر بـ 5 أيام. غرامة: 50.0
 تم إرجاع 'Clean Code' بنجاح. الرصيد الكلي: 0.0
 ]]></system-out>
   </testcase>
-  <testcase name="testReturnMedia_Fail_MediaNotBorrowedByUser" classname="BorrowingServiceTest" time="0.005">
+  <testcase name="testReturnMedia_Fail_MediaNotBorrowedByUser" classname="BorrowingServiceTest" time="0.008">
     <system-out><![CDATA[هذه المادة غير مستعارة منك.
 ]]></system-out>
   </testcase>
-  <testcase name="testBorrowMedia_Fail_MediaNotAvailable" classname="BorrowingServiceTest" time="0.007">
+  <testcase name="testBorrowMedia_Fail_MediaNotAvailable" classname="BorrowingServiceTest" time="0.005">
     <system-out><![CDATA[المادة 'Clean Code' غير متاحة.
 ]]></system-out>
   </testcase>
-  <testcase name="testBorrowMedia_Fail_UserHasOverdueItems" classname="BorrowingServiceTest" time="0.013">
+  <testcase name="testBorrowMedia_Fail_UserHasOverdueItems" classname="BorrowingServiceTest" time="0.017">
     <system-out><![CDATA[يجب إرجاع المواد المتأخرة أولاً.
 ]]></system-out>
   </testcase>
-  <testcase name="testGetBorrowDays_EmptyStringMediaType" classname="BorrowingServiceTest" time="0.011"/>
-  <testcase name="testReturnMedia_Success_OnTime" classname="BorrowingServiceTest" time="0.008">
+  <testcase name="testGetBorrowDays_EmptyStringMediaType" classname="BorrowingServiceTest" time="0.006"/>
+  <testcase name="testReturnMedia_Success_OnTime" classname="BorrowingServiceTest" time="0.006">
     <system-out><![CDATA[تم إرجاع 'Clean Code' بنجاح. الرصيد الكلي: 0.0
 ]]></system-out>
   </testcase>
-  <testcase name="testBorrowMedia_Success_Book" classname="BorrowingServiceTest" time="0.008">
+  <testcase name="testBorrowMedia_Success_Book" classname="BorrowingServiceTest" time="0.018">
     <system-out><![CDATA[تم استعارة الكتاب 'Clean Code'. تاريخ الاستحقاق: 2025-11-24
 ]]></system-out>
   </testcase>
-  <testcase name="testGetBorrowDays_ValidCD" classname="BorrowingServiceTest" time="0.003"/>
-  <testcase name="testBorrowMedia_Success_CD" classname="BorrowingServiceTest" time="0.009">
+  <testcase name="testGetBorrowDays_ValidCD" classname="BorrowingServiceTest" time="0.004"/>
+  <testcase name="testBorrowMedia_Success_CD" classname="BorrowingServiceTest" time="0.007">
     <system-out><![CDATA[تم استعارة القرص المدمج 'Best of Mozart'. تاريخ الاستحقاق: 2025-11-03
 ]]></system-out>
   </testcase>
-  <testcase name="testGetBorrowDays_NullMediaType" classname="BorrowingServiceTest" time="0.01"/>
-  <testcase name="testBorrowMedia_Fail_UserNotLoggedIn" classname="BorrowingServiceTest" time="0.003">
+  <testcase name="testGetBorrowDays_NullMediaType" classname="BorrowingServiceTest" time="0.003"/>
+  <testcase name="testBorrowMedia_Fail_UserNotLoggedIn" classname="BorrowingServiceTest" time="0.004">
     <system-out><![CDATA[يجب تسجيل الدخول أولاً.
 ]]></system-out>
   </testcase>
-  <testcase name="testGetBorrowDays_ValidBook" classname="BorrowingServiceTest" time="0.036"/>
+  <testcase name="testGetBorrowDays_ValidBook" classname="BorrowingServiceTest" time="0.005"/>
 </testsuite>

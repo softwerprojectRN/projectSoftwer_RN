@@ -1,6 +1,8 @@
+EmailServerTest.class
 UserTest.class
 AdminTest$AdminTestHelper.class
 MediaTest$5.class
+EmailNotifierTest.class
 MediaTest$3.class
 CDTest.class
 MediaTest$6.class
