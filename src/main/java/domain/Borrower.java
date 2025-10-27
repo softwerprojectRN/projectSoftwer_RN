@@ -18,7 +18,7 @@ public class Borrower extends User {
     }
 
     // دالة للاتصال بالداتابيز
-    public static Connection connect() {
+    public static   Connection connect() {
         String url = "jdbc:sqlite:database.db";
         try {
             return DriverManager.getConnection(url);

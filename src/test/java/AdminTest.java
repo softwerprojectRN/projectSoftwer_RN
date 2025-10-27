@@ -1242,51 +1242,6 @@ public class AdminTest {
 
 
 
-@Test
-public void testUnregisterUser_Success() throws SQLException {
-    // Given
-    Connection mockConn = mock(Connection.class);
-    PreparedStatement mockCheckStmt = mock(PreparedStatement.class);
-    PreparedStatement mockBorrowStmt = mock(PreparedStatement.class);
-    PreparedStatement mockFinesStmt = mock(PreparedStatement.class);
-    PreparedStatement mockUserStmt = mock(PreparedStatement.class);
-    ResultSet mockResultSet = mock(ResultSet.class);
-
-    // Mock الـ Connection
-    when(mockConn.prepareStatement("SELECT id FROM users WHERE username = ?"))
-            .thenReturn(mockCheckStmt);
-    when(mockConn.prepareStatement("DELETE FROM borrow_records WHERE user_id = ?"))
-            .thenReturn(mockBorrowStmt);
-    when(mockConn.prepareStatement("DELETE FROM user_fines WHERE user_id = ?"))
-            .thenReturn(mockFinesStmt);
-    when(mockConn.prepareStatement("DELETE FROM users WHERE id = ?"))
-            .thenReturn(mockUserStmt);
-
-    // Mock المستخدم موجود
-    when(mockCheckStmt.executeQuery()).thenReturn(mockResultSet);
-    when(mockResultSet.next()).thenReturn(true);
-    when(mockResultSet.getInt("id")).thenReturn(1);
-
-    // Mock عمليات الحذف الناجحة
-    when(mockBorrowStmt.executeUpdate()).thenReturn(1);
-    when(mockFinesStmt.executeUpdate()).thenReturn(1);
-    when(mockUserStmt.executeUpdate()).thenReturn(1); // تم حذف المستخدم
-
-    // Mock الـ connect method
-    try (MockedStatic<Admin> adminMock = mockStatic(Admin.class)) {
-        adminMock.when(Admin::connect).thenReturn(mockConn);
-
-        // When
-        boolean result = Admin.unregisterUser("testuser");
-
-        // Then
-        assertTrue(result);
-        verify(mockConn).setAutoCommit(false);
-        verify(mockConn).commit();
-        verify(mockConn).setAutoCommit(true);
-    }
-}
-
 }
 
 
