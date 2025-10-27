@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="AdminTest" time="3.701" tests="17" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="AdminTest" time="2.959" tests="17" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire2065614992699092121\surefirebooter-20251020224024647_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire2065614992699092121 2025-10-20T22-40-24_444-jvmRun1 surefire-20251020224024647_1tmp surefire_0-20251020224024647_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire14476802813300399778\surefirebooter-20251027220420878_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire14476802813300399778 2025-10-27T22-04-20_642-jvmRun1 surefire-20251027220420878_1tmp surefire_0-20251027220420878_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\lenovo\projectSoftwer_RN\target\test-classes;C:\Users\lenovo\projectSoftwer_RN\target\classes;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\xerial\sqlite-jdbc\3.50.3.0\sqlite-jdbc-3.50.3.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-core\5.8.0\mockito-core-5.8.0.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy\1.14.10\byte-buddy-1.14.10.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.10\byte-buddy-agent-1.14.10.jar;C:\Users\lenovo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-junit-jupiter\5.8.0\mockito-junit-jupiter-5.8.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -31,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire2065614992699092121\surefirebooter-20251020224024647_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire14476802813300399778\surefirebooter-20251027220420878_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -58,43 +58,43 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testStaticBlock_Failure" classname="AdminTest" time="3.192">
+  <testcase name="testStaticBlock_Failure" classname="AdminTest" time="2.647">
     <system-out><![CDATA[The table has been created successfully.
 تم إنشاء جدول admins بنجاح.
 ]]></system-out>
   </testcase>
-  <testcase name="testConnect_Failure" classname="AdminTest" time="0.112">
+  <testcase name="testConnect_Failure" classname="AdminTest" time="0.077">
     <system-out><![CDATA[null
 ]]></system-out>
   </testcase>
-  <testcase name="testRegister_ConnectReturnsNull" classname="AdminTest" time="0.011"/>
-  <testcase name="testLogin_SQLException" classname="AdminTest" time="0.012"/>
-  <testcase name="testRegister_CheckSqlException" classname="AdminTest" time="0.01">
+  <testcase name="testRegister_ConnectReturnsNull" classname="AdminTest" time="0.014"/>
+  <testcase name="testLogin_SQLException" classname="AdminTest" time="0.007"/>
+  <testcase name="testRegister_CheckSqlException" classname="AdminTest" time="0.007">
     <system-out><![CDATA[خطأ في التحقق: DB error on check
 ]]></system-out>
   </testcase>
-  <testcase name="testLogin_Success" classname="AdminTest" time="0.03"/>
-  <testcase name="testRegister_AlreadyExists" classname="AdminTest" time="0.013">
+  <testcase name="testLogin_Success" classname="AdminTest" time="0.012"/>
+  <testcase name="testRegister_AlreadyExists" classname="AdminTest" time="0.006">
     <system-out><![CDATA[الأدمن موجود بالفعل: exists
 ]]></system-out>
   </testcase>
-  <testcase name="testGenerateSalt_ReturnsDifferentValues" classname="AdminTest" time="0.015"/>
-  <testcase name="testRegister_InsertSQLException" classname="AdminTest" time="0.016">
+  <testcase name="testGenerateSalt_ReturnsDifferentValues" classname="AdminTest" time="0.009"/>
+  <testcase name="testRegister_InsertSQLException" classname="AdminTest" time="0.01">
     <system-out><![CDATA[خطأ في التسجيل: DB error on insert
 ]]></system-out>
   </testcase>
-  <testcase name="testHashPassword_NoSuchAlgorithmException" classname="AdminTest" time="0.101"/>
-  <testcase name="testRegister_Success" classname="AdminTest" time="0.02">
+  <testcase name="testHashPassword_NoSuchAlgorithmException" classname="AdminTest" time="0.056"/>
+  <testcase name="testRegister_Success" classname="AdminTest" time="0.007">
     <system-out><![CDATA[تم تسجيل الأدمن بنجاح: admin1
 ]]></system-out>
   </testcase>
-  <testcase name="testHashPassword_Success" classname="AdminTest" time="0.007"/>
-  <testcase name="testLogin_AdminNotFound" classname="AdminTest" time="0.01"/>
-  <testcase name="testLogin_InvalidPassword" classname="AdminTest" time="0.01"/>
-  <testcase name="testShowAdminInfo" classname="AdminTest" time="0.008">
+  <testcase name="testHashPassword_Success" classname="AdminTest" time="0.004"/>
+  <testcase name="testLogin_AdminNotFound" classname="AdminTest" time="0.006"/>
+  <testcase name="testLogin_InvalidPassword" classname="AdminTest" time="0.008"/>
+  <testcase name="testShowAdminInfo" classname="AdminTest" time="0.004">
     <system-out><![CDATA[Admin username: adm
 ]]></system-out>
   </testcase>
-  <testcase name="testConnect_Success" classname="AdminTest" time="0.007"/>
-  <testcase name="testLogin_ConnectReturnsNull" classname="AdminTest" time="0.007"/>
+  <testcase name="testConnect_Success" classname="AdminTest" time="0.004"/>
+  <testcase name="testLogin_ConnectReturnsNull" classname="AdminTest" time="0.004"/>
 </testsuite>

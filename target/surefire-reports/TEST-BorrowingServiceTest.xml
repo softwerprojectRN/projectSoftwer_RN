@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="BookTest" time="0.231" tests="23" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="BorrowingServiceTest" time="0.593" tests="16" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,94 +58,57 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testGetAllBooksSuccess" classname="BookTest" time="0.087">
-    <system-out><![CDATA[The media table has been created successfully.
-The books table has been created successfully.
-Retrieved 2 books from database.
+  <testcase name="testReturnMedia_Success_OverdueCD" classname="BorrowingServiceTest" time="0.348">
+    <system-out><![CDATA[جدول borrow_records تم إنشاؤه بنجاح.
+جدول user_fines تم إنشاؤه بنجاح.
+القرص المدمج متأخر بـ 3 أيام. غرامة: 60.0
+تم إرجاع 'Best of Mozart' بنجاح. الرصيد الكلي: 0.0
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBookWithEmptyIsbn" classname="BookTest" time="0.002">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
+  <testcase name="testBorrowMedia_Fail_UserHasFines" classname="BorrowingServiceTest" time="0.009">
+    <system-out><![CDATA[ادفع غرامتك (50.0) أولاً.
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBook_WithValidInputs_ShouldProceedToDatabaseOperations" classname="BookTest" time="0.008">
-    <system-out><![CDATA[Book added successfully: Valid Title
+  <testcase name="testReturnMedia_Fail_UserHasNoBorrowedMedia" classname="BorrowingServiceTest" time="0.017">
+    <system-out><![CDATA[هذه المادة غير مستعارة منك.
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBook_WhenIsbnIsWhitespace_ShouldReturnNull" classname="BookTest" time="0.002">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
+  <testcase name="testGetBorrowDays_InvalidMediaType" classname="BorrowingServiceTest" time="0.018"/>
+  <testcase name="testReturnMedia_Success_OverdueBook" classname="BorrowingServiceTest" time="0.009">
+    <system-out><![CDATA[الكتاب متأخر بـ 5 أيام. غرامة: 50.0
+تم إرجاع 'Clean Code' بنجاح. الرصيد الكلي: 0.0
 ]]></system-out>
   </testcase>
-  <testcase name="testInheritedMethods" classname="BookTest" time="0.006">
-    <system-out><![CDATA[Media status updated: Test Book
-Media status updated: Test Book
-Media status updated: Test Book
+  <testcase name="testReturnMedia_Fail_MediaNotBorrowedByUser" classname="BorrowingServiceTest" time="0.005">
+    <system-out><![CDATA[هذه المادة غير مستعارة منك.
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBookWithNoGeneratedKeys" classname="BookTest" time="0.006">
-    <system-out><![CDATA[Error retrieving media ID.
+  <testcase name="testBorrowMedia_Fail_MediaNotAvailable" classname="BorrowingServiceTest" time="0.007">
+    <system-out><![CDATA[المادة 'Clean Code' غير متاحة.
 ]]></system-out>
   </testcase>
-  <testcase name="testToString" classname="BookTest" time="0.012"/>
-  <testcase name="testAddBookWithSQLExceptionInCheck" classname="BookTest" time="0.004">
-    <system-out><![CDATA[Error checking ISBN: Test exception
+  <testcase name="testBorrowMedia_Fail_UserHasOverdueItems" classname="BorrowingServiceTest" time="0.013">
+    <system-out><![CDATA[يجب إرجاع المواد المتأخرة أولاً.
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBook_WhenTitleIsNull_ShouldReturnNull" classname="BookTest" time="0.001">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
+  <testcase name="testGetBorrowDays_EmptyStringMediaType" classname="BorrowingServiceTest" time="0.011"/>
+  <testcase name="testReturnMedia_Success_OnTime" classname="BorrowingServiceTest" time="0.008">
+    <system-out><![CDATA[تم إرجاع 'Clean Code' بنجاح. الرصيد الكلي: 0.0
 ]]></system-out>
   </testcase>
-  <testcase name="testGetAllBooksWithSQLException" classname="BookTest" time="0.002">
-    <system-out><![CDATA[Error fetching books: Test exception
+  <testcase name="testBorrowMedia_Success_Book" classname="BorrowingServiceTest" time="0.008">
+    <system-out><![CDATA[تم استعارة الكتاب 'Clean Code'. تاريخ الاستحقاق: 2025-11-24
 ]]></system-out>
   </testcase>
-  <testcase name="testBookConstructor" classname="BookTest" time="0.001"/>
-  <testcase name="testAddBookWithNullAuthor" classname="BookTest" time="0.001">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
+  <testcase name="testGetBorrowDays_ValidCD" classname="BorrowingServiceTest" time="0.003"/>
+  <testcase name="testBorrowMedia_Success_CD" classname="BorrowingServiceTest" time="0.009">
+    <system-out><![CDATA[تم استعارة القرص المدمج 'Best of Mozart'. تاريخ الاستحقاق: 2025-11-03
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBook_WhenTitleIsEmpty_ShouldReturnNull" classname="BookTest" time="0.002">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
+  <testcase name="testGetBorrowDays_NullMediaType" classname="BorrowingServiceTest" time="0.01"/>
+  <testcase name="testBorrowMedia_Fail_UserNotLoggedIn" classname="BorrowingServiceTest" time="0.003">
+    <system-out><![CDATA[يجب تسجيل الدخول أولاً.
 ]]></system-out>
   </testcase>
-  <testcase name="testAddBookWithSQLExceptionInInsert" classname="BookTest" time="0.011">
-    <system-out><![CDATA[Error adding book: Test exception
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenAuthorIsWhitespace_ShouldReturnNull" classname="BookTest" time="0.003">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenIsbnIsNull_ShouldReturnNull" classname="BookTest" time="0.002">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBookWithDuplicateIsbn" classname="BookTest" time="0.031">
-    <system-out><![CDATA[Book already exists (ISBN:1234567890)
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenAuthorIsEmpty_ShouldReturnNull" classname="BookTest" time="0.001">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenAuthorIsNull_ShouldReturnNull" classname="BookTest" time="0.001">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenTitleIsWhitespace_ShouldReturnNull" classname="BookTest" time="0.001">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBookWithEmptyTitle" classname="BookTest" time="0.003">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBookSuccess" classname="BookTest" time="0.013">
-    <system-out><![CDATA[Book added successfully: Test Book
-]]></system-out>
-  </testcase>
-  <testcase name="testAddBook_WhenIsbnIsEmpty_ShouldReturnNull" classname="BookTest" time="0.001">
-    <system-out><![CDATA[Error: All fields (title, author, isbn) must be non-empty
-]]></system-out>
-  </testcase>
+  <testcase name="testGetBorrowDays_ValidBook" classname="BorrowingServiceTest" time="0.036"/>
 </testsuite>

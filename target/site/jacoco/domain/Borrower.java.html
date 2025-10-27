@@ -19,9 +19,9 @@ public class Borrower extends User {
 
     // دالة للاتصال بالداتابيز
     public static Connection connect() {
-<span class="nc" id="L22">        String url = &quot;jdbc:sqlite:database.db&quot;;</span>
+<span class="fc" id="L22">        String url = &quot;jdbc:sqlite:database.db&quot;;</span>
         try {
-<span class="nc" id="L24">            return DriverManager.getConnection(url);</span>
+<span class="fc" id="L24">            return DriverManager.getConnection(url);</span>
 <span class="nc" id="L25">        } catch (SQLException e) {</span>
 <span class="nc" id="L26">            System.out.println(&quot;Database connection error: &quot; + e.getMessage());</span>
 <span class="nc" id="L27">            return null;</span>
@@ -30,11 +30,11 @@ public class Borrower extends User {
 
     // إنشاء جدول borrow_records و user_fines تلقائياً إذا لم يكن موجود
     static {
-<span class="nc" id="L33">        Connection conn = connect();</span>
-<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (conn == null) {</span>
+<span class="fc" id="L33">        Connection conn = connect();</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if (conn == null) {</span>
 <span class="nc" id="L35">            System.out.println(&quot;Database not available, tables not created.&quot;);</span>
         } else {
-<span class="nc" id="L37">            String borrowSql = &quot;CREATE TABLE IF NOT EXISTS borrow_records (\n&quot;</span>
+<span class="fc" id="L37">            String borrowSql = &quot;CREATE TABLE IF NOT EXISTS borrow_records (\n&quot;</span>
                     + &quot; id INTEGER PRIMARY KEY AUTOINCREMENT,\n&quot;
                     + &quot; user_id INTEGER NOT NULL,\n&quot;
                     + &quot; media_id INTEGER NOT NULL,\n&quot;
@@ -48,26 +48,26 @@ public class Borrower extends User {
                     + &quot; FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,\n&quot;
                     + &quot; FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE\n&quot;
                     + &quot;);&quot;;
-<span class="nc" id="L51">            try (Statement stmt = conn.createStatement()) {</span>
-<span class="nc" id="L52">                stmt.execute(borrowSql);</span>
-<span class="nc" id="L53">                System.out.println(&quot;جدول borrow_records تم إنشاؤه بنجاح.&quot;);</span>
+<span class="fc" id="L51">            try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L52">                stmt.execute(borrowSql);</span>
+<span class="fc" id="L53">                System.out.println(&quot;جدول borrow_records تم إنشاؤه بنجاح.&quot;);</span>
 <span class="nc" id="L54">            } catch (SQLException e) {</span>
 <span class="nc" id="L55">                System.out.println(&quot;خطأ في إنشاء جدول borrow_records: &quot; + e.getMessage());</span>
-<span class="nc" id="L56">            }</span>
+<span class="fc" id="L56">            }</span>
 
-<span class="nc" id="L58">            String fineSql = &quot;CREATE TABLE IF NOT EXISTS user_fines (\n&quot;</span>
+<span class="fc" id="L58">            String fineSql = &quot;CREATE TABLE IF NOT EXISTS user_fines (\n&quot;</span>
                     + &quot; user_id INTEGER PRIMARY KEY,\n&quot;
                     + &quot; total_fine REAL DEFAULT 0.0,\n&quot;
                     + &quot; FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE\n&quot;
                     + &quot;);&quot;;
-<span class="nc" id="L63">            try (Statement stmt = conn.createStatement()) {</span>
-<span class="nc" id="L64">                stmt.execute(fineSql);</span>
-<span class="nc" id="L65">                System.out.println(&quot;جدول user_fines تم إنشاؤه بنجاح.&quot;);</span>
+<span class="fc" id="L63">            try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L64">                stmt.execute(fineSql);</span>
+<span class="fc" id="L65">                System.out.println(&quot;جدول user_fines تم إنشاؤه بنجاح.&quot;);</span>
 <span class="nc" id="L66">            } catch (SQLException e) {</span>
 <span class="nc" id="L67">                System.out.println(&quot;خطأ في إنشاء جدول user_fines: &quot; + e.getMessage());</span>
-<span class="nc" id="L68">            }</span>
+<span class="fc" id="L68">            }</span>
         }
-<span class="nc" id="L70">    }</span>
+<span class="fc" id="L70">    }</span>
 
     // =================== دوال المساعدة ===================
     public int getUserId() {
