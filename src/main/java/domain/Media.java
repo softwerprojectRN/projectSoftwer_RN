@@ -96,4 +96,6 @@ public abstract class Media {
         String available = isAvailable ? "Yes" : "No";
         return "ID: " + id + ", Title: '" + title + "', Type: " + mediaType + ", Available: " + available;
     }
+
+
 }

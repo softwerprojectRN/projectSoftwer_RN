@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: BorrowerTest
 -------------------------------------------------------------------------------
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.745 s -- in BorrowerTest
+Tests run: 34, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.080 s -- in BorrowerTest
