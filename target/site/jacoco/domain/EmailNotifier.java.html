@@ -28,9 +28,22 @@ public class EmailNotifier implements Observer {
 
     @Override
     public void notify(User user, String message) {
-<span class="fc" id="L31">        String email = user.getUsername() + &quot;@example.com&quot;; // Assuming username is email</span>
-<span class="fc" id="L32">        emailServer.sendEmail(email, &quot;part 3 Library Notification&quot;, message);</span>
-<span class="fc" id="L33">    }</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (emailServer == null) {</span>
+<span class="fc" id="L32">            System.err.println(&quot;تحذير: خادم البريد الإلكتروني غير متاح. لم يتم إرسال الإشعار.&quot;);</span>
+<span class="fc" id="L33">            return;</span>
+        }
+<span class="fc bfc" id="L35" title="All 4 branches covered.">        if (user == null || user.getUsername() == null) {</span>
+<span class="fc" id="L36">            System.err.println(&quot;تحذير: بيانات المستخدم غير صحيحة. لم يتم إرسال الإشعار.&quot;);</span>
+<span class="fc" id="L37">            return;</span>
+        }
+        try {
+<span class="fc" id="L40">            String email = user.getUsername() + &quot;@example.com&quot;; // Assuming username is email</span>
+<span class="fc" id="L41">            emailServer.sendEmail(email, &quot;part 3 Library Notification&quot;, message);</span>
+<span class="fc" id="L42">        } catch (Exception e) {</span>
+<span class="fc" id="L43">            System.err.println(&quot;فشل في إرسال البريد الإلكتروني: &quot; + e.getMessage());</span>
+<span class="fc" id="L44">            throw new RuntimeException(&quot;Failed to send email notification&quot;, e);</span>
+<span class="fc" id="L45">        }</span>
+<span class="fc" id="L46">    }</span>
 }
 
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

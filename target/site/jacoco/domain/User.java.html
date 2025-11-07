@@ -19,8 +19,8 @@ public class User {
 <span class="fc" id="L19">        Connection conn = null;</span>
         try {
 <span class="fc" id="L21">            conn = DriverManager.getConnection(url);</span>
-<span class="nc" id="L22">        } catch (SQLException e) {</span>
-<span class="nc" id="L23">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L22">        } catch (SQLException e) {</span>
+<span class="fc" id="L23">            System.out.println(e.getMessage());</span>
 <span class="fc" id="L24">        }</span>
 <span class="fc" id="L25">        return conn;</span>
     }

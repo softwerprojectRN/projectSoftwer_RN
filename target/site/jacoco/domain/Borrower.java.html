@@ -318,7 +318,7 @@ public class Borrower extends User {
     public List&lt;MediaRecord&gt; getOverdueMedia() { //
 <span class="fc" id="L319">        List&lt;MediaRecord&gt; overdue = new ArrayList&lt;&gt;();</span>
 <span class="fc bfc" id="L320" title="All 2 branches covered.">        for (MediaRecord record : borrowedMedia) {</span>
-<span class="pc bpc" id="L321" title="1 of 2 branches missed.">            if (record.isOverdue()) overdue.add(record);</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">            if (record.isOverdue()) overdue.add(record);</span>
 <span class="fc" id="L322">        }</span>
 <span class="fc" id="L323">        return overdue;</span>
     }
