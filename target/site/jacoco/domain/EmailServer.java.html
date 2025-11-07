@@ -52,14 +52,14 @@ public class EmailServer {
 <span class="fc" id="L52">            this.password = dotenv.get(&quot;EMAIL_PASSWORD&quot;);</span>
             
             // Validate credentials
-<span class="pc bpc" id="L55" title="2 of 4 branches missed.">            if (username == null || username.isEmpty()) {</span>
-<span class="nc" id="L56">                throw new IllegalStateException(&quot;EMAIL_USERNAME not found in .env file&quot;);</span>
+<span class="fc bfc" id="L55" title="All 4 branches covered.">            if (username == null || username.isEmpty()) {</span>
+<span class="fc" id="L56">                throw new IllegalStateException(&quot;EMAIL_USERNAME not found in .env file&quot;);</span>
             }
-<span class="pc bpc" id="L58" title="2 of 4 branches missed.">            if (password == null || password.isEmpty()) {</span>
-<span class="nc" id="L59">                throw new IllegalStateException(&quot;EMAIL_PASSWORD not found in .env file&quot;);</span>
+<span class="fc bfc" id="L58" title="All 4 branches covered.">            if (password == null || password.isEmpty()) {</span>
+<span class="fc" id="L59">                throw new IllegalStateException(&quot;EMAIL_PASSWORD not found in .env file&quot;);</span>
             }
-<span class="nc" id="L61">        } catch (Exception e) {</span>
-<span class="nc" id="L62">            throw new IllegalStateException(&quot;Failed to initialize EmailServer: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L61">        } catch (Exception e) {</span>
+<span class="fc" id="L62">            throw new IllegalStateException(&quot;Failed to initialize EmailServer: &quot; + e.getMessage(), e);</span>
 <span class="fc" id="L63">        }</span>
 <span class="fc" id="L64">    }</span>
 
@@ -103,15 +103,15 @@ public class EmailServer {
 <span class="fc" id="L103">            message.setText(body);</span>
 
             // إرسال الرسالة
-<span class="nc" id="L106">            Transport.send(message);</span>
-<span class="nc" id="L107">            System.out.println(&quot;تم إرسال البريد بنجاح إلى: &quot; + to);</span>
+<span class="fc" id="L106">            Transport.send(message);</span>
+<span class="fc" id="L107">            System.out.println(&quot;تم إرسال البريد بنجاح إلى: &quot; + to);</span>
             
             // Track the sent email
-<span class="nc" id="L110">            sentEmails.add(new Email(to, subject, body));</span>
+<span class="fc" id="L110">            sentEmails.add(new Email(to, subject, body));</span>
 <span class="fc" id="L111">        } catch (MessagingException e) {</span>
 <span class="fc" id="L112">            throw new RuntimeException(&quot;فشل في إرسال البريد: &quot; + e.getMessage(), e);</span>
-<span class="nc" id="L113">        }</span>
-<span class="nc" id="L114">    }</span>
+<span class="fc" id="L113">        }</span>
+<span class="fc" id="L114">    }</span>
 
     // Method to get list of sent emails (returns a copy to prevent external modification)
     public List&lt;Email&gt; getSentEmails() {
@@ -124,19 +124,19 @@ public class EmailServer {
 <span class="fc" id="L124">    }</span>
 
     public static void run() {
-<span class="nc" id="L127">        System.out.println(&quot;Current working directory: &quot; + System.getProperty(&quot;user.dir&quot;));</span>
-<span class="nc" id="L128">        Dotenv dotenv = Dotenv.load();</span>
-<span class="nc" id="L129">        String username = dotenv.get(&quot;EMAIL_USERNAME&quot;);</span>
-<span class="nc" id="L130">        String password = dotenv.get(&quot;EMAIL_PASSWORD&quot;);</span>
+<span class="fc" id="L127">        System.out.println(&quot;Current working directory: &quot; + System.getProperty(&quot;user.dir&quot;));</span>
+<span class="fc" id="L128">        Dotenv dotenv = Dotenv.load();</span>
+<span class="fc" id="L129">        String username = dotenv.get(&quot;EMAIL_USERNAME&quot;);</span>
+<span class="fc" id="L130">        String password = dotenv.get(&quot;EMAIL_PASSWORD&quot;);</span>
 
-<span class="nc" id="L132">        EmailServer emailService = new EmailServer(username, password);</span>
-<span class="nc" id="L133">        String subject = &quot;hi &quot;;</span>
-<span class="nc" id="L134">        String body = &quot;hi&quot;;</span>
-<span class="nc" id="L135">        emailService.sendEmail(&quot;s12216975@stu.najah.edu&quot;, subject, body);</span>
-<span class="nc" id="L136">    }</span>
+<span class="fc" id="L132">        EmailServer emailService = new EmailServer(username, password);</span>
+<span class="fc" id="L133">        String subject = &quot;hi &quot;;</span>
+<span class="fc" id="L134">        String body = &quot;hi&quot;;</span>
+<span class="fc" id="L135">        emailService.sendEmail(&quot;s12216975@stu.najah.edu&quot;, subject, body);</span>
+<span class="fc" id="L136">    }</span>
 
     public static void main(String []s) {
-<span class="nc" id="L139">        run();</span>
-<span class="nc" id="L140">    }</span>
+<span class="fc" id="L139">        run();</span>
+<span class="fc" id="L140">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
