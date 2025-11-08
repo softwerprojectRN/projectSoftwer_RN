@@ -165,4 +165,26 @@ public class Book extends Media {
     public String toString() {
         return super.toString() + ", Author: '" + author + "', ISBN: " + isbn;
     }
+
+    // أضف هذه الطريقة إلى فئة Book
+    public static List<Book> searchBooks(String searchTerm, String searchType) {
+        SearchStrategy strategy;
+
+        switch (searchType.toLowerCase()) {
+            case "title":
+                strategy = new SearchByTitle();
+                break;
+            case "isbn":
+                strategy = new SearchByISBN();
+                break;
+            case "author":
+                strategy = new SearchByAuthor();
+                break;
+            default:
+                strategy = new SearchByTitle();
+        }
+
+        BookSearcher searcher = new BookSearcher(strategy);
+        return searcher.search(searchTerm);
+    }
 }

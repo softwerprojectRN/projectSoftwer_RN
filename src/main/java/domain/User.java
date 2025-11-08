@@ -181,4 +181,8 @@ public class User {
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
     }
+
+
+
+
 }
