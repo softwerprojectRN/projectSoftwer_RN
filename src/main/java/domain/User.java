@@ -4,7 +4,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 public class User {
 
@@ -180,6 +182,28 @@ public class User {
 
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
+    }
+
+
+    public List<Book> searchForBook(String searchTerm, String searchType) {
+        // يمكننا إضافة قاعدة عمل: يجب على المستخدم أن يكون مسجل دخوله ليتمكن من البحث.
+        if (!this.loggedIn) {
+            System.out.println("خطأ: يجب تسجيل الدخول للبحث عن كتب.");
+            return new ArrayList<>(); // إرجاع قائمة فارغة
+        }
+
+        System.out.println("المستخدم '" + this.username + "' يبحث عن '" + searchTerm + "' حسب " + searchType + "...");
+
+        // تفويض عملية البحث إلى الميثود الـ static في كلاس Book
+        List<Book> foundBooks = Book.searchBooks(searchTerm, searchType);
+
+        if (foundBooks.isEmpty()) {
+            System.out.println("لم يتم العثور على كتب تطابق معايير البحث.");
+        } else {
+            System.out.println("تم العثور على " + foundBooks.size() + " كتاب/كتب:");
+        }
+
+        return foundBooks;
     }
 
 
