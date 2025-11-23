@@ -13,7 +13,6 @@ public class Borrower extends User {
         this.fineBalance = 0.0;
     }
 
-    // Getters and Setters
     public List<MediaRecord> getBorrowedMedia() {
         return new ArrayList<>(borrowedMedia);
     }

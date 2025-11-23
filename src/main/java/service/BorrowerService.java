@@ -17,11 +17,9 @@ public class BorrowerService {
     }
 
     public void loadBorrowerData(Borrower borrower) {
-        // Load borrowed media
         List<MediaRecord> borrowedMedia = borrowRecordDAO.findActiveByUserId(borrower.getId());
         borrower.setBorrowedMedia(borrowedMedia);
 
-        // Load fine balance
         double fineBalance = fineDAO.getFineBalance(borrower.getId());
         borrower.setFineBalance(fineBalance);
 

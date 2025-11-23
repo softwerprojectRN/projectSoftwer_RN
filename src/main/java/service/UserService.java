@@ -13,25 +13,21 @@ public class UserService {
     }
 
     public User register(String username, String password) {
-        // Validate input
         if (username == null || username.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()) {
             System.err.println("Error: Username and password cannot be empty");
             return null;
         }
 
-        // Check if user already exists
         User existing = userDAO.findByUsername(username);
         if (existing != null) {
             System.out.println("User already exists: " + username);
             return null;
         }
 
-        // Generate salt and hash password
         String salt = PasswordUtil.generateSalt();
         String passwordHash = PasswordUtil.hashPassword(password, salt);
 
-        // Insert into database
         if (userDAO.insert(username, passwordHash, salt)) {
             System.out.println("User registered successfully: " + username);
             return userDAO.findByUsername(username);
@@ -48,7 +44,6 @@ public class UserService {
             return null;
         }
 
-        // Hash the input password and compare
         String inputHash = PasswordUtil.hashPassword(password, user.getSalt());
 
         if (user.getPasswordHash().equals(inputHash)) {

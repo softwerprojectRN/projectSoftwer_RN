@@ -18,7 +18,6 @@ public class BookService {
     }
 
     public Book addBook(String title, String author, String isbn) {
-        // Validate input
         if (title == null || title.trim().isEmpty() ||
                 author == null || author.trim().isEmpty() ||
                 isbn == null || isbn.trim().isEmpty()) {
@@ -26,21 +25,18 @@ public class BookService {
             return null;
         }
 
-        // Check if book with ISBN already exists
         Book existing = bookDAO.findByISBN(isbn);
         if (existing != null) {
             System.out.println("Book already exists (ISBN: " + isbn + ")");
             return null;
         }
 
-        // Insert into media table first
         int mediaId = mediaDAO.insert(title.trim(), "book");
         if (mediaId == -1) {
             System.err.println("Error: Failed to create media record");
             return null;
         }
 
-        // Insert into books table
         int bookId = bookDAO.insert(mediaId, author.trim(), isbn.trim());
         if (bookId != -1) {
             System.out.println("Book added successfully: " + title);

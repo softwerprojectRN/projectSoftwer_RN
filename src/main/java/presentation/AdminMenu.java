@@ -3,7 +3,6 @@ package presentation;
 import model.Admin;
 import service.AdminService;
 import service.BorrowingService;
-
 import java.util.Scanner;
 
 public class AdminMenu {
@@ -18,20 +17,91 @@ public class AdminMenu {
     }
 
     public void start() {
-        // Admin login
-        System.out.println("=== Admin Login ===");
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n=== Admin System ===");
+            System.out.println("1. Login as Admin");
+            System.out.println("2. Register New Admin");
+            System.out.println("3. Exit");
+            System.out.print("Select an option: ");
+
+            String input = scanner.nextLine().trim();
+            int choice;
+
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid option! Please enter a number.");
+                continue;
+            }
+
+            switch (choice) {
+                case 1:
+                    loginAdmin();
+                    if (currentAdmin != null) {
+                        showMenu();
+                    }
+                    break;
+                case 2:
+                    registerAdmin();
+                    break;
+                case 3:
+                    System.out.println("Exiting Admin System. Goodbye!");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid option!");
+            }
+        }
+    }
+
+    private void registerAdmin() {
+        System.out.println("\n=== Register New Admin ===");
         System.out.print("Username: ");
-        String username = scanner.nextLine();
+        String username = scanner.nextLine().trim();
+
+        if (username.isEmpty()) {
+            System.out.println("Username cannot be empty!");
+            return;
+        }
+
         System.out.print("Password: ");
-        String password = scanner.nextLine();
+        String password = scanner.nextLine().trim();
+
+        if (password.isEmpty()) {
+            System.out.println("Password cannot be empty!");
+            return;
+        }
+
+        System.out.print("Confirm Password: ");
+        String confirmPassword = scanner.nextLine().trim();
+
+        if (!password.equals(confirmPassword)) {
+            System.out.println("Passwords do not match!");
+            return;
+        }
+
+        Admin newAdmin = adminService.register(username, password);
+        if (newAdmin != null) {
+            System.out.println("Admin registered successfully! You can now login.");
+        } else {
+            System.out.println("Failed to register admin. Username might already exist.");
+        }
+    }
+
+    private void loginAdmin() {
+        System.out.println("\n=== Admin Login ===");
+        System.out.print("Username: ");
+        String username = scanner.nextLine().trim();
+
+        System.out.print("Password: ");
+        String password = scanner.nextLine().trim();
 
         currentAdmin = adminService.login(username, password);
         if (currentAdmin == null) {
             System.out.println("Invalid credentials!");
-            return;
         }
-
-        showMenu();
     }
 
     private void showMenu() {
@@ -40,11 +110,15 @@ public class AdminMenu {
             System.out.println("\n=== Admin Menu ===");
             System.out.println("1. Send Overdue Reminders");
             System.out.println("2. Unregister User");
-            System.out.println("3. Logout");
+            System.out.println("3. Add New Book");
+            System.out.println("4. Add New CD");
+            System.out.println("5. View All Users with Overdue Books");
+            System.out.println("6. Logout");
             System.out.print("Select an option: ");
 
             String input = scanner.nextLine().trim();
             int choice;
+
             try {
                 choice = Integer.parseInt(input);
             } catch (NumberFormatException e) {
@@ -60,7 +134,17 @@ public class AdminMenu {
                     unregisterUser();
                     break;
                 case 3:
+                    addNewBook();
+                    break;
+                case 4:
+                    addNewCD();
+                    break;
+                case 5:
+                    viewUsersWithOverdueBooks();
+                    break;
+                case 6:
                     currentAdmin.logout();
+                    currentAdmin = null;
                     running = false;
                     break;
                 default:
@@ -77,13 +161,116 @@ public class AdminMenu {
 
     private void unregisterUser() {
         System.out.print("\nEnter username to unregister: ");
-        String username = scanner.nextLine();
+        String username = scanner.nextLine().trim();
+
+        if (username.isEmpty()) {
+            System.out.println("Username cannot be empty!");
+            return;
+        }
+
+        System.out.print("Are you sure you want to unregister user '" + username + "'? (yes/no): ");
+        String confirm = scanner.nextLine().trim().toLowerCase();
+
+        if (!confirm.equals("yes")) {
+            System.out.println("Operation cancelled.");
+            return;
+        }
 
         boolean success = adminService.unregisterUser(username);
         if (success) {
             System.out.println("User unregistered successfully!");
         } else {
-            System.out.println("Failed to unregister user!");
+            System.out.println("Failed to unregister user! User might not exist.");
+        }
+    }
+
+    private void addNewBook() {
+        System.out.println("\n=== Add New Book ===");
+
+        System.out.print("Title: ");
+        String title = scanner.nextLine().trim();
+
+        System.out.print("Author: ");
+        String author = scanner.nextLine().trim();
+
+        System.out.print("ISBN: ");
+        String isbn = scanner.nextLine().trim();
+
+        if (title.isEmpty() || author.isEmpty() || isbn.isEmpty()) {
+            System.out.println("All fields are required!");
+            return;
+        }
+
+        service.BookService bookService = new service.BookService();
+        model.Book book = bookService.addBook(title, author, isbn);
+
+        if (book != null) {
+            System.out.println("Book added successfully!");
+            System.out.println(book);
+        } else {
+            System.out.println("Failed to add book!");
+        }
+    }
+
+    private void addNewCD() {
+        System.out.println("\n=== Add New CD ===");
+
+        System.out.print("Title: ");
+        String title = scanner.nextLine().trim();
+
+        System.out.print("Artist: ");
+        String artist = scanner.nextLine().trim();
+
+        System.out.print("Genre: ");
+        String genre = scanner.nextLine().trim();
+
+        System.out.print("Duration (in minutes): ");
+        String durationStr = scanner.nextLine().trim();
+
+        if (title.isEmpty() || artist.isEmpty()) {
+            System.out.println("Title and Artist are required!");
+            return;
+        }
+
+        int duration;
+        try {
+            duration = Integer.parseInt(durationStr);
+            if (duration <= 0) {
+                System.out.println("Duration must be a positive number!");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid duration format!");
+            return;
+        }
+
+        service.CDService cdService = new service.CDService();
+        model.CD cd = cdService.addCD(title, artist, genre, duration);
+
+        if (cd != null) {
+            System.out.println("CD added successfully!");
+            System.out.println(cd);
+        } else {
+            System.out.println("Failed to add CD!");
+        }
+    }
+
+    private void viewUsersWithOverdueBooks() {
+        System.out.println("\n=== Users with Overdue Books ===");
+        var usersWithOverdue = borrowingService.getUsersWithOverdueBooks();
+
+        if (usersWithOverdue.isEmpty()) {
+            System.out.println("No users have overdue books.");
+        } else {
+            System.out.println("Total users with overdue books: " + usersWithOverdue.size());
+            System.out.println("-----------------------------------");
+            for (var userInfo : usersWithOverdue) {
+                System.out.printf("User ID: %d | Username: %s | Overdue Books: %d%n",
+                        userInfo.getUserId(),
+                        userInfo.getUsername(),
+                        userInfo.getOverdueCount());
+            }
+            System.out.println("-----------------------------------");
         }
     }
 

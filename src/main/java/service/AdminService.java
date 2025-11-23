@@ -32,18 +32,15 @@ public class AdminService {
     }
 
     public Admin register(String username, String password) {
-        // Check if admin already exists
         Admin existing = adminDAO.findByUsername(username);
         if (existing != null) {
             System.out.println("Admin already exists: " + username);
             return null;
         }
 
-        // Generate salt and hash password
         String salt = PasswordUtil.generateSalt();
         String passwordHash = PasswordUtil.hashPassword(password, salt);
 
-        // Insert into database
         if (adminDAO.insert(username, passwordHash, salt)) {
             System.out.println("Admin registered successfully: " + username);
             return adminDAO.findByUsername(username);
@@ -60,7 +57,6 @@ public class AdminService {
             return null;
         }
 
-        // Hash the input password and compare
         String inputHash = PasswordUtil.hashPassword(password, admin.getSalt());
 
         if (admin.getPasswordHash().equals(inputHash)) {
