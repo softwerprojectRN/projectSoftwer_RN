@@ -1,6 +1,6 @@
 package model;
 
-public abstract class Media {
+public class Media {
     protected int id;
     protected String title;
     protected boolean isAvailable;
