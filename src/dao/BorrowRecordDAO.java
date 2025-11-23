@@ -1,0 +1,199 @@
+package dao;
+
+import model.*;
+import util.DatabaseConnection;
+
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class BorrowRecordDAO {
+
+    public void initializeTable() {
+        Connection conn = DatabaseConnection.getConnection();
+        if (conn == null) return;
+
+        String sql = "CREATE TABLE IF NOT EXISTS borrow_records (\n" +
+                "  id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "  user_id INTEGER NOT NULL,\n" +
+                "  media_id INTEGER NOT NULL,\n" +
+                "  media_type TEXT NOT NULL,\n" +
+                "  media_title TEXT NOT NULL,\n" +
+                "  borrow_date TEXT NOT NULL,\n" +
+                "  due_date TEXT NOT NULL,\n" +
+                "  returned INTEGER DEFAULT 0,\n" +
+                "  return_date TEXT,\n" +
+                "  fine REAL DEFAULT 0.0,\n" +
+                "  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,\n" +
+                "  FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE\n" +
+                ");";
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Borrow records table created successfully.");
+        } catch (SQLException e) {
+            System.err.println("Error creating borrow_records table: " + e.getMessage());
+        }
+    }
+
+    public int insert(int userId, int mediaId, String mediaType, String mediaTitle,
+                      LocalDate borrowDate, LocalDate dueDate) {
+        Connection conn = DatabaseConnection.getConnection();
+        if (conn == null) return -1;
+
+        String sql = "INSERT INTO borrow_records (user_id, media_id, media_type, media_title, " +
+                "borrow_date, due_date) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, mediaId);
+            pstmt.setString(3, mediaType);
+            pstmt.setString(4, mediaTitle);
+            pstmt.setString(5, borrowDate.toString());
+            pstmt.setString(6, dueDate.toString());
+            pstmt.executeUpdate();
+
+            ResultSet generatedKeys = pstmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error inserting borrow record: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    public boolean markAsReturned(int recordId, LocalDate returnDate, double fine) {
+        Connection conn = DatabaseConnection.getConnection();
+        if (conn == null) return false;
+
+        String sql = "UPDATE borrow_records SET returned = 1, return_date = ?, fine = ? WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, returnDate.toString());
+            pstmt.setDouble(2, fine);
+            pstmt.setInt(3, recordId);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Error marking record as returned: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public List<MediaRecord> findActiveByUserId(int userId) {
+        List<MediaRecord> records = new ArrayList<>();
+        Connection conn = DatabaseConnection.getConnection();
+        if (conn == null) return records;
+
+        String sql = "SELECT br.*, m.media_type FROM borrow_records br " +
+                "JOIN media m ON br.media_id = m.id " +
+                "WHERE br.user_id = ? AND br.returned = 0";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int mediaId = rs.getInt("media_id");
+                String mediaType = rs.getString("media_type");
+                String title = rs.getString("media_title");
+                LocalDate dueDate = LocalDate.parse(rs.getString("due_date"));
+                int recordId = rs.getInt("id");
+
+                Media media = null;
+
+                if (mediaType.equals("book")) {
+                    // Fetch book details
+                    BookDAO bookDAO = new BookDAO();
+                    String bookSql = "SELECT b.author, b.isbn FROM books b WHERE b.id = ?";
+                    try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {
+                        bookStmt.setInt(1, mediaId);
+                        ResultSet bookRs = bookStmt.executeQuery();
+                        if (bookRs.next()) {
+                            media = new Book(mediaId, title, bookRs.getString("author"),
+                                    bookRs.getString("isbn"), false);
+                        }
+                    }
+                } else if (mediaType.equals("cd")) {
+                    // Fetch CD details
+                    String cdSql = "SELECT c.artist, c.genre, c.duration FROM cds c WHERE c.id = ?";
+                    try (PreparedStatement cdStmt = conn.prepareStatement(cdSql)) {
+                        cdStmt.setInt(1, mediaId);
+                        ResultSet cdRs = cdStmt.executeQuery();
+                        if (cdRs.next()) {
+                            media = new CD(mediaId, title, cdRs.getString("artist"),
+                                    cdRs.getString("genre"), cdRs.getInt("duration"), false);
+                        }
+                    }
+                }
+
+                if (media != null) {
+                    records.add(new MediaRecord(recordId, media, dueDate));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error loading borrowed media: " + e.getMessage());
+        }
+        return records;
+    }
+
+    public List<UserWithOverdueBooks> getUsersWithOverdueBooks() {
+        List<UserWithOverdueBooks> usersWithOverdueBooks = new ArrayList<>();
+        Connection conn = DatabaseConnection.getConnection();
+        if (conn == null) return usersWithOverdueBooks;
+
+        String sql = "SELECT u.id, u.username, COUNT(br.id) as overdue_count " +
+                "FROM users u " +
+                "JOIN borrow_records br ON u.id = br.user_id " +
+                "WHERE br.returned = 0 AND br.due_date < date('now') " +
+                "GROUP BY u.id, u.username";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int userId = rs.getInt("id");
+                String username = rs.getString("username");
+                int overdueCount = rs.getInt("overdue_count");
+
+                usersWithOverdueBooks.add(new UserWithOverdueBooks(userId, username, overdueCount));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting users with overdue books: " + e.getMessage());
+        }
+        return usersWithOverdueBooks;
+    }
+
+    public List<MediaRecord> findOverdueByUserId(int userId) {
+        List<MediaRecord> overdueRecords = new ArrayList<>();
+        List<MediaRecord> allRecords = findActiveByUserId(userId);
+
+        for (MediaRecord record : allRecords) {
+            if (record.isOverdue()) {
+                overdueRecords.add(record);
+            }
+        }
+        return overdueRecords;
+    }
+
+    public int countActiveByUserId(int userId) {
+        Connection conn = DatabaseConnection.getConnection();
+        if (conn == null) return 0;
+
+        String sql = "SELECT COUNT(*) as count FROM borrow_records " +
+                "WHERE user_id = ? AND returned = 0";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error counting active records: " + e.getMessage());
+        }
+        return 0;
+    }
+}
