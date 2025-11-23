@@ -7,17 +7,17 @@ import util.PasswordUtil;
 import java.sql.*;
 
 public class UserDAO {
-    
+
     public void initializeTable() {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return;
 
         String sql = "CREATE TABLE IF NOT EXISTS users (\n" +
-                     "  id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                     "  username TEXT NOT NULL UNIQUE,\n" +
-                     "  password_hash TEXT NOT NULL,\n" +
-                     "  salt TEXT NOT NULL\n" +
-                     ");";
+                "  id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "  username TEXT NOT NULL UNIQUE,\n" +
+                "  password_hash TEXT NOT NULL,\n" +
+                "  salt TEXT NOT NULL\n" +
+                ");";
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
@@ -38,10 +38,10 @@ public class UserDAO {
 
             if (rs.next()) {
                 return new User(
-                    rs.getInt("id"),
-                    rs.getString("username"),
-                    rs.getString("password_hash"),
-                    rs.getString("salt")
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password_hash"),
+                        rs.getString("salt")
                 );
             }
         } catch (SQLException e) {

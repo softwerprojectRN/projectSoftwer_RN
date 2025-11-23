@@ -9,7 +9,7 @@ public class PasswordUtil {
 
     public static String generateSalt() {
         SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
+        byte[] salt = new byte[16]; // حجم الـ salt
         random.nextBytes(salt);
         return Base64.getEncoder().encodeToString(salt);
     }
@@ -17,7 +17,7 @@ public class PasswordUtil {
     public static String hashPassword(String password, String salt) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(Base64.getDecoder().decode(salt)); // مهم: decode الـ Base64
+            md.update(Base64.getDecoder().decode(salt));
             byte[] hashedBytes = md.digest(password.getBytes());
             return Base64.getEncoder().encodeToString(hashedBytes);
         } catch (NoSuchAlgorithmException e) {

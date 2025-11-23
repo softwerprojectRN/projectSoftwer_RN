@@ -1,8 +1,10 @@
 package strategy;
-
+import model.Book;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import model.Media;
+
 
 public class SearchByISBN implements SearchStrategy {
     @Override
