@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 
 public class EmailServer {
-
     private final String username;
     private final String password;
     private final List<Email> sentEmails = new ArrayList<>();
@@ -47,10 +46,13 @@ public class EmailServer {
     // Constructor that loads credentials from .env file
     public EmailServer() {
         try {
-            Dotenv dotenv = Dotenv.load();
+            Dotenv dotenv = Dotenv.configure()
+                    .ignoreIfMissing()
+                    .load();
+
             this.username = dotenv.get("EMAIL_USERNAME");
             this.password = dotenv.get("EMAIL_PASSWORD");
-            
+
             // Validate credentials
             if (username == null || username.isEmpty()) {
                 throw new IllegalStateException("EMAIL_USERNAME not found in .env file");
@@ -58,12 +60,21 @@ public class EmailServer {
             if (password == null || password.isEmpty()) {
                 throw new IllegalStateException("EMAIL_PASSWORD not found in .env file");
             }
+
+            System.out.println("Email server initialized successfully");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize EmailServer: " + e.getMessage(), e);
         }
     }
 
     public EmailServer(String username, String password) {
+        if (username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty");
+        }
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+
         this.username = username;
         this.password = password;
     }
@@ -80,36 +91,40 @@ public class EmailServer {
             throw new IllegalArgumentException("Recipient email address cannot be null or empty");
         }
 
-        // إعداد خصائص SMTP
+        // Setup SMTP properties
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
 
-        // إنشاء جلسة مع المصادقة
+        // Create session with authentication
         Session session = Session.getInstance(props, new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
         });
 
         try {
-            // إنشاء رسالة
+            // Create message
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject(subject);
             message.setText(body);
 
-            // إرسال الرسالة
+            // Send message
             Transport.send(message);
-            System.out.println("تم إرسال البريد بنجاح إلى: " + to);
-            
+            System.out.println("Email sent successfully to: " + to);
+
             // Track the sent email
             sentEmails.add(new Email(to, subject, body));
         } catch (MessagingException e) {
-            throw new RuntimeException("فشل في إرسال البريد: " + e.getMessage(), e);
+            System.err.println("Failed to send email: " + e.getMessage());
+            throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
         }
     }
 
@@ -123,19 +138,32 @@ public class EmailServer {
         sentEmails.clear();
     }
 
-    public static void run() {
-        System.out.println("Current working directory: " + System.getProperty("user.dir"));
-        Dotenv dotenv = Dotenv.load();
-        String username = dotenv.get("EMAIL_USERNAME");
-        String password = dotenv.get("EMAIL_PASSWORD");
+    public static void main(String[] args) {
+        try {
+            System.out.println("Current working directory: " + System.getProperty("user.dir"));
 
-        EmailServer emailService = new EmailServer(username, password);
-        String subject = "hi ";
-        String body = "hi";
-        emailService.sendEmail("s12216975@stu.najah.edu", subject, body);
-    }
+            Dotenv dotenv = Dotenv.configure()
+                    .ignoreIfMissing()
+                    .load();
 
-    public static void main(String []s) {
-        run();
+            String username = dotenv.get("EMAIL_USERNAME");
+            String password = dotenv.get("EMAIL_PASSWORD");
+
+            if (username == null || password == null) {
+                System.err.println("Email credentials not found in .env file");
+                return;
+            }
+
+            EmailServer emailService = new EmailServer(username, password);
+            String subject = "Test Email";
+            String body = "This is a test email from the Library System";
+
+            emailService.sendEmail("s12216975@stu.najah.edu", subject, body);
+
+            System.out.println("Email sent successfully!");
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
