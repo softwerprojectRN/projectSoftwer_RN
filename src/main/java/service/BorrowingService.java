@@ -38,7 +38,6 @@ public class BorrowingService {
     }
 
     public boolean borrowMedia(Borrower borrower, Media media) {
-        // Validation checks
         if (!borrower.isLoggedIn()) {
             System.out.println("Error: You must be logged in to borrow media.");
             return false;
@@ -59,14 +58,11 @@ public class BorrowingService {
             return false;
         }
 
-        // Calculate due date
         LocalDate dueDate = LocalDate.now().plusDays(BORROW_DAYS.get(media.getMediaType()));
 
-        // Update media availability
         mediaDAO.updateAvailability(media.getId(), false);
         media.setAvailable(false);
 
-        // Create borrow record
         int recordId = borrowRecordDAO.insert(
                 borrower.getId(),
                 media.getId(),
@@ -77,7 +73,6 @@ public class BorrowingService {
         );
 
         if (recordId != -1) {
-            // Add to borrower's list
             MediaRecord record = new MediaRecord(recordId, media, dueDate);
             List<MediaRecord> borrowed = borrower.getBorrowedMedia();
             borrowed.add(record);
@@ -93,11 +88,9 @@ public class BorrowingService {
     public boolean returnMedia(Borrower borrower, Media media) {
         for (MediaRecord record : borrower.getBorrowedMedia()) {
             if (record.getMedia().getId() == media.getId()) {
-                // Update media availability
                 mediaDAO.updateAvailability(media.getId(), true);
                 media.setAvailable(true);
 
-                // Calculate fine if overdue
                 double mediaFine = 0.0;
                 if (record.isOverdue()) {
                     long overdueDays = record.getOverdueDays();
@@ -105,17 +98,14 @@ public class BorrowingService {
                     System.out.println("Media is " + overdueDays + " days overdue. Fine: " + mediaFine);
                 }
 
-                // Update borrow record
                 borrowRecordDAO.markAsReturned(record.getRecordId(), LocalDate.now(), mediaFine);
 
-                // Update fine balance
                 if (mediaFine > 0) {
                     double newBalance = borrower.getFineBalance() + mediaFine;
                     borrower.setFineBalance(newBalance);
                     fineDAO.updateFine(borrower.getId(), newBalance);
                 }
 
-                // Remove from borrower's list
                 List<MediaRecord> borrowed = borrower.getBorrowedMedia();
                 borrowed.remove(record);
                 borrower.setBorrowedMedia(borrowed);

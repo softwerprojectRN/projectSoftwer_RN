@@ -13,7 +13,6 @@ public class Media {
         this.mediaType = mediaType;
     }
 
-    // Getters
     public int getId() { return id; }
     public String getTitle() { return title; }
     public boolean isAvailable() { return isAvailable; }

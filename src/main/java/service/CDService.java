@@ -30,14 +30,12 @@ public class CDService {
             return null;
         }
 
-        // Insert into media table first
         int mediaId = mediaDAO.insert(title.trim(), "cd");
         if (mediaId == -1) {
             System.err.println("Error: Failed to create media record");
             return null;
         }
 
-        // Insert into CDs table
         int cdId = cdDAO.insert(mediaId, artist.trim(), genre != null ? genre.trim() : "", duration);
         if (cdId != -1) {
             System.out.println("CD added successfully: " + title);
