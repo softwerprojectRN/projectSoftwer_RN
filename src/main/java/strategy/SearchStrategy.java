@@ -1,4 +1,4 @@
-package domain;
+package strategy;
 
 import java.util.List;
 

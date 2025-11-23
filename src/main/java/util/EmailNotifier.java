@@ -1,6 +1,9 @@
-package domain;
+package util;
+import model.*;
+import util.*;
 
- interface Observer {
+
+interface Observer {
     void notify(User user, String message);
 }
 

@@ -1,7 +1,10 @@
-package domain;
+package strategy;
 
+import model.Book;
+import strategy.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class BookSearcher {
     private SearchStrategy searchStrategy;

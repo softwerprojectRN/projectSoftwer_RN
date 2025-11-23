@@ -1,4 +1,4 @@
-package domain;
+package strategy;
 
 import java.sql.*;
 import java.util.ArrayList;

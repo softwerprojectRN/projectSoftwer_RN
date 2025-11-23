@@ -1,4 +1,4 @@
-package domain;
+package util;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.*;
