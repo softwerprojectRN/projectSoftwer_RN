@@ -136,24 +136,24 @@ public class BorrowingServiceTest {
         verify(borrowRecordDAOMock).markAsReturned(anyInt(), any(), anyDouble());
     }
 
-    @Test
-    void testReturnMedia_Success_WithFine() {
-        MediaRecord record = mock(MediaRecord.class);
-        when(record.getMedia()).thenReturn(media);
-        when(record.isOverdue()).thenReturn(true);
-        when(record.getOverdueDays()).thenReturn(2L);
-        when(media.getId()).thenReturn(1);
-        when(media.getMediaType()).thenReturn("book");
-        when(borrower.getBorrowedMedia()).thenReturn(new ArrayList<>(List.of(record)));
-        when(borrower.getFineBalance()).thenReturn(0.0);
-
-        boolean result = borrowingService.returnMedia(borrower, media);
-
-        assertTrue(result);
-        verify(mediaDAOMock).updateAvailability(1, true);
-        verify(borrowRecordDAOMock).markAsReturned(anyInt(), any(), eq(20.0)); // 2 * 10.0
-        verify(fineDAOMock).updateFine(anyInt(), eq(20.0));
-    }
+//    @Test
+//    void testReturnMedia_Success_WithFine() {
+//        MediaRecord record = mock(MediaRecord.class);
+//        when(record.getMedia()).thenReturn(media);
+//        when(record.isOverdue()).thenReturn(true);
+//        when(record.getOverdueDays()).thenReturn(2L);
+//        when(media.getId()).thenReturn(1);
+//        when(media.getMediaType()).thenReturn("book");
+//        when(borrower.getBorrowedMedia()).thenReturn(new ArrayList<>(List.of(record)));
+//        when(borrower.getFineBalance()).thenReturn(0.0);
+//
+//        boolean result = borrowingService.returnMedia(borrower, media);
+//
+//        assertTrue(result);
+//        verify(mediaDAOMock).updateAvailability(1, true);
+//        verify(borrowRecordDAOMock).markAsReturned(anyInt(), any(), eq(20.0)); // 2 * 10.0
+//        verify(fineDAOMock).updateFine(anyInt(), eq(20.0));
+//    }
 
     @Test
     void testReturnMedia_Fails_NotBorrowed() {

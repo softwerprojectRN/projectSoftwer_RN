@@ -7,12 +7,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * Represents an email server that can send emails and track sent messages.
+ * <p>
+ * Supports loading credentials from a .env file or directly via constructor.
+ * Provides methods to send emails, view sent emails, and clear email history.
+ * <p>
+ * Usage example:
+ * <pre>
+ * EmailServer server = new EmailServer();
+ * server.sendEmail("recipient@example.com", "Subject", "Body");
+ * </pre>
+ * </p>
+ * Author: Library Management System
+ * Version: 1.0
+ */
 public class EmailServer {
     private final String username;
     private final String password;
     private final List<Email> sentEmails = new ArrayList<>();
 
-    // Inner class to represent a sent email
+
+
+    /**
+     * Inner class representing a sent email.
+     */
     public static class Email {
         private final String to;
         private final String subject;
@@ -43,7 +62,10 @@ public class EmailServer {
         }
     }
 
-    // Constructor that loads credentials from .env file
+    /**
+     * Constructs an EmailServer and loads credentials from a .env file.
+     * Throws IllegalStateException if credentials are missing.
+     */
     public EmailServer() {
         try {
             Dotenv dotenv = Dotenv.configure()
@@ -53,7 +75,6 @@ public class EmailServer {
             this.username = dotenv.get("EMAIL_USERNAME");
             this.password = dotenv.get("EMAIL_PASSWORD");
 
-            // Validate credentials
             if (username == null || username.isEmpty()) {
                 throw new IllegalStateException("EMAIL_USERNAME not found in .env file");
             }
@@ -67,6 +88,12 @@ public class EmailServer {
         }
     }
 
+    /**
+     * Constructs an EmailServer with explicit username and password.
+     *
+     * @param username email username
+     * @param password email password
+     */
     public EmailServer(String username, String password) {
         if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty");
@@ -79,8 +106,15 @@ public class EmailServer {
         this.password = password;
     }
 
+    /**
+     * Sends an email to a recipient with the specified subject and body.
+     * Tracks sent emails in memory.
+     *
+     * @param to recipient email address
+     * @param subject email subject
+     * @param body email body
+     */
     public void sendEmail(String to, String subject, String body) {
-        // Validate credentials before attempting to send
         if (username == null || username.isEmpty()) {
             throw new IllegalStateException("Email username is not configured");
         }
@@ -91,7 +125,6 @@ public class EmailServer {
             throw new IllegalArgumentException("Recipient email address cannot be null or empty");
         }
 
-        // Setup SMTP properties
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -100,7 +133,6 @@ public class EmailServer {
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         props.put("mail.smtp.ssl.protocols", "TLSv1.2");
 
-        // Create session with authentication
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -109,18 +141,15 @@ public class EmailServer {
         });
 
         try {
-            // Create message
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject(subject);
             message.setText(body);
 
-            // Send message
             Transport.send(message);
             System.out.println("Email sent successfully to: " + to);
 
-            // Track the sent email
             sentEmails.add(new Email(to, subject, body));
         } catch (MessagingException e) {
             System.err.println("Failed to send email: " + e.getMessage());
@@ -128,16 +157,25 @@ public class EmailServer {
         }
     }
 
-    // Method to get list of sent emails (returns a copy to prevent external modification)
+    /**
+     * Returns a copy of the list of sent emails.
+     * @return list of sent emails
+     */
     public List<Email> getSentEmails() {
         return new ArrayList<>(sentEmails);
     }
 
-    // Method to clear sent emails history
+    /**
+     * Clears the sent emails history.
+     */
     public void clearSentEmails() {
         sentEmails.clear();
     }
 
+    /**
+     * Main method for testing the email server.
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         try {
             System.out.println("Current working directory: " + System.getProperty("user.dir"));

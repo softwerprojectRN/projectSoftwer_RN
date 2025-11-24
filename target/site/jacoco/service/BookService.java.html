@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BookService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=٤;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">BookService.java</span></div><h1>BookService.java</h1><pre class="source lang-java linenums">package service;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BookService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">BookService.java</span></div><h1>BookService.java</h1><pre class="source lang-java linenums">package service;
 
 import dao.BookDAO;
 import dao.MediaDAO;
@@ -6,66 +6,101 @@ import model.Book;
 
 import java.util.List;
 
+/**
+ * Service class responsible for book-related operations such as adding books,
+ * retrieving all books, and searching books by title, author, or ISBN.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class BookService {
+
+    /** DAO used for interacting with the books table. */
     private final BookDAO bookDAO;
+
+    /** DAO used for interacting with the media table. */
     private final MediaDAO mediaDAO;
 
-<span class="fc" id="L13">    public BookService() {</span>
-<span class="fc" id="L14">        this.bookDAO = new BookDAO();</span>
-<span class="fc" id="L15">        this.mediaDAO = new MediaDAO();</span>
-<span class="fc" id="L16">        this.bookDAO.initializeTable();</span>
-<span class="fc" id="L17">        this.mediaDAO.initializeTable();</span>
-<span class="fc" id="L18">    }</span>
+    /**
+     * Constructs a BookService instance and initializes required database tables.
+     */
+<span class="fc" id="L27">    public BookService() {</span>
+<span class="fc" id="L28">        this.bookDAO = new BookDAO();</span>
+<span class="fc" id="L29">        this.mediaDAO = new MediaDAO();</span>
+<span class="fc" id="L30">        this.bookDAO.initializeTable();</span>
+<span class="fc" id="L31">        this.mediaDAO.initializeTable();</span>
+<span class="fc" id="L32">    }</span>
 
+    /**
+     * Adds a new book to the system.
+     *
+     * @param title  The title of the book.
+     * @param author The author of the book.
+     * @param isbn   The ISBN of the book.
+     * @return A Book object representing the newly added book,
+     *         or null if the operation fails.
+     */
     public Book addBook(String title, String author, String isbn) {
-<span class="pc bpc" id="L21" title="2 of 6 branches missed.">        if (title == null || title.trim().isEmpty() ||</span>
-<span class="pc bpc" id="L22" title="1 of 4 branches missed.">                author == null || author.trim().isEmpty() ||</span>
-<span class="fc bfc" id="L23" title="All 2 branches covered.">                isbn == null || isbn.trim().isEmpty()) {</span>
-<span class="fc" id="L24">            System.err.println(&quot;Error: All fields must be non-empty&quot;);</span>
-<span class="fc" id="L25">            return null;</span>
+<span class="pc bpc" id="L44" title="2 of 6 branches missed.">        if (title == null || title.trim().isEmpty() ||</span>
+<span class="pc bpc" id="L45" title="1 of 4 branches missed.">                author == null || author.trim().isEmpty() ||</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">                isbn == null || isbn.trim().isEmpty()) {</span>
+<span class="fc" id="L47">            System.err.println(&quot;Error: All fields must be non-empty&quot;);</span>
+<span class="fc" id="L48">            return null;</span>
         }
 
-<span class="fc" id="L28">        Book existing = bookDAO.findByISBN(isbn);</span>
-<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (existing != null) {</span>
-<span class="fc" id="L30">            System.out.println(&quot;Book already exists (ISBN: &quot; + isbn + &quot;)&quot;);</span>
-<span class="fc" id="L31">            return null;</span>
+<span class="fc" id="L51">        Book existing = bookDAO.findByISBN(isbn);</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (existing != null) {</span>
+<span class="fc" id="L53">            System.out.println(&quot;Book already exists (ISBN: &quot; + isbn + &quot;)&quot;);</span>
+<span class="fc" id="L54">            return null;</span>
         }
 
-<span class="fc" id="L34">        int mediaId = mediaDAO.insert(title.trim(), &quot;book&quot;);</span>
-<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (mediaId == -1) {</span>
-<span class="fc" id="L36">            System.err.println(&quot;Error: Failed to create media record&quot;);</span>
-<span class="fc" id="L37">            return null;</span>
+<span class="fc" id="L57">        int mediaId = mediaDAO.insert(title.trim(), &quot;book&quot;);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (mediaId == -1) {</span>
+<span class="fc" id="L59">            System.err.println(&quot;Error: Failed to create media record&quot;);</span>
+<span class="fc" id="L60">            return null;</span>
         }
 
-<span class="fc" id="L40">        int bookId = bookDAO.insert(mediaId, author.trim(), isbn.trim());</span>
-<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (bookId != -1) {</span>
-<span class="fc" id="L42">            System.out.println(&quot;Book added successfully: &quot; + title);</span>
-<span class="fc" id="L43">            return new Book(bookId, title, author, isbn, true);</span>
+<span class="fc" id="L63">        int bookId = bookDAO.insert(mediaId, author.trim(), isbn.trim());</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (bookId != -1) {</span>
+<span class="fc" id="L65">            System.out.println(&quot;Book added successfully: &quot; + title);</span>
+<span class="fc" id="L66">            return new Book(bookId, title, author, isbn, true);</span>
         }
 
-<span class="fc" id="L46">        return null;</span>
+<span class="fc" id="L69">        return null;</span>
     }
 
+    /**
+     * Retrieves all books stored in the system.
+     *
+     * @return A list of all Book objects.
+     */
     public List&lt;Book&gt; getAllBooks() {
-<span class="fc" id="L50">        return bookDAO.findAll();</span>
+<span class="fc" id="L78">        return bookDAO.findAll();</span>
     }
 
+    /**
+     * Searches for books based on a provided search term and search type.
+     *
+     * @param searchTerm The keyword to search for.
+     * @param searchType The type of search: &quot;title&quot;, &quot;author&quot;, or &quot;isbn&quot;.
+     * @return A list of books matching the search criteria.
+     */
     public List&lt;Book&gt; searchBooks(String searchTerm, String searchType) {
-<span class="pc bpc" id="L54" title="1 of 4 branches missed.">        if (searchTerm == null || searchTerm.trim().isEmpty()) {</span>
-<span class="fc" id="L55">            System.out.println(&quot;Search term cannot be empty&quot;);</span>
-<span class="fc" id="L56">            return List.of();</span>
+<span class="pc bpc" id="L89" title="1 of 4 branches missed.">        if (searchTerm == null || searchTerm.trim().isEmpty()) {</span>
+<span class="fc" id="L90">            System.out.println(&quot;Search term cannot be empty&quot;);</span>
+<span class="fc" id="L91">            return List.of();</span>
         }
 
-<span class="fc bfc" id="L59" title="All 4 branches covered.">        switch (searchType.toLowerCase()) {</span>
+<span class="fc bfc" id="L94" title="All 4 branches covered.">        switch (searchType.toLowerCase()) {</span>
             case &quot;title&quot;:
-<span class="fc" id="L61">                return bookDAO.searchByTitle(searchTerm);</span>
+<span class="fc" id="L96">                return bookDAO.searchByTitle(searchTerm);</span>
             case &quot;author&quot;:
-<span class="fc" id="L63">                return bookDAO.searchByAuthor(searchTerm);</span>
+<span class="fc" id="L98">                return bookDAO.searchByAuthor(searchTerm);</span>
             case &quot;isbn&quot;:
-<span class="fc" id="L65">                return bookDAO.searchByISBNPattern(searchTerm);</span>
+<span class="fc" id="L100">                return bookDAO.searchByISBNPattern(searchTerm);</span>
             default:
-<span class="fc" id="L67">                System.out.println(&quot;Invalid search type. Using title search.&quot;);</span>
-<span class="fc" id="L68">                return bookDAO.searchByTitle(searchTerm);</span>
+<span class="fc" id="L102">                System.out.println(&quot;Invalid search type. Using title search.&quot;);</span>
+<span class="fc" id="L103">                return bookDAO.searchByTitle(searchTerm);</span>
         }
     }
 }

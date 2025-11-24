@@ -9,12 +9,12 @@ github-inti-demo,dao,CDDAO,213,186,21,15,60,58,15,11,3,5
 github-inti-demo,dao,FineDAO,22,172,5,15,4,51,5,13,0,8
 github-inti-demo,dao,MediaDAO,99,21,13,1,27,9,9,2,2,2
 github-inti-demo,util,EmailNotifier,0,50,0,6,0,17,0,5,0,2
-github-inti-demo,util,DatabaseConnection,11,3,0,0,4,1,1,1,1,1
+github-inti-demo,util,DatabaseConnection,3,11,0,0,1,4,1,1,1,1
 github-inti-demo,util,EmailServer.Email,3,24,0,0,1,9,1,4,1,4
 github-inti-demo,util,EmailServer.new Authenticator() {...},10,6,0,0,1,1,1,1,1,1
-github-inti-demo,util,PasswordUtil,11,31,0,0,3,8,1,2,1,2
+github-inti-demo,util,PasswordUtil,11,52,0,4,3,12,1,4,1,2
 github-inti-demo,util,EmailServer,96,190,15,17,28,45,14,8,1,5
-github-inti-demo,service,BorrowingService,3,279,2,16,2,66,2,14,0,7
+github-inti-demo,service,BorrowingService,41,246,4,14,9,60,4,12,0,7
 github-inti-demo,service,UserService,2,99,1,15,1,28,1,10,0,3
 github-inti-demo,service,AdminService,26,160,3,13,8,46,3,12,0,7
 github-inti-demo,service,CDService,1,142,4,20,0,33,4,14,0,5
@@ -22,13 +22,13 @@ github-inti-demo,service,BorrowerService,135,97,11,7,29,23,7,7,1,4
 github-inti-demo,service,BookService,0,144,4,22,0,34,4,14,0,4
 github-inti-demo,model,Book,0,27,0,0,0,7,0,4,0,4
 github-inti-demo,model,Media,0,47,0,2,0,14,0,8,0,7
-github-inti-demo,model,User,0,67,0,2,0,22,0,13,0,12
+github-inti-demo,model,User,0,67,0,2,0,27,0,13,0,12
 github-inti-demo,model,CD,16,19,0,0,3,6,3,2,3,2
-github-inti-demo,model,MediaRecord,33,12,2,0,8,5,8,1,7,1
+github-inti-demo,model,MediaRecord,33,12,2,0,10,5,8,1,7,1
 github-inti-demo,model,Borrower,0,57,0,4,0,16,0,8,0,6
 github-inti-demo,model,Admin,0,13,0,0,0,4,0,2,0,2
 github-inti-demo,model,UserWithOverdueBooks,0,21,0,0,0,8,0,4,0,4
-github-inti-demo,strategy,BookSearcher,29,0,4,0,9,0,5,0,3,0
-github-inti-demo,strategy,SearchByAuthor,13,0,0,0,4,0,2,0,2,0
-github-inti-demo,strategy,SearchByISBN,13,0,0,0,4,0,2,0,2,0
-github-inti-demo,strategy,SearchByTitle,13,0,0,0,4,0,2,0,2,0
+github-inti-demo,strategy,BookSearcher,0,29,0,4,0,9,0,5,0,3
+github-inti-demo,strategy,SearchByAuthor,0,13,0,0,0,4,0,2,0,2
+github-inti-demo,strategy,SearchByISBN,0,13,0,0,0,4,0,2,0,2
+github-inti-demo,strategy,SearchByTitle,0,13,0,0,0,4,0,2,0,2
