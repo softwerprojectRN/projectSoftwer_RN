@@ -4,6 +4,7 @@ AdminServiceTest.class
 CDDAOTest.class
 BorrowRecordDAOTest.class
 EmailNotifierTest.class
+CDTest.class
 model\UserTest.class
 MediaTest.class
 BorrowerServiceTest$1.class
@@ -12,6 +13,7 @@ BookServiceTest.class
 AdminTest.class
 BookDAOTest.class
 MediaDAOTest.class
+MediaRecordTest.class
 BorrowingServiceTest.class
 FineDAOTest.class
 UserDAOTest.class
