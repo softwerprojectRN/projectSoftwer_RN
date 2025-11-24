@@ -7,15 +7,38 @@ import model.MediaRecord;
 
 import java.util.List;
 
+/**
+ * Service class that manages borrower-related operations such as loading
+ * borrowed media data, generating overdue reports, paying fines,
+ * and displaying borrowed items.
+ *
+ * <p>This service interacts with {@link BorrowRecordDAO} and {@link FineDAO}
+ * to retrieve and update borrower information.</p>
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class BorrowerService {
+
+    /** DAO used for retrieving and updating borrow record information. */
     private final BorrowRecordDAO borrowRecordDAO;
+
+    /** DAO used for managing borrower fines. */
     private final FineDAO fineDAO;
 
+    /**
+     * Constructs a BorrowerService instance and initializes DAOs.
+     */
     public BorrowerService() {
         this.borrowRecordDAO = new BorrowRecordDAO();
         this.fineDAO = new FineDAO();
     }
 
+    /**
+     * Loads a borrower's currently borrowed media items and fine balance.
+     *
+     * @param borrower The borrower whose data will be loaded.
+     */
     public void loadBorrowerData(Borrower borrower) {
         List<MediaRecord> borrowedMedia = borrowRecordDAO.findActiveByUserId(borrower.getId());
         borrower.setBorrowedMedia(borrowedMedia);
@@ -26,6 +49,12 @@ public class BorrowerService {
         System.out.println("Loaded " + borrowedMedia.size() + " borrowed items for " + borrower.getUsername());
     }
 
+    /**
+     * Generates and prints a detailed overdue report for the borrower,
+     * including overdue days and calculated fines.
+     *
+     * @param borrower The borrower for whom the overdue report is generated.
+     */
     public void generateOverdueReport(Borrower borrower) {
         List<MediaRecord> overdueItems = borrower.getOverdueMedia();
 
@@ -53,6 +82,13 @@ public class BorrowerService {
         System.out.println("=============================\n");
     }
 
+    /**
+     * Processes a fine payment for a borrower.
+     *
+     * @param borrower The borrower making the payment.
+     * @param amount   The payment amount.
+     * @return true if the payment is successful, false otherwise.
+     */
     public boolean payFine(Borrower borrower, double amount) {
         if (amount <= 0 || amount > borrower.getFineBalance()) {
             System.out.println("Invalid payment amount.");
@@ -69,6 +105,12 @@ public class BorrowerService {
         return false;
     }
 
+    /**
+     * Displays all currently borrowed media items for a borrower.
+     * Includes overdue warnings when applicable.
+     *
+     * @param borrower The borrower whose borrowed media will be displayed.
+     */
     public void displayBorrowedMedia(Borrower borrower) {
         List<MediaRecord> borrowed = borrower.getBorrowedMedia();
 

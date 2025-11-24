@@ -1,20 +1,30 @@
 package dao;
 
 import util.DatabaseConnection;
-
 import java.sql.*;
 
+/**
+ * Data Access Object for Media entity.
+ * Manages database operations for the base media table that both books and CDs inherit from.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class MediaDAO {
 
+    /**
+     * Initializes the media table in the database.
+     * Creates the base table for all media types.
+     */
     public void initializeTable() {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return;
 
         String sql = "CREATE TABLE IF NOT EXISTS media (\n" +
-                "  id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                "  title TEXT NOT NULL,\n" +
-                "  media_type TEXT NOT NULL,\n" +
-                "  available INTEGER NOT NULL DEFAULT 1\n" +
+                " id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                " title TEXT NOT NULL,\n" +
+                " media_type TEXT NOT NULL,\n" +
+                " available INTEGER NOT NULL DEFAULT 1\n" +
                 ");";
 
         try (Statement stmt = conn.createStatement()) {
@@ -25,11 +35,19 @@ public class MediaDAO {
         }
     }
 
+    /**
+     * Inserts a new media record into the database.
+     *
+     * @param title the title of the media
+     * @param mediaType the type of media (book or cd)
+     * @return the generated media ID if successful, -1 otherwise
+     */
     public int insert(String title, String mediaType) {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return -1;
 
         String sql = "INSERT INTO media (title, media_type, available) VALUES (?, ?, 1)";
+
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, title);
             pstmt.setString(2, mediaType);
@@ -45,11 +63,19 @@ public class MediaDAO {
         return -1;
     }
 
+    /**
+     * Updates the availability status of a media item.
+     *
+     * @param mediaId the ID of the media
+     * @param available true if available, false if borrowed
+     * @return true if update was successful, false otherwise
+     */
     public boolean updateAvailability(int mediaId, boolean available) {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return false;
 
         String sql = "UPDATE media SET available = ? WHERE id = ?";
+
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, available ? 1 : 0);
             pstmt.setInt(2, mediaId);

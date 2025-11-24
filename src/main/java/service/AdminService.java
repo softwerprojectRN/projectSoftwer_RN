@@ -10,12 +10,31 @@ import util.PasswordUtil;
 
 import java.util.List;
 
+/**
+ * Service class responsible for admin-related operations such as registration,
+ * login, user management, and sending overdue reminders.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class AdminService {
+
+    /** DAO for managing admin records. */
     private final AdminDAO adminDAO;
+
+    /** DAO for managing user records. */
     private final UserDAO userDAO;
+
+    /** Email server instance used to send notifications. */
     private EmailServer emailServer;
+
+    /** Email notifier utility wrapping the email server. */
     private EmailNotifier emailNotifier;
 
+    /**
+     * Constructs an AdminService instance, initializes required DAOs,
+     * and attempts to initialize the email server.
+     */
     public AdminService() {
         this.adminDAO = new AdminDAO();
         this.userDAO = new UserDAO();
@@ -31,6 +50,13 @@ public class AdminService {
         }
     }
 
+    /**
+     * Registers a new admin with a username and password.
+     *
+     * @param username The desired username for the admin.
+     * @param password The password for the admin account.
+     * @return The newly created Admin object, or null if registration fails.
+     */
     public Admin register(String username, String password) {
         Admin existing = adminDAO.findByUsername(username);
         if (existing != null) {
@@ -49,6 +75,13 @@ public class AdminService {
         return null;
     }
 
+    /**
+     * Logs an admin into the system.
+     *
+     * @param username The username of the admin.
+     * @param password The password provided by the admin.
+     * @return The logged-in Admin object, or null if authentication fails.
+     */
     public Admin login(String username, String password) {
         Admin admin = adminDAO.findByUsername(username);
 
@@ -69,10 +102,21 @@ public class AdminService {
         }
     }
 
+    /**
+     * Deletes a user account from the system.
+     *
+     * @param username The username of the user to be deleted.
+     * @return true if deletion was successful, false otherwise.
+     */
     public boolean unregisterUser(String username) {
         return userDAO.delete(username);
     }
 
+    /**
+     * Sends email reminders to all users who have overdue books.
+     *
+     * @param borrowingService The borrowing service used to fetch overdue records.
+     */
     public void sendOverdueReminders(BorrowingService borrowingService) {
         if (emailNotifier == null) {
             System.out.println("Warning: Email server not available. Cannot send reminders.");
@@ -94,6 +138,11 @@ public class AdminService {
         }
     }
 
+    /**
+     * Sets a new email server for sending notifications.
+     *
+     * @param server The EmailServer instance to use.
+     */
     public void setEmailServer(EmailServer server) {
         this.emailServer = server;
         if (server == null) {
@@ -103,6 +152,11 @@ public class AdminService {
         }
     }
 
+    /**
+     * Retrieves the currently configured email server.
+     *
+     * @return The EmailServer instance.
+     */
     public EmailServer getEmailServer() {
         return emailServer;
     }

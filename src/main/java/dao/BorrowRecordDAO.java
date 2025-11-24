@@ -2,31 +2,42 @@ package dao;
 
 import model.*;
 import util.DatabaseConnection;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object for BorrowRecord entity.
+ * Manages database operations for borrowing records including tracking borrowed items,
+ * returns, and overdue calculations.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class BorrowRecordDAO {
 
+    /**
+     * Initializes the borrow_records table in the database.
+     * Creates the table with foreign key relationships to users and media tables.
+     */
     public void initializeTable() {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return;
 
         String sql = "CREATE TABLE IF NOT EXISTS borrow_records (\n" +
-                "  id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                "  user_id INTEGER NOT NULL,\n" +
-                "  media_id INTEGER NOT NULL,\n" +
-                "  media_type TEXT NOT NULL,\n" +
-                "  media_title TEXT NOT NULL,\n" +
-                "  borrow_date TEXT NOT NULL,\n" +
-                "  due_date TEXT NOT NULL,\n" +
-                "  returned INTEGER DEFAULT 0,\n" +
-                "  return_date TEXT,\n" +
-                "  fine REAL DEFAULT 0.0,\n" +
-                "  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,\n" +
-                "  FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE\n" +
+                " id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                " user_id INTEGER NOT NULL,\n" +
+                " media_id INTEGER NOT NULL,\n" +
+                " media_type TEXT NOT NULL,\n" +
+                " media_title TEXT NOT NULL,\n" +
+                " borrow_date TEXT NOT NULL,\n" +
+                " due_date TEXT NOT NULL,\n" +
+                " returned INTEGER DEFAULT 0,\n" +
+                " return_date TEXT,\n" +
+                " fine REAL DEFAULT 0.0,\n" +
+                " FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,\n" +
+                " FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE\n" +
                 ");";
 
         try (Statement stmt = conn.createStatement()) {
@@ -37,6 +48,17 @@ public class BorrowRecordDAO {
         }
     }
 
+    /**
+     * Inserts a new borrow record into the database.
+     *
+     * @param userId the ID of the user borrowing the media
+     * @param mediaId the ID of the media being borrowed
+     * @param mediaType the type of media (book or cd)
+     * @param mediaTitle the title of the media
+     * @param borrowDate the date the media was borrowed
+     * @param dueDate the date the media is due to be returned
+     * @return the generated record ID if successful, -1 otherwise
+     */
     public int insert(int userId, int mediaId, String mediaType, String mediaTitle,
                       LocalDate borrowDate, LocalDate dueDate) {
         Connection conn = DatabaseConnection.getConnection();
@@ -64,11 +86,20 @@ public class BorrowRecordDAO {
         return -1;
     }
 
+    /**
+     * Marks a borrow record as returned.
+     *
+     * @param recordId the ID of the borrow record
+     * @param returnDate the date the media was returned
+     * @param fine the fine amount (if any) for late return
+     * @return true if update was successful, false otherwise
+     */
     public boolean markAsReturned(int recordId, LocalDate returnDate, double fine) {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return false;
 
         String sql = "UPDATE borrow_records SET returned = 1, return_date = ?, fine = ? WHERE id = ?";
+
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, returnDate.toString());
             pstmt.setDouble(2, fine);
@@ -81,6 +112,12 @@ public class BorrowRecordDAO {
         }
     }
 
+    /**
+     * Finds all active (not returned) borrow records for a specific user.
+     *
+     * @param userId the ID of the user
+     * @return List of MediaRecord objects representing active borrows
+     */
     public List<MediaRecord> findActiveByUserId(int userId) {
         List<MediaRecord> records = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
@@ -104,7 +141,6 @@ public class BorrowRecordDAO {
                 Media media = null;
 
                 if (mediaType.equals("book")) {
-                    // Fetch book details
                     BookDAO bookDAO = new BookDAO();
                     String bookSql = "SELECT b.author, b.isbn FROM books b WHERE b.id = ?";
                     try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {
@@ -116,7 +152,6 @@ public class BorrowRecordDAO {
                         }
                     }
                 } else if (mediaType.equals("cd")) {
-                    // Fetch CD details
                     String cdSql = "SELECT c.artist, c.genre, c.duration FROM cds c WHERE c.id = ?";
                     try (PreparedStatement cdStmt = conn.prepareStatement(cdSql)) {
                         cdStmt.setInt(1, mediaId);
@@ -138,6 +173,11 @@ public class BorrowRecordDAO {
         return records;
     }
 
+    /**
+     * Retrieves all users who have overdue books.
+     *
+     * @return List of UserWithOverdueBooks objects containing user information and overdue count
+     */
     public List<UserWithOverdueBooks> getUsersWithOverdueBooks() {
         List<UserWithOverdueBooks> usersWithOverdueBooks = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
@@ -156,7 +196,6 @@ public class BorrowRecordDAO {
                 int userId = rs.getInt("id");
                 String username = rs.getString("username");
                 int overdueCount = rs.getInt("overdue_count");
-
                 usersWithOverdueBooks.add(new UserWithOverdueBooks(userId, username, overdueCount));
             }
         } catch (SQLException e) {
@@ -165,6 +204,12 @@ public class BorrowRecordDAO {
         return usersWithOverdueBooks;
     }
 
+    /**
+     * Finds all overdue borrow records for a specific user.
+     *
+     * @param userId the ID of the user
+     * @return List of overdue MediaRecord objects
+     */
     public List<MediaRecord> findOverdueByUserId(int userId) {
         List<MediaRecord> overdueRecords = new ArrayList<>();
         List<MediaRecord> allRecords = findActiveByUserId(userId);
@@ -177,6 +222,12 @@ public class BorrowRecordDAO {
         return overdueRecords;
     }
 
+    /**
+     * Counts the number of active (not returned) borrow records for a user.
+     *
+     * @param userId the ID of the user
+     * @return the count of active borrow records
+     */
     public int countActiveByUserId(int userId) {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return 0;

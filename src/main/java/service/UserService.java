@@ -4,14 +4,33 @@ import dao.UserDAO;
 import model.User;
 import util.PasswordUtil;
 
+/**
+ * Service class that handles user registration and login operations.
+ * Provides validation, password hashing, and communication with {@link UserDAO}.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class UserService {
+
+    /** Data Access Object responsible for user-related database operations */
     private final UserDAO userDAO;
 
+    /**
+     * Constructs a new {@code UserService} instance and initializes the users table.
+     */
     public UserService() {
         this.userDAO = new UserDAO();
         this.userDAO.initializeTable();
     }
 
+    /**
+     * Registers a new user after validating inputs and hashing the password.
+     *
+     * @param username the username chosen by the user (cannot be empty)
+     * @param password the raw password to be hashed and stored securely
+     * @return the created {@link User} object if successful, otherwise {@code null}
+     */
     public User register(String username, String password) {
         if (username == null || username.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()) {
@@ -36,6 +55,13 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Authenticates a user by verifying their username and password.
+     *
+     * @param username the username of the user attempting to log in
+     * @param password the raw password entered by the user
+     * @return the logged-in {@link User} object if credentials are valid, otherwise {@code null}
+     */
     public User login(String username, String password) {
         User user = userDAO.findByUsername(username);
 
