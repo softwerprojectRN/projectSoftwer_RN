@@ -32,7 +32,6 @@ public class BorrowingService {
         this.borrowRecordDAO = new BorrowRecordDAO();
         this.fineDAO = new FineDAO();
         this.mediaDAO = new MediaDAO();
-
         this.borrowRecordDAO.initializeTable();
         this.fineDAO.initializeTable();
     }
@@ -77,11 +76,9 @@ public class BorrowingService {
             List<MediaRecord> borrowed = borrower.getBorrowedMedia();
             borrowed.add(record);
             borrower.setBorrowedMedia(borrowed);
-
             System.out.println("Successfully borrowed '" + media.getTitle() + "'. Due date: " + dueDate);
             return true;
         }
-
         return false;
     }
 
@@ -101,9 +98,10 @@ public class BorrowingService {
                 borrowRecordDAO.markAsReturned(record.getRecordId(), LocalDate.now(), mediaFine);
 
                 if (mediaFine > 0) {
-                    double newBalance = borrower.getFineBalance() + mediaFine;
+                    fineDAO.addFine(borrower.getId(), mediaFine);
+                    double newBalance = fineDAO.getFineBalance(borrower.getId());
                     borrower.setFineBalance(newBalance);
-                    fineDAO.updateFine(borrower.getId(), newBalance);
+                    System.out.println("Fine added: " + mediaFine);
                 }
 
                 List<MediaRecord> borrowed = borrower.getBorrowedMedia();
@@ -114,7 +112,6 @@ public class BorrowingService {
                 return true;
             }
         }
-
         System.out.println("Error: This media is not borrowed by you.");
         return false;
     }
