@@ -3,20 +3,30 @@ package dao;
 import model.User;
 import util.DatabaseConnection;
 import util.PasswordUtil;
-
 import java.sql.*;
 
+/**
+ * Data Access Object for User entity.
+ * Manages database operations for user accounts including registration and authentication.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class UserDAO {
 
+    /**
+     * Initializes the users table in the database.
+     * Creates the table with columns for authentication and user management.
+     */
     public void initializeTable() {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return;
 
         String sql = "CREATE TABLE IF NOT EXISTS users (\n" +
-                "  id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                "  username TEXT NOT NULL UNIQUE,\n" +
-                "  password_hash TEXT NOT NULL,\n" +
-                "  salt TEXT NOT NULL\n" +
+                " id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                " username TEXT NOT NULL UNIQUE,\n" +
+                " password_hash TEXT NOT NULL,\n" +
+                " salt TEXT NOT NULL\n" +
                 ");";
 
         try (Statement stmt = conn.createStatement()) {
@@ -27,11 +37,18 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Finds a user by username.
+     *
+     * @param username the username to search for
+     * @return User object if found, null otherwise
+     */
     public User findByUsername(String username) {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return null;
 
         String sql = "SELECT * FROM users WHERE username = ?";
+
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
@@ -50,11 +67,20 @@ public class UserDAO {
         return null;
     }
 
+    /**
+     * Inserts a new user into the database.
+     *
+     * @param username the user's username
+     * @param passwordHash the hashed password
+     * @param salt the salt used for password hashing
+     * @return true if insertion was successful, false otherwise
+     */
     public boolean insert(String username, String passwordHash, String salt) {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return false;
 
         String sql = "INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)";
+
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.setString(2, passwordHash);
@@ -67,6 +93,13 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Deletes a user and all associated records from the database.
+     * Uses transaction to ensure data integrity.
+     *
+     * @param username the username of the user to delete
+     * @return true if deletion was successful, false otherwise
+     */
     public boolean delete(String username) {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return false;

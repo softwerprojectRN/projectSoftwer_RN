@@ -9,6 +9,18 @@ import service.*;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Provides a console-based user interface for interacting with the library system.
+ * Allows users to register, login, browse/search media, borrow/return items, and manage fines.
+ *
+ * Communicates with {@link UserService}, {@link BookService}, {@link CDService}, {@link BorrowingService},
+ * and {@link BorrowerService} for performing operations.
+ *
+ * Usage: Run the {@link #main(String[])} method to start the user menu.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class UserMenu {
     private static Scanner scanner = new Scanner(System.in);
     private final UserService userService;
@@ -18,6 +30,9 @@ public class UserMenu {
     private final BorrowerService borrowerService;
     private Borrower currentUser;
 
+    /**
+     * Constructs a new {@code UserMenu} and initializes all required services.
+     */
     public UserMenu() {
         this.userService = new UserService();
         this.bookService = new BookService();
@@ -26,6 +41,9 @@ public class UserMenu {
         this.borrowerService = new BorrowerService();
     }
 
+    /**
+     * Starts the main user menu system with registration, login, and operations.
+     */
     public void start() {
         boolean running = true;
 
@@ -65,6 +83,9 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Handles user registration with input validation.
+     */
     private void registerUser() {
         System.out.println("\n=== User Registration ===");
         System.out.print("Username: ");
@@ -79,6 +100,9 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Handles user login and sets the {@link #currentUser}.
+     */
     private void loginUser() {
         System.out.println("\n=== User Login ===");
         System.out.print("Username: ");
@@ -102,6 +126,9 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Displays the main menu for a logged-in user.
+     */
     private void showMainMenu() {
         boolean running = true;
 
@@ -171,6 +198,9 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Lists all available books in the library.
+     */
     private void browseBooks() {
         System.out.println("\n=== All Books ===");
         List<Book> books = bookService.getAllBooks();
@@ -185,6 +215,9 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Lists all available CDs in the library.
+     */
     private void browseCDs() {
         System.out.println("\n=== All CDs ===");
         List<CD> cds = cdService.getAllCDs();
@@ -199,6 +232,9 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Searches books based on title, author, or ISBN.
+     */
     private void searchBooks() {
         System.out.println("\n=== Search Books ===");
         System.out.println("Search by:");
@@ -240,6 +276,9 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Searches CDs based on title, artist, or genre.
+     */
     private void searchCDs() {
         System.out.println("\n=== Search CDs ===");
         System.out.println("Search by:");
@@ -281,6 +320,9 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Borrows a selected media item (book or CD) for the current user.
+     */
     private void borrowMedia() {
         System.out.println("\n=== Borrow Media ===");
         System.out.println("1. Borrow Book");
@@ -327,6 +369,9 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Returns a borrowed media item for the current user.
+     */
     private void returnMedia() {
         System.out.println("\n=== Return Media ===");
 
@@ -360,14 +405,23 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Displays the list of media currently borrowed by the user.
+     */
     private void viewBorrowedItems() {
         borrowerService.displayBorrowedMedia(currentUser);
     }
 
+    /**
+     * Displays a report of overdue items for the current user.
+     */
     private void viewOverdueReport() {
         borrowerService.generateOverdueReport(currentUser);
     }
 
+    /**
+     * Handles paying fines for overdue media.
+     */
     private void payFine() {
         System.out.println("\n=== Pay Fine ===");
         System.out.printf("Current fine balance: %.2f\n", currentUser.getFineBalance());
@@ -388,11 +442,19 @@ public class UserMenu {
         }
     }
 
+    /**
+     * Displays the current fine balance for the user.
+     */
     private void viewFineBalance() {
         System.out.println("\n=== Fine Balance ===");
         System.out.printf("Your current fine balance: %.2f\n", currentUser.getFineBalance());
     }
 
+    /**
+     * Main entry point for the UserMenu console application.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         UserMenu menu = new UserMenu();
         menu.start();

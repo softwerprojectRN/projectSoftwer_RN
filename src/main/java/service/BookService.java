@@ -6,10 +6,24 @@ import model.Book;
 
 import java.util.List;
 
+/**
+ * Service class responsible for book-related operations such as adding books,
+ * retrieving all books, and searching books by title, author, or ISBN.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class BookService {
+
+    /** DAO used for interacting with the books table. */
     private final BookDAO bookDAO;
+
+    /** DAO used for interacting with the media table. */
     private final MediaDAO mediaDAO;
 
+    /**
+     * Constructs a BookService instance and initializes required database tables.
+     */
     public BookService() {
         this.bookDAO = new BookDAO();
         this.mediaDAO = new MediaDAO();
@@ -17,6 +31,15 @@ public class BookService {
         this.mediaDAO.initializeTable();
     }
 
+    /**
+     * Adds a new book to the system.
+     *
+     * @param title  The title of the book.
+     * @param author The author of the book.
+     * @param isbn   The ISBN of the book.
+     * @return A Book object representing the newly added book,
+     *         or null if the operation fails.
+     */
     public Book addBook(String title, String author, String isbn) {
         if (title == null || title.trim().isEmpty() ||
                 author == null || author.trim().isEmpty() ||
@@ -46,10 +69,22 @@ public class BookService {
         return null;
     }
 
+    /**
+     * Retrieves all books stored in the system.
+     *
+     * @return A list of all Book objects.
+     */
     public List<Book> getAllBooks() {
         return bookDAO.findAll();
     }
 
+    /**
+     * Searches for books based on a provided search term and search type.
+     *
+     * @param searchTerm The keyword to search for.
+     * @param searchType The type of search: "title", "author", or "isbn".
+     * @return A list of books matching the search criteria.
+     */
     public List<Book> searchBooks(String searchTerm, String searchType) {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             System.out.println("Search term cannot be empty");

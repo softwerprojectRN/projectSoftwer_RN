@@ -5,17 +5,42 @@ import service.AdminService;
 import service.BorrowingService;
 import java.util.Scanner;
 
+/**
+ * Provides a console-based admin interface for managing the library system.
+ * Allows admins to log in, register, add books/CDs, send overdue reminders, and manage users.
+ *
+ * Handles input validation and communicates with {@link AdminService} and {@link BorrowingService}.
+ *
+ * Usage: Run the {@link #main(String[])} method to start the admin menu.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
+
 public class AdminMenu {
+
     private static Scanner scanner = new Scanner(System.in);
+
+    /** Service for admin-related operations */
     private final AdminService adminService;
+
+    /** Service for managing borrowings and overdue books */
     private final BorrowingService borrowingService;
+
+    /** Currently logged-in admin */
     private Admin currentAdmin;
 
+    /**
+     * Constructs a new {@code AdminMenu} and initializes required services.
+     */
     public AdminMenu() {
         this.adminService = new AdminService();
         this.borrowingService = new BorrowingService();
     }
 
+    /**
+     * Starts the admin menu system with login/registration and main operations.
+     */
     public void start() {
         boolean running = true;
 
@@ -56,6 +81,9 @@ public class AdminMenu {
         }
     }
 
+    /**
+     * Handles new admin registration with validation.
+     */
     private void registerAdmin() {
         System.out.println("\n=== Register New Admin ===");
         System.out.print("Username: ");
@@ -90,6 +118,9 @@ public class AdminMenu {
         }
     }
 
+    /**
+     * Handles admin login and sets the {@link #currentAdmin}.
+     */
     private void loginAdmin() {
         System.out.println("\n=== Admin Login ===");
         System.out.print("Username: ");
@@ -104,6 +135,9 @@ public class AdminMenu {
         }
     }
 
+    /**
+     * Displays the main admin menu after successful login.
+     */
     private void showMenu() {
         boolean running = true;
         while (running) {
@@ -153,12 +187,18 @@ public class AdminMenu {
         }
     }
 
+    /**
+     * Sends overdue book reminders to users.
+     */
     private void sendOverdueReminders() {
         System.out.println("\nSending overdue reminders...");
         adminService.sendOverdueReminders(borrowingService);
         System.out.println("Reminders sent successfully!");
     }
 
+    /**
+     * Unregisters a user after confirmation.
+     */
     private void unregisterUser() {
         System.out.print("\nEnter username to unregister: ");
         String username = scanner.nextLine().trim();
@@ -184,6 +224,9 @@ public class AdminMenu {
         }
     }
 
+    /**
+     * Adds a new book to the system using {@link service.BookService}.
+     */
     private void addNewBook() {
         System.out.println("\n=== Add New Book ===");
 
@@ -212,6 +255,9 @@ public class AdminMenu {
         }
     }
 
+    /**
+     * Adds a new CD to the system using {@link service.CDService}.
+     */
     private void addNewCD() {
         System.out.println("\n=== Add New CD ===");
 
@@ -255,6 +301,9 @@ public class AdminMenu {
         }
     }
 
+    /**
+     * Displays all users who currently have overdue books.
+     */
     private void viewUsersWithOverdueBooks() {
         System.out.println("\n=== Users with Overdue Books ===");
         var usersWithOverdue = borrowingService.getUsersWithOverdueBooks();
@@ -274,6 +323,11 @@ public class AdminMenu {
         }
     }
 
+    /**
+     * Main entry point for the AdminMenu console application.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         AdminMenu menu = new AdminMenu();
         menu.start();

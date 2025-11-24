@@ -2,22 +2,32 @@ package dao;
 
 import model.Book;
 import util.DatabaseConnection;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object for Book entity.
+ * Manages database operations for books including CRUD operations and search functionality.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class BookDAO {
 
+    /**
+     * Initializes the books table in the database.
+     * Creates the table with a foreign key relationship to the media table.
+     */
     public void initializeTable() {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return;
 
         String sql = "CREATE TABLE IF NOT EXISTS books (\n" +
-                "  id INTEGER PRIMARY KEY,\n" +
-                "  author TEXT NOT NULL,\n" +
-                "  isbn TEXT NOT NULL UNIQUE,\n" +
-                "  FOREIGN KEY (id) REFERENCES media(id) ON DELETE CASCADE\n" +
+                " id INTEGER PRIMARY KEY,\n" +
+                " author TEXT NOT NULL,\n" +
+                " isbn TEXT NOT NULL UNIQUE,\n" +
+                " FOREIGN KEY (id) REFERENCES media(id) ON DELETE CASCADE\n" +
                 ");";
 
         try (Statement stmt = conn.createStatement()) {
@@ -28,6 +38,12 @@ public class BookDAO {
         }
     }
 
+    /**
+     * Finds a book by its ISBN.
+     *
+     * @param isbn the ISBN to search for
+     * @return Book object if found, null otherwise
+     */
     public Book findByISBN(String isbn) {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return null;
@@ -54,11 +70,20 @@ public class BookDAO {
         return null;
     }
 
+    /**
+     * Inserts a new book record into the database.
+     *
+     * @param mediaId the ID from the media table
+     * @param author the book's author
+     * @param isbn the book's ISBN
+     * @return the media ID if successful, -1 otherwise
+     */
     public int insert(int mediaId, String author, String isbn) {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return -1;
 
         String sql = "INSERT INTO books (id, author, isbn) VALUES (?, ?, ?)";
+
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, mediaId);
             pstmt.setString(2, author);
@@ -71,6 +96,11 @@ public class BookDAO {
         }
     }
 
+    /**
+     * Retrieves all books from the database.
+     *
+     * @return List of all Book objects
+     */
     public List<Book> findAll() {
         List<Book> books = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
@@ -97,6 +127,12 @@ public class BookDAO {
         return books;
     }
 
+    /**
+     * Searches for books by title using pattern matching.
+     *
+     * @param title the title or partial title to search for
+     * @return List of matching Book objects
+     */
     public List<Book> searchByTitle(String title) {
         List<Book> books = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
@@ -125,6 +161,12 @@ public class BookDAO {
         return books;
     }
 
+    /**
+     * Searches for books by author using pattern matching.
+     *
+     * @param author the author name or partial name to search for
+     * @return List of matching Book objects
+     */
     public List<Book> searchByAuthor(String author) {
         List<Book> books = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
@@ -153,6 +195,12 @@ public class BookDAO {
         return books;
     }
 
+    /**
+     * Searches for books by ISBN pattern.
+     *
+     * @param isbn the ISBN or partial ISBN to search for
+     * @return List of matching Book objects
+     */
     public List<Book> searchByISBNPattern(String isbn) {
         List<Book> books = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
