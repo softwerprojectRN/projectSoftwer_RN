@@ -4,16 +4,37 @@ import dao.BookDAO;
 import model.Book;
 import java.util.List;
 
+/**
+ * Concrete search strategy for searching books by title.
+ * Implements the {@link SearchStrategy} interface.
+ *
+ * Enables searching for books in the database based on the title field.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class SearchByTitle implements SearchStrategy {
+
+    /** DAO for accessing book data */
     private final BookDAO bookDAO;
 
-<span class="nc" id="L10">    public SearchByTitle() {</span>
-<span class="nc" id="L11">        this.bookDAO = new BookDAO();</span>
-<span class="nc" id="L12">    }</span>
+    /**
+     * Constructs a new {@code SearchByTitle} strategy.
+     * Initializes the {@link BookDAO}.
+     */
+<span class="nc" id="L25">    public SearchByTitle() {</span>
+<span class="nc" id="L26">        this.bookDAO = new BookDAO();</span>
+<span class="nc" id="L27">    }</span>
 
+    /**
+     * Searches for books using the title provided.
+     *
+     * @param searchTerm the title to search for
+     * @return a list of {@link Book} objects matching the title
+     */
     @Override
     public List&lt;Book&gt; search(String searchTerm) {
-<span class="nc" id="L16">        return bookDAO.searchByTitle(searchTerm);</span>
+<span class="nc" id="L37">        return bookDAO.searchByTitle(searchTerm);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

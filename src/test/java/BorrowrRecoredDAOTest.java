@@ -1,4 +1,5 @@
 import dao.*;
+import model.MediaRecord;
 import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -271,4 +272,145 @@ class BorrowRecordDAOTest {
             System.setErr(System.err);
         }
     }
+
+    @Test
+    void testFindActiveByUserId_book() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+        PreparedStatement mockBookStmt = mock(PreparedStatement.class);
+        ResultSet mockBookRs = mock(ResultSet.class);
+
+        when(mockConn.prepareStatement(contains("FROM borrow_records br"))).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(true, false);
+        when(mockRs.getInt("media_id")).thenReturn(1);
+        when(mockRs.getString("media_type")).thenReturn("book");
+        when(mockRs.getString("media_title")).thenReturn("Book Title");
+        when(mockRs.getInt("id")).thenReturn(101);
+        when(mockRs.getString("due_date")).thenReturn(LocalDate.now().plusDays(5).toString());
+
+        when(mockConn.prepareStatement(contains("FROM books b"))).thenReturn(mockBookStmt);
+        when(mockBookStmt.executeQuery()).thenReturn(mockBookRs);
+        when(mockBookRs.next()).thenReturn(true);
+        when(mockBookRs.getString("author")).thenReturn("Author A");
+        when(mockBookRs.getString("isbn")).thenReturn("12345");
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+            List<MediaRecord> records = borrowRecordDAO.findActiveByUserId(1);
+
+            assertEquals(1, records.size());
+            assertTrue(records.get(0).getMedia() instanceof Book);
+            assertEquals("Book Title", records.get(0).getMedia().getTitle());
+        }
+    }
+
+    @Test
+    void testFindActiveByUserId_cd() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+        PreparedStatement mockCdStmt = mock(PreparedStatement.class);
+        ResultSet mockCdRs = mock(ResultSet.class);
+
+        when(mockConn.prepareStatement(contains("FROM borrow_records br"))).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(true, false);
+        when(mockRs.getInt("media_id")).thenReturn(2);
+        when(mockRs.getString("media_type")).thenReturn("cd");
+        when(mockRs.getString("media_title")).thenReturn("CD Title");
+        when(mockRs.getInt("id")).thenReturn(102);
+        when(mockRs.getString("due_date")).thenReturn(LocalDate.now().plusDays(3).toString());
+
+        when(mockConn.prepareStatement(contains("FROM cds c"))).thenReturn(mockCdStmt);
+        when(mockCdStmt.executeQuery()).thenReturn(mockCdRs);
+        when(mockCdRs.next()).thenReturn(true);
+        when(mockCdRs.getString("artist")).thenReturn("Artist X");
+        when(mockCdRs.getString("genre")).thenReturn("Pop");
+        when(mockCdRs.getInt("duration")).thenReturn(60);
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+            List<MediaRecord> records = borrowRecordDAO.findActiveByUserId(1);
+
+            assertEquals(1, records.size());
+            assertTrue(records.get(0).getMedia() instanceof CD);
+            assertEquals("CD Title", records.get(0).getMedia().getTitle());
+        }
+    }
+
+    @Test
+    void testFindActiveByUserId_noRecords() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(false);
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+            List<MediaRecord> records = borrowRecordDAO.findActiveByUserId(1);
+            assertTrue(records.isEmpty());
+        }
+    }
+
+    @Test
+    void testFindActiveByUserId_connectionNull() {
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+            List<MediaRecord> records = borrowRecordDAO.findActiveByUserId(1);
+            assertTrue(records.isEmpty());
+        }
+    }
+
+    @Test
+    void testFindActiveByUserId_sqlException() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenThrow(new SQLException("Query failed"));
+
+        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(errContent));
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+            List<MediaRecord> records = borrowRecordDAO.findActiveByUserId(1);
+            assertTrue(records.isEmpty());
+            assertTrue(errContent.toString().contains("Error loading borrowed media"));
+        } finally {
+            System.setErr(System.err);
+        }
+    }
+    @Test
+    void testFindOverdueByUserId() {
+        MediaRecord overdue = mock(MediaRecord.class);
+        when(overdue.isOverdue()).thenReturn(true);
+        MediaRecord notOverdue = mock(MediaRecord.class);
+        when(notOverdue.isOverdue()).thenReturn(false);
+
+        BorrowRecordDAO spyDAO = spy(borrowRecordDAO);
+        doReturn(List.of(overdue, notOverdue)).when(spyDAO).findActiveByUserId(1);
+
+        List<MediaRecord> overdueRecords = spyDAO.findOverdueByUserId(1);
+        assertEquals(1, overdueRecords.size());
+        assertTrue(overdueRecords.contains(overdue));
+    }
+    @Test
+    void testMarkAsReturned_noRowsUpdated() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        when(mockStmt.executeUpdate()).thenReturn(0);
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+            assertFalse(borrowRecordDAO.markAsReturned(1, LocalDate.now(), 5.0));
+        }
+    }
+
 }

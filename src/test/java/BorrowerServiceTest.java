@@ -117,15 +117,162 @@ class BorrowerServiceTest {
         when(borrower.getOverdueMedia()).thenReturn(List.of());
 
         // Capture system output
+        PrintStream originalOut = System.out;
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
 
-        borrowerService.generateOverdueReport(borrower);
+        try {
+            borrowerService.generateOverdueReport(borrower);
 
-        String result = output.toString().trim();
+            String result = output.toString().trim();
 
-        assertTrue(result.contains("You have no overdue items."));
+            assertTrue(result.contains("You have no overdue items."));
+        } finally {
+            // Restore original System.out
+            System.setOut(originalOut);
+        }
     }
+
+    // ---------------------------
+    // Test displayBorrowedMedia with empty list
+    // ---------------------------
+    @Test
+    void testDisplayBorrowedMedia_Empty() {
+        Borrower borrower = mock(Borrower.class);
+        when(borrower.getBorrowedMedia()).thenReturn(List.of());
+
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        try {
+            BorrowerService service = new BorrowerService();
+            service.displayBorrowedMedia(borrower);
+
+            String result = output.toString();
+            assertTrue(result.contains("You have no borrowed items."));
+        } finally {
+            System.setOut(originalOut);
+        }
+    }
+
+    // ---------------------------
+    // Test displayBorrowedMedia with items (overdue & not overdue)
+    // ---------------------------
+    @Test
+    void testDisplayBorrowedMedia_WithItems() {
+        Media media1 = new Media(1, "Book A", false, "book");
+        Media media2 = new Media(2, "CD B", false, "cd");
+
+        MediaRecord record1 = mock(MediaRecord.class);
+        when(record1.getMedia()).thenReturn(media1);
+        when(record1.getDueDate()).thenReturn(LocalDate.now().minusDays(2));
+        when(record1.isOverdue()).thenReturn(true);
+        when(record1.getOverdueDays()).thenReturn(2L);
+
+        MediaRecord record2 = mock(MediaRecord.class);
+        when(record2.getMedia()).thenReturn(media2);
+        when(record2.getDueDate()).thenReturn(LocalDate.now().plusDays(3));
+        when(record2.isOverdue()).thenReturn(false);
+
+        Borrower borrower = mock(Borrower.class);
+        when(borrower.getBorrowedMedia()).thenReturn(List.of(record1, record2));
+
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        try {
+            BorrowerService service = new BorrowerService();
+            service.displayBorrowedMedia(borrower);
+
+            String outStr = output.toString();
+            assertTrue(outStr.contains("Book A"));
+            assertTrue(outStr.contains("CD B"));
+            assertTrue(outStr.contains("OVERDUE by 2 days"));
+        } finally {
+            System.setOut(originalOut);
+        }
+    }
+
+    // ---------------------------
+    // Test generateOverdueReport with multiple overdue items
+    // ---------------------------
+    @Test
+    void testGenerateOverdueReport_WithItems() {
+        Media media1 = mock(Media.class);
+        when(media1.getTitle()).thenReturn("Book A");
+        when(media1.getMediaType()).thenReturn("book");
+
+        Media media2 = mock(Media.class);
+        when(media2.getTitle()).thenReturn("CD B");
+        when(media2.getMediaType()).thenReturn("cd");
+
+        MediaRecord record1 = mock(MediaRecord.class);
+        when(record1.getMedia()).thenReturn(media1);
+        when(record1.getOverdueDays()).thenReturn(3L);
+
+        MediaRecord record2 = mock(MediaRecord.class);
+        when(record2.getMedia()).thenReturn(media2);
+        when(record2.getOverdueDays()).thenReturn(2L);
+
+        Borrower borrower = mock(Borrower.class);
+        when(borrower.getOverdueMedia()).thenReturn(List.of(record1, record2));
+
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        try {
+            BorrowerService service = new BorrowerService() {
+                // Mock fine per day calculation
+                public static double getFinePerDay(String mediaType) {
+                    return mediaType.equals("book") ? 1.5 : 2.0;
+                }
+            };
+
+            service.generateOverdueReport(borrower);
+
+            String outStr = output.toString();
+            assertTrue(outStr.contains("Book A"));
+            assertTrue(outStr.contains("CD B"));
+            assertTrue(outStr.contains("Total Overdue Fines"));
+        } finally {
+            System.setOut(originalOut);
+        }
+    }
+
+    // ---------------------------
+    // Test loadBorrowerData with empty borrowed media and zero fine
+    // ---------------------------
+    @Test
+    void testLoadBorrowerData_Empty() throws Exception {
+        BorrowRecordDAO borrowRecordDAOMock = mock(BorrowRecordDAO.class);
+        FineDAO fineDAOMock = mock(FineDAO.class);
+
+        BorrowerService service = new BorrowerService();
+        injectField(service, "borrowRecordDAO", borrowRecordDAOMock);
+        injectField(service, "fineDAO", fineDAOMock);
+
+        Borrower borrower = new Borrower(1, "test", "hash", "salt");
+        when(borrowRecordDAOMock.findActiveByUserId(1)).thenReturn(List.of());
+        when(fineDAOMock.getFineBalance(1)).thenReturn(0.0);
+
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        try {
+            service.loadBorrowerData(borrower);
+
+            assertEquals(0, borrower.getBorrowedMedia().size());
+            assertEquals(0.0, borrower.getFineBalance());
+            assertTrue(output.toString().contains("Loaded 0 borrowed items"));
+        } finally {
+            System.setOut(originalOut);
+        }
+    }
+
 
 }
 

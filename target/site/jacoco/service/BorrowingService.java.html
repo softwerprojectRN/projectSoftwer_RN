@@ -13,122 +13,170 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service class responsible for managing the borrowing and returning of media items
+ * such as books and CDs. It handles validation, fine calculation, overdue tracking,
+ * and communication with related DAOs.
+ *
+ * &lt;p&gt;This service ensures that users follow borrowing rules, such as paying fines
+ * before borrowing and returning overdue items.&lt;/p&gt;
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class BorrowingService {
-<span class="fc" id="L17">    private static final Map&lt;String, Integer&gt; BORROW_DAYS = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L18">    private static final Map&lt;String, Double&gt; FINE_PER_DAY = new HashMap&lt;&gt;();</span>
+
+    /** Map storing allowed borrowing days for each media type. */
+<span class="fc" id="L30">    private static final Map&lt;String, Integer&gt; BORROW_DAYS = new HashMap&lt;&gt;();</span>
+
+    /** Map storing fine-per-day policies for each media type. */
+<span class="fc" id="L33">    private static final Map&lt;String, Double&gt; FINE_PER_DAY = new HashMap&lt;&gt;();</span>
 
     private final BorrowRecordDAO borrowRecordDAO;
     private final FineDAO fineDAO;
     private final MediaDAO mediaDAO;
 
     static {
-<span class="fc" id="L25">        BORROW_DAYS.put(&quot;book&quot;, 28);</span>
-<span class="fc" id="L26">        FINE_PER_DAY.put(&quot;book&quot;, 10.0);</span>
-<span class="fc" id="L27">        BORROW_DAYS.put(&quot;cd&quot;, 7);</span>
-<span class="fc" id="L28">        FINE_PER_DAY.put(&quot;cd&quot;, 20.0);</span>
-<span class="fc" id="L29">    }</span>
+<span class="fc" id="L40">        BORROW_DAYS.put(&quot;book&quot;, 28);</span>
+<span class="fc" id="L41">        FINE_PER_DAY.put(&quot;book&quot;, 10.0);</span>
 
-<span class="fc" id="L31">    public BorrowingService() {</span>
-<span class="fc" id="L32">        this.borrowRecordDAO = new BorrowRecordDAO();</span>
-<span class="fc" id="L33">        this.fineDAO = new FineDAO();</span>
-<span class="fc" id="L34">        this.mediaDAO = new MediaDAO();</span>
+<span class="fc" id="L43">        BORROW_DAYS.put(&quot;cd&quot;, 7);</span>
+<span class="fc" id="L44">        FINE_PER_DAY.put(&quot;cd&quot;, 20.0);</span>
+<span class="fc" id="L45">    }</span>
 
-<span class="fc" id="L36">        this.borrowRecordDAO.initializeTable();</span>
-<span class="fc" id="L37">        this.fineDAO.initializeTable();</span>
-<span class="fc" id="L38">    }</span>
+    /**
+     * Constructs a BorrowingService instance and initializes required DAOs.
+     */
+<span class="fc" id="L50">    public BorrowingService() {</span>
+<span class="fc" id="L51">        this.borrowRecordDAO = new BorrowRecordDAO();</span>
+<span class="fc" id="L52">        this.fineDAO = new FineDAO();</span>
+<span class="fc" id="L53">        this.mediaDAO = new MediaDAO();</span>
+<span class="fc" id="L54">        this.borrowRecordDAO.initializeTable();</span>
+<span class="fc" id="L55">        this.fineDAO.initializeTable();</span>
+<span class="fc" id="L56">    }</span>
 
+    /**
+     * Allows a borrower to borrow a media item if all borrowing conditions are met.
+     *
+     * @param borrower The borrower requesting to borrow media.
+     * @param media    The media item being borrowed.
+     * @return true if the borrowing operation was successful; false otherwise.
+     */
     public boolean borrowMedia(Borrower borrower, Media media) {
-<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (!borrower.isLoggedIn()) {</span>
-<span class="fc" id="L42">            System.out.println(&quot;Error: You must be logged in to borrow media.&quot;);</span>
-<span class="fc" id="L43">            return false;</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (!borrower.isLoggedIn()) {</span>
+<span class="fc" id="L67">            System.out.println(&quot;Error: You must be logged in to borrow media.&quot;);</span>
+<span class="fc" id="L68">            return false;</span>
         }
 
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (borrower.getFineBalance() &gt; 0) {</span>
-<span class="fc" id="L47">            System.out.println(&quot;Error: Please pay your fine (&quot; + borrower.getFineBalance() + &quot;) first.&quot;);</span>
-<span class="fc" id="L48">            return false;</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (borrower.getFineBalance() &gt; 0) {</span>
+<span class="fc" id="L72">            System.out.println(&quot;Error: Please pay your fine (&quot; + borrower.getFineBalance() + &quot;) first.&quot;);</span>
+<span class="fc" id="L73">            return false;</span>
         }
 
-<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (!borrower.getOverdueMedia().isEmpty()) {</span>
-<span class="fc" id="L52">            System.out.println(&quot;Error: You must return overdue media first.&quot;);</span>
-<span class="fc" id="L53">            return false;</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (!borrower.getOverdueMedia().isEmpty()) {</span>
+<span class="fc" id="L77">            System.out.println(&quot;Error: You must return overdue media first.&quot;);</span>
+<span class="fc" id="L78">            return false;</span>
         }
 
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (!media.isAvailable()) {</span>
-<span class="fc" id="L57">            System.out.println(&quot;Error: Media '&quot; + media.getTitle() + &quot;' is not available.&quot;);</span>
-<span class="fc" id="L58">            return false;</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (!media.isAvailable()) {</span>
+<span class="fc" id="L82">            System.out.println(&quot;Error: Media '&quot; + media.getTitle() + &quot;' is not available.&quot;);</span>
+<span class="fc" id="L83">            return false;</span>
         }
 
-<span class="fc" id="L61">        LocalDate dueDate = LocalDate.now().plusDays(BORROW_DAYS.get(media.getMediaType()));</span>
+<span class="fc" id="L86">        LocalDate dueDate = LocalDate.now().plusDays(BORROW_DAYS.get(media.getMediaType()));</span>
 
-<span class="fc" id="L63">        mediaDAO.updateAvailability(media.getId(), false);</span>
-<span class="fc" id="L64">        media.setAvailable(false);</span>
+<span class="fc" id="L88">        mediaDAO.updateAvailability(media.getId(), false);</span>
+<span class="fc" id="L89">        media.setAvailable(false);</span>
 
-<span class="fc" id="L66">        int recordId = borrowRecordDAO.insert(</span>
-<span class="fc" id="L67">                borrower.getId(),</span>
-<span class="fc" id="L68">                media.getId(),</span>
-<span class="fc" id="L69">                media.getMediaType(),</span>
-<span class="fc" id="L70">                media.getTitle(),</span>
-<span class="fc" id="L71">                LocalDate.now(),</span>
+<span class="fc" id="L91">        int recordId = borrowRecordDAO.insert(</span>
+<span class="fc" id="L92">                borrower.getId(),</span>
+<span class="fc" id="L93">                media.getId(),</span>
+<span class="fc" id="L94">                media.getMediaType(),</span>
+<span class="fc" id="L95">                media.getTitle(),</span>
+<span class="fc" id="L96">                LocalDate.now(),</span>
                 dueDate
         );
 
-<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (recordId != -1) {</span>
-<span class="fc" id="L76">            MediaRecord record = new MediaRecord(recordId, media, dueDate);</span>
-<span class="fc" id="L77">            List&lt;MediaRecord&gt; borrowed = borrower.getBorrowedMedia();</span>
-<span class="fc" id="L78">            borrowed.add(record);</span>
-<span class="fc" id="L79">            borrower.setBorrowedMedia(borrowed);</span>
-
-<span class="fc" id="L81">            System.out.println(&quot;Successfully borrowed '&quot; + media.getTitle() + &quot;'. Due date: &quot; + dueDate);</span>
-<span class="fc" id="L82">            return true;</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (recordId != -1) {</span>
+<span class="fc" id="L101">            MediaRecord record = new MediaRecord(recordId, media, dueDate);</span>
+<span class="fc" id="L102">            List&lt;MediaRecord&gt; borrowed = borrower.getBorrowedMedia();</span>
+<span class="fc" id="L103">            borrowed.add(record);</span>
+<span class="fc" id="L104">            borrower.setBorrowedMedia(borrowed);</span>
+<span class="fc" id="L105">            System.out.println(&quot;Successfully borrowed '&quot; + media.getTitle() + &quot;'. Due date: &quot; + dueDate);</span>
+<span class="fc" id="L106">            return true;</span>
         }
-
-<span class="nc" id="L85">        return false;</span>
+<span class="nc" id="L108">        return false;</span>
     }
 
+    /**
+     * Handles the return process of a media item, calculates overdue fines if any,
+     * and updates the borrower's fine balance.
+     *
+     * @param borrower The borrower returning the media.
+     * @param media    The media item being returned.
+     * @return true if successfully returned; false if the user did not borrow the item.
+     */
     public boolean returnMedia(Borrower borrower, Media media) {
-<span class="fc bfc" id="L89" title="All 2 branches covered.">        for (MediaRecord record : borrower.getBorrowedMedia()) {</span>
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">            if (record.getMedia().getId() == media.getId()) {</span>
-<span class="fc" id="L91">                mediaDAO.updateAvailability(media.getId(), true);</span>
-<span class="fc" id="L92">                media.setAvailable(true);</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        for (MediaRecord record : borrower.getBorrowedMedia()) {</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">            if (record.getMedia().getId() == media.getId()) {</span>
+<span class="fc" id="L122">                mediaDAO.updateAvailability(media.getId(), true);</span>
+<span class="fc" id="L123">                media.setAvailable(true);</span>
 
-<span class="fc" id="L94">                double mediaFine = 0.0;</span>
-<span class="fc bfc" id="L95" title="All 2 branches covered.">                if (record.isOverdue()) {</span>
-<span class="fc" id="L96">                    long overdueDays = record.getOverdueDays();</span>
-<span class="fc" id="L97">                    mediaFine = overdueDays * FINE_PER_DAY.get(media.getMediaType());</span>
-<span class="fc" id="L98">                    System.out.println(&quot;Media is &quot; + overdueDays + &quot; days overdue. Fine: &quot; + mediaFine);</span>
+<span class="fc" id="L125">                double mediaFine = 0.0;</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">                if (record.isOverdue()) {</span>
+<span class="fc" id="L127">                    long overdueDays = record.getOverdueDays();</span>
+<span class="fc" id="L128">                    mediaFine = overdueDays * FINE_PER_DAY.get(media.getMediaType());</span>
+<span class="fc" id="L129">                    System.out.println(&quot;Media is &quot; + overdueDays + &quot; days overdue. Fine: &quot; + mediaFine);</span>
                 }
 
-<span class="fc" id="L101">                borrowRecordDAO.markAsReturned(record.getRecordId(), LocalDate.now(), mediaFine);</span>
+<span class="fc" id="L132">                borrowRecordDAO.markAsReturned(record.getRecordId(), LocalDate.now(), mediaFine);</span>
 
-<span class="fc bfc" id="L103" title="All 2 branches covered.">                if (mediaFine &gt; 0) {</span>
-<span class="fc" id="L104">                    double newBalance = borrower.getFineBalance() + mediaFine;</span>
-<span class="fc" id="L105">                    borrower.setFineBalance(newBalance);</span>
-<span class="fc" id="L106">                    fineDAO.updateFine(borrower.getId(), newBalance);</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">                if (mediaFine &gt; 0) {</span>
+<span class="fc" id="L135">                    fineDAO.addFine(borrower.getId(), mediaFine);</span>
+<span class="fc" id="L136">                    double newBalance = fineDAO.getFineBalance(borrower.getId());</span>
+<span class="fc" id="L137">                    borrower.setFineBalance(newBalance);</span>
+<span class="fc" id="L138">                    System.out.println(&quot;Fine added: &quot; + mediaFine);</span>
                 }
 
-<span class="fc" id="L109">                List&lt;MediaRecord&gt; borrowed = borrower.getBorrowedMedia();</span>
-<span class="fc" id="L110">                borrowed.remove(record);</span>
-<span class="fc" id="L111">                borrower.setBorrowedMedia(borrowed);</span>
+<span class="fc" id="L141">                List&lt;MediaRecord&gt; borrowed = borrower.getBorrowedMedia();</span>
+<span class="fc" id="L142">                borrowed.remove(record);</span>
+<span class="fc" id="L143">                borrower.setBorrowedMedia(borrowed);</span>
 
-<span class="fc" id="L113">                System.out.println(&quot;Successfully returned '&quot; + media.getTitle() + &quot;'. Total fine balance: &quot; + borrower.getFineBalance());</span>
-<span class="fc" id="L114">                return true;</span>
+<span class="fc" id="L145">                System.out.println(&quot;Successfully returned '&quot; + media.getTitle() + &quot;'. Total fine balance: &quot; + borrower.getFineBalance());</span>
+<span class="fc" id="L146">                return true;</span>
             }
-<span class="nc" id="L116">        }</span>
-
-<span class="fc" id="L118">        System.out.println(&quot;Error: This media is not borrowed by you.&quot;);</span>
-<span class="fc" id="L119">        return false;</span>
+<span class="nc" id="L148">        }</span>
+<span class="fc" id="L149">        System.out.println(&quot;Error: This media is not borrowed by you.&quot;);</span>
+<span class="fc" id="L150">        return false;</span>
     }
 
+    /**
+     * Retrieves a list of users who currently have overdue books.
+     *
+     * @return A list containing user and overdue book count information.
+     */
     public List&lt;UserWithOverdueBooks&gt; getUsersWithOverdueBooks() {
-<span class="fc" id="L123">        return borrowRecordDAO.getUsersWithOverdueBooks();</span>
+<span class="fc" id="L159">        return borrowRecordDAO.getUsersWithOverdueBooks();</span>
     }
 
+    /**
+     * Returns the allowed number of borrow days for a given media type.
+     *
+     * @param mediaType The type of media (e.g., &quot;book&quot;, &quot;cd&quot;).
+     * @return Number of days allowed for borrowing.
+     */
     public static int getBorrowDays(String mediaType) {
-<span class="fc" id="L127">        return BORROW_DAYS.getOrDefault(mediaType, 0);</span>
+<span class="fc" id="L169">        return BORROW_DAYS.getOrDefault(mediaType, 0);</span>
     }
 
+    /**
+     * Returns the fine per day for a given media type.
+     *
+     * @param mediaType The media type.
+     * @return The daily fine amount.
+     */
     public static double getFinePerDay(String mediaType) {
-<span class="fc" id="L131">        return FINE_PER_DAY.getOrDefault(mediaType, 0.0);</span>
+<span class="fc" id="L179">        return FINE_PER_DAY.getOrDefault(mediaType, 0.0);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -4,10 +4,8 @@ import model.MediaRecord;
 import model.UserWithOverdueBooks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import service.BorrowingService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,17 +140,22 @@ public class BorrowingServiceTest {
         when(record.getMedia()).thenReturn(media);
         when(record.isOverdue()).thenReturn(true);
         when(record.getOverdueDays()).thenReturn(2L);
+        when(record.getRecordId()).thenReturn(100);
         when(media.getId()).thenReturn(1);
         when(media.getMediaType()).thenReturn("book");
+        when(media.getTitle()).thenReturn("Test Book");
+        when(borrower.getId()).thenReturn(0);
         when(borrower.getBorrowedMedia()).thenReturn(new ArrayList<>(List.of(record)));
         when(borrower.getFineBalance()).thenReturn(0.0);
+        when(fineDAOMock.getFineBalance(0)).thenReturn(20.0);
 
         boolean result = borrowingService.returnMedia(borrower, media);
 
         assertTrue(result);
         verify(mediaDAOMock).updateAvailability(1, true);
         verify(borrowRecordDAOMock).markAsReturned(anyInt(), any(), eq(20.0)); // 2 * 10.0
-        verify(fineDAOMock).updateFine(anyInt(), eq(20.0));
+        verify(fineDAOMock).addFine(0, 20.0);
+        verify(fineDAOMock).getFineBalance(0);
     }
 
     @Test

@@ -7,86 +7,128 @@ import model.MediaRecord;
 
 import java.util.List;
 
+/**
+ * Service class that manages borrower-related operations such as loading
+ * borrowed media data, generating overdue reports, paying fines,
+ * and displaying borrowed items.
+ *
+ * &lt;p&gt;This service interacts with {@link BorrowRecordDAO} and {@link FineDAO}
+ * to retrieve and update borrower information.&lt;/p&gt;
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class BorrowerService {
+
+    /** DAO used for retrieving and updating borrow record information. */
     private final BorrowRecordDAO borrowRecordDAO;
+
+    /** DAO used for managing borrower fines. */
     private final FineDAO fineDAO;
 
-<span class="fc" id="L14">    public BorrowerService() {</span>
-<span class="fc" id="L15">        this.borrowRecordDAO = new BorrowRecordDAO();</span>
-<span class="fc" id="L16">        this.fineDAO = new FineDAO();</span>
-<span class="fc" id="L17">    }</span>
+    /**
+     * Constructs a BorrowerService instance and initializes DAOs.
+     */
+<span class="fc" id="L32">    public BorrowerService() {</span>
+<span class="fc" id="L33">        this.borrowRecordDAO = new BorrowRecordDAO();</span>
+<span class="fc" id="L34">        this.fineDAO = new FineDAO();</span>
+<span class="fc" id="L35">    }</span>
 
+    /**
+     * Loads a borrower's currently borrowed media items and fine balance.
+     *
+     * @param borrower The borrower whose data will be loaded.
+     */
     public void loadBorrowerData(Borrower borrower) {
-<span class="fc" id="L20">        List&lt;MediaRecord&gt; borrowedMedia = borrowRecordDAO.findActiveByUserId(borrower.getId());</span>
-<span class="fc" id="L21">        borrower.setBorrowedMedia(borrowedMedia);</span>
+<span class="fc" id="L43">        List&lt;MediaRecord&gt; borrowedMedia = borrowRecordDAO.findActiveByUserId(borrower.getId());</span>
+<span class="fc" id="L44">        borrower.setBorrowedMedia(borrowedMedia);</span>
 
-<span class="fc" id="L23">        double fineBalance = fineDAO.getFineBalance(borrower.getId());</span>
-<span class="fc" id="L24">        borrower.setFineBalance(fineBalance);</span>
+<span class="fc" id="L46">        double fineBalance = fineDAO.getFineBalance(borrower.getId());</span>
+<span class="fc" id="L47">        borrower.setFineBalance(fineBalance);</span>
 
-<span class="fc" id="L26">        System.out.println(&quot;Loaded &quot; + borrowedMedia.size() + &quot; borrowed items for &quot; + borrower.getUsername());</span>
-<span class="fc" id="L27">    }</span>
+<span class="fc" id="L49">        System.out.println(&quot;Loaded &quot; + borrowedMedia.size() + &quot; borrowed items for &quot; + borrower.getUsername());</span>
+<span class="fc" id="L50">    }</span>
 
+    /**
+     * Generates and prints a detailed overdue report for the borrower,
+     * including overdue days and calculated fines.
+     *
+     * @param borrower The borrower for whom the overdue report is generated.
+     */
     public void generateOverdueReport(Borrower borrower) {
-<span class="fc" id="L30">        List&lt;MediaRecord&gt; overdueItems = borrower.getOverdueMedia();</span>
+<span class="fc" id="L59">        List&lt;MediaRecord&gt; overdueItems = borrower.getOverdueMedia();</span>
 
-<span class="pc bpc" id="L32" title="1 of 2 branches missed.">        if (overdueItems.isEmpty()) {</span>
-<span class="fc" id="L33">            System.out.println(&quot;You have no overdue items.&quot;);</span>
-<span class="fc" id="L34">            return;</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (overdueItems.isEmpty()) {</span>
+<span class="fc" id="L62">            System.out.println(&quot;You have no overdue items.&quot;);</span>
+<span class="fc" id="L63">            return;</span>
         }
 
-<span class="nc" id="L37">        System.out.println(&quot;\n=== Overdue Items Report ===&quot;);</span>
-<span class="nc" id="L38">        double totalFine = 0.0;</span>
+<span class="fc" id="L66">        System.out.println(&quot;\n=== Overdue Items Report ===&quot;);</span>
+<span class="fc" id="L67">        double totalFine = 0.0;</span>
 
-<span class="nc bnc" id="L40" title="All 2 branches missed.">        for (MediaRecord record : overdueItems) {</span>
-<span class="nc" id="L41">            long overdueDays = record.getOverdueDays();</span>
-<span class="nc" id="L42">            double finePerDay = BorrowingService.getFinePerDay(record.getMedia().getMediaType());</span>
-<span class="nc" id="L43">            double itemFine = overdueDays * finePerDay;</span>
-<span class="nc" id="L44">            totalFine += itemFine;</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        for (MediaRecord record : overdueItems) {</span>
+<span class="fc" id="L70">            long overdueDays = record.getOverdueDays();</span>
+<span class="fc" id="L71">            double finePerDay = BorrowingService.getFinePerDay(record.getMedia().getMediaType());</span>
+<span class="fc" id="L72">            double itemFine = overdueDays * finePerDay;</span>
+<span class="fc" id="L73">            totalFine += itemFine;</span>
 
-<span class="nc bnc" id="L46" title="All 2 branches missed.">            String mediaType = record.getMedia().getMediaType().equals(&quot;book&quot;) ? &quot;Book&quot; : &quot;CD&quot;;</span>
-<span class="nc" id="L47">            System.out.printf(&quot;- Title: '%s', Type: %s, Overdue Days: %d, Fine: %.2f\n&quot;,</span>
-<span class="nc" id="L48">                    record.getMedia().getTitle(), mediaType, overdueDays, itemFine);</span>
-<span class="nc" id="L49">        }</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            String mediaType = record.getMedia().getMediaType().equals(&quot;book&quot;) ? &quot;Book&quot; : &quot;CD&quot;;</span>
+<span class="fc" id="L76">            System.out.printf(&quot;- Title: '%s', Type: %s, Overdue Days: %d, Fine: %.2f\n&quot;,</span>
+<span class="fc" id="L77">                    record.getMedia().getTitle(), mediaType, overdueDays, itemFine);</span>
+<span class="fc" id="L78">        }</span>
 
-<span class="nc" id="L51">        System.out.println(&quot;-----------------------------&quot;);</span>
-<span class="nc" id="L52">        System.out.printf(&quot;Total Overdue Fines: %.2f\n&quot;, totalFine);</span>
-<span class="nc" id="L53">        System.out.println(&quot;=============================\n&quot;);</span>
-<span class="nc" id="L54">    }</span>
+<span class="fc" id="L80">        System.out.println(&quot;-----------------------------&quot;);</span>
+<span class="fc" id="L81">        System.out.printf(&quot;Total Overdue Fines: %.2f\n&quot;, totalFine);</span>
+<span class="fc" id="L82">        System.out.println(&quot;=============================\n&quot;);</span>
+<span class="fc" id="L83">    }</span>
 
+    /**
+     * Processes a fine payment for a borrower.
+     *
+     * @param borrower The borrower making the payment.
+     * @param amount   The payment amount.
+     * @return true if the payment is successful, false otherwise.
+     */
     public boolean payFine(Borrower borrower, double amount) {
-<span class="fc bfc" id="L57" title="All 4 branches covered.">        if (amount &lt;= 0 || amount &gt; borrower.getFineBalance()) {</span>
-<span class="fc" id="L58">            System.out.println(&quot;Invalid payment amount.&quot;);</span>
-<span class="fc" id="L59">            return false;</span>
+<span class="fc bfc" id="L93" title="All 4 branches covered.">        if (amount &lt;= 0 || amount &gt; borrower.getFineBalance()) {</span>
+<span class="fc" id="L94">            System.out.println(&quot;Invalid payment amount.&quot;);</span>
+<span class="fc" id="L95">            return false;</span>
         }
 
-<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (fineDAO.payFine(borrower.getId(), amount)) {</span>
-<span class="fc" id="L63">            borrower.setFineBalance(borrower.getFineBalance() - amount);</span>
-<span class="fc" id="L64">            System.out.printf(&quot;Payment of %.2f successful. New balance: %.2f\n&quot;,</span>
-<span class="fc" id="L65">                    amount, borrower.getFineBalance());</span>
-<span class="fc" id="L66">            return true;</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (fineDAO.payFine(borrower.getId(), amount)) {</span>
+<span class="fc" id="L99">            borrower.setFineBalance(borrower.getFineBalance() - amount);</span>
+<span class="fc" id="L100">            System.out.printf(&quot;Payment of %.2f successful. New balance: %.2f\n&quot;,</span>
+<span class="fc" id="L101">                    amount, borrower.getFineBalance());</span>
+<span class="fc" id="L102">            return true;</span>
         }
 
-<span class="fc" id="L69">        return false;</span>
+<span class="fc" id="L105">        return false;</span>
     }
 
+    /**
+     * Displays all currently borrowed media items for a borrower.
+     * Includes overdue warnings when applicable.
+     *
+     * @param borrower The borrower whose borrowed media will be displayed.
+     */
     public void displayBorrowedMedia(Borrower borrower) {
-<span class="nc" id="L73">        List&lt;MediaRecord&gt; borrowed = borrower.getBorrowedMedia();</span>
+<span class="fc" id="L115">        List&lt;MediaRecord&gt; borrowed = borrower.getBorrowedMedia();</span>
 
-<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (borrowed.isEmpty()) {</span>
-<span class="nc" id="L76">            System.out.println(&quot;You have no borrowed items.&quot;);</span>
-<span class="nc" id="L77">            return;</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (borrowed.isEmpty()) {</span>
+<span class="fc" id="L118">            System.out.println(&quot;You have no borrowed items.&quot;);</span>
+<span class="fc" id="L119">            return;</span>
         }
 
-<span class="nc" id="L80">        System.out.println(&quot;\n=== Your Borrowed Items ===&quot;);</span>
-<span class="nc bnc" id="L81" title="All 2 branches missed.">        for (MediaRecord record : borrowed) {</span>
-<span class="nc" id="L82">            System.out.println(record.getMedia());</span>
-<span class="nc" id="L83">            System.out.println(&quot;Due Date: &quot; + record.getDueDate());</span>
-<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (record.isOverdue()) {</span>
-<span class="nc" id="L85">                System.out.println(&quot;⚠️  OVERDUE by &quot; + record.getOverdueDays() + &quot; days&quot;);</span>
+<span class="fc" id="L122">        System.out.println(&quot;\n=== Your Borrowed Items ===&quot;);</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        for (MediaRecord record : borrowed) {</span>
+<span class="fc" id="L124">            System.out.println(record.getMedia());</span>
+<span class="fc" id="L125">            System.out.println(&quot;Due Date: &quot; + record.getDueDate());</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">            if (record.isOverdue()) {</span>
+<span class="fc" id="L127">                System.out.println(&quot;⚠️  OVERDUE by &quot; + record.getOverdueDays() + &quot; days&quot;);</span>
             }
-<span class="nc" id="L87">            System.out.println(&quot;---&quot;);</span>
-<span class="nc" id="L88">        }</span>
-<span class="nc" id="L89">        System.out.println(&quot;===========================\n&quot;);</span>
-<span class="nc" id="L90">    }</span>
+<span class="fc" id="L129">            System.out.println(&quot;---&quot;);</span>
+<span class="fc" id="L130">        }</span>
+<span class="fc" id="L131">        System.out.println(&quot;===========================\n&quot;);</span>
+<span class="fc" id="L132">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

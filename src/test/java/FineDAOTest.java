@@ -225,4 +225,57 @@ class FineDAOTest {
         assertTrue(spyDAO.clearFine(1));
         verify(spyDAO).updateFine(1, 0.0);
     }
+    // ------------------ getFineBalance null connection ------------------
+    @Test
+    void testGetFineBalance_connectionNull() {
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+            assertEquals(0.0, fineDAO.getFineBalance(1));
+        }
+    }
+
+    // ------------------ initializeFine null connection ------------------
+    @Test
+    void testInitializeFine_connectionNull() {
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+            assertFalse(fineDAO.initializeFine(1));
+        }
+    }
+
+    // ------------------ updateFine SQLException ------------------
+    @Test
+    void testUpdateFine_sqlException() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        doThrow(new SQLException("Update failed")).when(mockStmt).executeUpdate();
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+
+            assertFalse(fineDAO.updateFine(1, 20.0));
+        }
+    }
+
+    // ------------------ addFine fails when updateFine returns false ------------------
+    @Test
+    void testAddFine_updateFails() {
+        FineDAO spyDAO = spy(fineDAO);
+        doReturn(10.0).when(spyDAO).getFineBalance(1);
+        doReturn(false).when(spyDAO).updateFine(1, 15.0);
+
+        assertFalse(spyDAO.addFine(1, 5.0));
+    }
+
+    // ------------------ payFine fails when updateFine returns false ------------------
+    @Test
+    void testPayFine_updateFails() {
+        FineDAO spyDAO = spy(fineDAO);
+        doReturn(10.0).when(spyDAO).getFineBalance(1);
+        doReturn(false).when(spyDAO).updateFine(1, 7.0);
+
+        assertFalse(spyDAO.payFine(1, 3.0));
+    }
+
 }

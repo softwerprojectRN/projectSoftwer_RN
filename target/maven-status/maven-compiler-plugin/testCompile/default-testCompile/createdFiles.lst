@@ -6,12 +6,15 @@ BorrowRecordDAOTest.class
 EmailNotifierTest.class
 model\UserTest.class
 MediaTest.class
+BorrowerServiceTest$1.class
 UserWithOverdueBooksTest.class
 BookServiceTest.class
 AdminTest.class
 BookDAOTest.class
+MediaDAOTest.class
 BorrowingServiceTest.class
 FineDAOTest.class
+UserDAOTest.class
 BookTest.class
 UserServiceTest.class
 model\BorrowerTest.class

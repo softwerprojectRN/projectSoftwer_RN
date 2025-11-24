@@ -203,4 +203,166 @@ class CDDAOTest {
             System.setOut(System.out);
         }
     }
+
+    @Test
+    void testSearchByTitle_successMultiple() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(true, true, false);
+        when(mockRs.getInt("id")).thenReturn(1, 2);
+        when(mockRs.getString("title")).thenReturn("CD1", "CD2");
+        when(mockRs.getString("artist")).thenReturn("A1", "A2");
+        when(mockRs.getString("genre")).thenReturn("Pop", "Rock");
+        when(mockRs.getInt("duration")).thenReturn(50, 60);
+        when(mockRs.getInt("available")).thenReturn(1, 0);
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+
+            List<CD> cds = cdDAO.searchByTitle("CD");
+            assertEquals(2, cds.size());
+            assertTrue(cds.get(0).isAvailable());
+            assertFalse(cds.get(1).isAvailable());
+        }
+    }
+
+    @Test
+    void testSearchByTitle_emptyResult() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(false);
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+
+            List<CD> cds = cdDAO.searchByTitle("NonExist");
+            assertTrue(cds.isEmpty());
+        }
+    }
+
+    @Test
+    void testSearchByTitle_sqlException() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        doThrow(new SQLException("Query failed")).when(mockStmt).executeQuery();
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+
+            List<CD> cds = cdDAO.searchByTitle("Any");
+            assertTrue(cds.isEmpty());
+        }
+    }
+
+    @Test
+    void testSearchByTitle_nullConnection() {
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+            List<CD> cds = cdDAO.searchByTitle("Any");
+            assertTrue(cds.isEmpty());
+        }
+    }
+
+    // ------------------ searchByArtist() ------------------
+    @Test
+    void testSearchByArtist_successSingle() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(true, false);
+        when(mockRs.getInt("id")).thenReturn(1);
+        when(mockRs.getString("title")).thenReturn("Album1");
+        when(mockRs.getString("artist")).thenReturn("Artist1");
+        when(mockRs.getString("genre")).thenReturn("Pop");
+        when(mockRs.getInt("duration")).thenReturn(40);
+        when(mockRs.getInt("available")).thenReturn(1);
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+
+            List<CD> cds = cdDAO.searchByArtist("Artist1");
+            assertEquals(1, cds.size());
+            assertEquals("Artist1", cds.get(0).getArtist());
+        }
+    }
+
+    @Test
+    void testSearchByArtist_empty() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(false);
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+            List<CD> cds = cdDAO.searchByArtist("NoOne");
+            assertTrue(cds.isEmpty());
+        }
+    }
+
+    // ------------------ searchByGenre() ------------------
+    @Test
+    void testSearchByGenre_success() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(true, false);
+        when(mockRs.getInt("id")).thenReturn(1);
+        when(mockRs.getString("title")).thenReturn("Album");
+        when(mockRs.getString("artist")).thenReturn("Artist");
+        when(mockRs.getString("genre")).thenReturn("Jazz");
+        when(mockRs.getInt("duration")).thenReturn(45);
+        when(mockRs.getInt("available")).thenReturn(1);
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+            List<CD> cds = cdDAO.searchByGenre("Jazz");
+            assertEquals(1, cds.size());
+            assertEquals("Jazz", cds.get(0).getGenre());
+        }
+    }
+
+    @Test
+    void testSearchByGenre_empty() throws SQLException {
+        Connection mockConn = mock(Connection.class);
+        PreparedStatement mockStmt = mock(PreparedStatement.class);
+        ResultSet mockRs = mock(ResultSet.class);
+
+        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
+        when(mockStmt.executeQuery()).thenReturn(mockRs);
+        when(mockRs.next()).thenReturn(false);
+
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+            List<CD> cds = cdDAO.searchByGenre("NoGenre");
+            assertTrue(cds.isEmpty());
+        }
+    }
+
+    @Test
+    void testSearchByGenre_nullConnection() {
+        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
+            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+            List<CD> cds = cdDAO.searchByGenre("Any");
+            assertTrue(cds.isEmpty());
+        }
+    }
 }

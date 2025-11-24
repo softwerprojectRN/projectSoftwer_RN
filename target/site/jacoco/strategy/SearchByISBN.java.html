@@ -4,16 +4,37 @@ import dao.BookDAO;
 import model.Book;
 import java.util.List;
 
+/**
+ * Concrete search strategy for searching books by ISBN pattern.
+ * Implements the {@link SearchStrategy} interface.
+ *
+ * Allows searching for books in the database based on ISBN matching.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class SearchByISBN implements SearchStrategy {
+
+    /** DAO for accessing book data */
     private final BookDAO bookDAO;
 
-<span class="nc" id="L10">    public SearchByISBN() {</span>
-<span class="nc" id="L11">        this.bookDAO = new BookDAO();</span>
-<span class="nc" id="L12">    }</span>
+    /**
+     * Constructs a new {@code SearchByISBN} strategy.
+     * Initializes the {@link BookDAO}.
+     */
+<span class="nc" id="L25">    public SearchByISBN() {</span>
+<span class="nc" id="L26">        this.bookDAO = new BookDAO();</span>
+<span class="nc" id="L27">    }</span>
 
+    /**
+     * Searches for books using a pattern of ISBN numbers.
+     *
+     * @param searchTerm the ISBN pattern to search for
+     * @return a list of {@link Book} objects matching the ISBN pattern
+     */
     @Override
     public List&lt;Book&gt; search(String searchTerm) {
-<span class="nc" id="L16">        return bookDAO.searchByISBNPattern(searchTerm);</span>
+<span class="nc" id="L37">        return bookDAO.searchByISBNPattern(searchTerm);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

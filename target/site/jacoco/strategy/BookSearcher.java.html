@@ -4,23 +4,48 @@ import model.Book;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Context class for searching books using different search strategies.
+ * Supports changing the strategy at runtime.
+ *
+ * @author Library Management System
+ * @version 1.0
+ */
 public class BookSearcher {
+
+    /** Current search strategy used for book searching */
     private SearchStrategy searchStrategy;
 
-<span class="nc" id="L10">    public BookSearcher(SearchStrategy searchStrategy) {</span>
-<span class="nc" id="L11">        this.searchStrategy = searchStrategy;</span>
-<span class="nc" id="L12">    }</span>
+    /**
+     * Constructs a {@code BookSearcher} with the specified search strategy.
+     *
+     * @param searchStrategy the initial search strategy to use
+     */
+<span class="nc" id="L24">    public BookSearcher(SearchStrategy searchStrategy) {</span>
+<span class="nc" id="L25">        this.searchStrategy = searchStrategy;</span>
+<span class="nc" id="L26">    }</span>
 
+    /**
+     * Updates the search strategy at runtime.
+     *
+     * @param searchStrategy the new search strategy to use
+     */
     public void setSearchStrategy(SearchStrategy searchStrategy) {
-<span class="nc" id="L15">        this.searchStrategy = searchStrategy;</span>
-<span class="nc" id="L16">    }</span>
+<span class="nc" id="L34">        this.searchStrategy = searchStrategy;</span>
+<span class="nc" id="L35">    }</span>
 
+    /**
+     * Searches for books using the current search strategy.
+     *
+     * @param searchTerm the search query (cannot be empty)
+     * @return a list of {@link Book} objects that match the search term
+     */
     public List&lt;Book&gt; search(String searchTerm) {
-<span class="nc bnc" id="L19" title="All 4 branches missed.">        if (searchTerm == null || searchTerm.trim().isEmpty()) {</span>
-<span class="nc" id="L20">            System.out.println(&quot;Search term cannot be empty&quot;);</span>
-<span class="nc" id="L21">            return new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L44" title="All 4 branches missed.">        if (searchTerm == null || searchTerm.trim().isEmpty()) {</span>
+<span class="nc" id="L45">            System.out.println(&quot;Search term cannot be empty&quot;);</span>
+<span class="nc" id="L46">            return new ArrayList&lt;&gt;();</span>
         }
-<span class="nc" id="L23">        return searchStrategy.search(searchTerm.trim());</span>
+<span class="nc" id="L48">        return searchStrategy.search(searchTerm.trim());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
