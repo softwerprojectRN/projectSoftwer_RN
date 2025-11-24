@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: UserServiceTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in UserServiceTest
+=======
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.155 s -- in UserServiceTest
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02

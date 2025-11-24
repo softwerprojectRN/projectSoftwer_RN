@@ -38,7 +38,11 @@ public class MediaRecord {
      * @return the record ID
      */
     public int getRecordId() {
+<<<<<<< HEAD
 <span class="nc" id="L41">        return recordId;</span>
+=======
+<span class="fc" id="L41">        return recordId;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
     }
 
     /**
@@ -47,8 +51,13 @@ public class MediaRecord {
      * @param recordId the new record ID
      */
     public void setRecordId(int recordId) {
+<<<<<<< HEAD
 <span class="nc" id="L50">        this.recordId = recordId;</span>
 <span class="nc" id="L51">    }</span>
+=======
+<span class="fc" id="L50">        this.recordId = recordId;</span>
+<span class="fc" id="L51">    }</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 
     /**
      * Gets the borrowed media.
@@ -56,7 +65,11 @@ public class MediaRecord {
      * @return the Media object
      */
     public Media getMedia() {
+<<<<<<< HEAD
 <span class="nc" id="L59">        return media;</span>
+=======
+<span class="fc" id="L59">        return media;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
     }
 
     /**
@@ -65,7 +78,11 @@ public class MediaRecord {
      * @return the due date
      */
     public LocalDate getDueDate() {
+<<<<<<< HEAD
 <span class="nc" id="L68">        return dueDate;</span>
+=======
+<span class="fc" id="L68">        return dueDate;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
     }
 
     /**
@@ -74,8 +91,13 @@ public class MediaRecord {
      * @param dueDate the new due date
      */
     public void setDueDate(LocalDate dueDate) {
+<<<<<<< HEAD
 <span class="nc" id="L77">        this.dueDate = dueDate;</span>
 <span class="nc" id="L78">    }</span>
+=======
+<span class="fc" id="L77">        this.dueDate = dueDate;</span>
+<span class="fc" id="L78">    }</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 
     /**
      * Checks if the media is overdue.
@@ -83,7 +105,11 @@ public class MediaRecord {
      * @return true if overdue, false otherwise
      */
     public boolean isOverdue() {
+<<<<<<< HEAD
 <span class="nc" id="L86">        return LocalDate.now().isAfter(dueDate);</span>
+=======
+<span class="fc" id="L86">        return LocalDate.now().isAfter(dueDate);</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
     }
 
     /**
@@ -92,8 +118,13 @@ public class MediaRecord {
      * @return the number of overdue days, 0 if not overdue
      */
     public long getOverdueDays() {
+<<<<<<< HEAD
 <span class="nc bnc" id="L95" title="All 2 branches missed.">        if (!isOverdue()) return 0;</span>
 <span class="nc" id="L96">        return java.time.temporal.ChronoUnit.DAYS.between(dueDate, LocalDate.now());</span>
+=======
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (!isOverdue()) return 0;</span>
+<span class="fc" id="L96">        return java.time.temporal.ChronoUnit.DAYS.between(dueDate, LocalDate.now());</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

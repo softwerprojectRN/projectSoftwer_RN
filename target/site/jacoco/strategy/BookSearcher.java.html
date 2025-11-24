@@ -21,9 +21,15 @@ public class BookSearcher {
      *
      * @param searchStrategy the initial search strategy to use
      */
+<<<<<<< HEAD
 <span class="fc" id="L24">    public BookSearcher(SearchStrategy searchStrategy) {</span>
 <span class="fc" id="L25">        this.searchStrategy = searchStrategy;</span>
 <span class="fc" id="L26">    }</span>
+=======
+<span class="nc" id="L24">    public BookSearcher(SearchStrategy searchStrategy) {</span>
+<span class="nc" id="L25">        this.searchStrategy = searchStrategy;</span>
+<span class="nc" id="L26">    }</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 
     /**
      * Updates the search strategy at runtime.
@@ -31,8 +37,13 @@ public class BookSearcher {
      * @param searchStrategy the new search strategy to use
      */
     public void setSearchStrategy(SearchStrategy searchStrategy) {
+<<<<<<< HEAD
 <span class="fc" id="L34">        this.searchStrategy = searchStrategy;</span>
 <span class="fc" id="L35">    }</span>
+=======
+<span class="nc" id="L34">        this.searchStrategy = searchStrategy;</span>
+<span class="nc" id="L35">    }</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 
     /**
      * Searches for books using the current search strategy.
@@ -41,11 +52,19 @@ public class BookSearcher {
      * @return a list of {@link Book} objects that match the search term
      */
     public List&lt;Book&gt; search(String searchTerm) {
+<<<<<<< HEAD
 <span class="fc bfc" id="L44" title="All 4 branches covered.">        if (searchTerm == null || searchTerm.trim().isEmpty()) {</span>
 <span class="fc" id="L45">            System.out.println(&quot;Search term cannot be empty&quot;);</span>
 <span class="fc" id="L46">            return new ArrayList&lt;&gt;();</span>
         }
 <span class="fc" id="L48">        return searchStrategy.search(searchTerm.trim());</span>
+=======
+<span class="nc bnc" id="L44" title="All 4 branches missed.">        if (searchTerm == null || searchTerm.trim().isEmpty()) {</span>
+<span class="nc" id="L45">            System.out.println(&quot;Search term cannot be empty&quot;);</span>
+<span class="nc" id="L46">            return new ArrayList&lt;&gt;();</span>
+        }
+<span class="nc" id="L48">        return searchStrategy.search(searchTerm.trim());</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

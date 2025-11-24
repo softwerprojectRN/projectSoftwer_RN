@@ -123,19 +123,34 @@ public class BorrowingService {
 <span class="fc" id="L123">                media.setAvailable(true);</span>
 
 <span class="fc" id="L125">                double mediaFine = 0.0;</span>
+<<<<<<< HEAD
 <span class="pc bpc" id="L126" title="1 of 2 branches missed.">                if (record.isOverdue()) {</span>
 <span class="nc" id="L127">                    long overdueDays = record.getOverdueDays();</span>
 <span class="nc" id="L128">                    mediaFine = overdueDays * FINE_PER_DAY.get(media.getMediaType());</span>
 <span class="nc" id="L129">                    System.out.println(&quot;Media is &quot; + overdueDays + &quot; days overdue. Fine: &quot; + mediaFine);</span>
+=======
+<span class="fc bfc" id="L126" title="All 2 branches covered.">                if (record.isOverdue()) {</span>
+<span class="fc" id="L127">                    long overdueDays = record.getOverdueDays();</span>
+<span class="fc" id="L128">                    mediaFine = overdueDays * FINE_PER_DAY.get(media.getMediaType());</span>
+<span class="fc" id="L129">                    System.out.println(&quot;Media is &quot; + overdueDays + &quot; days overdue. Fine: &quot; + mediaFine);</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
                 }
 
 <span class="fc" id="L132">                borrowRecordDAO.markAsReturned(record.getRecordId(), LocalDate.now(), mediaFine);</span>
 
+<<<<<<< HEAD
 <span class="pc bpc" id="L134" title="1 of 2 branches missed.">                if (mediaFine &gt; 0) {</span>
 <span class="nc" id="L135">                    fineDAO.addFine(borrower.getId(), mediaFine);</span>
 <span class="nc" id="L136">                    double newBalance = fineDAO.getFineBalance(borrower.getId());</span>
 <span class="nc" id="L137">                    borrower.setFineBalance(newBalance);</span>
 <span class="nc" id="L138">                    System.out.println(&quot;Fine added: &quot; + mediaFine);</span>
+=======
+<span class="fc bfc" id="L134" title="All 2 branches covered.">                if (mediaFine &gt; 0) {</span>
+<span class="fc" id="L135">                    fineDAO.addFine(borrower.getId(), mediaFine);</span>
+<span class="fc" id="L136">                    double newBalance = fineDAO.getFineBalance(borrower.getId());</span>
+<span class="fc" id="L137">                    borrower.setFineBalance(newBalance);</span>
+<span class="fc" id="L138">                    System.out.println(&quot;Fine added: &quot; + mediaFine);</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
                 }
 
 <span class="fc" id="L141">                List&lt;MediaRecord&gt; borrowed = borrower.getBorrowedMedia();</span>

@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: EmailNotifierTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in EmailNotifierTest
+=======
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in EmailNotifierTest
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02

@@ -20,7 +20,11 @@ import java.sql.*;
      */
     public void initializeTable() {
 <span class="fc" id="L22">        Connection conn = DatabaseConnection.getConnection();</span>
+<<<<<<< HEAD
 <span class="pc bpc" id="L23" title="1 of 2 branches missed.">        if (conn == null) return;</span>
+=======
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        if (conn == null) return;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 
 <span class="fc" id="L25">        String sql = &quot;CREATE TABLE IF NOT EXISTS users (\n&quot; +</span>
                 &quot; id INTEGER PRIMARY KEY AUTOINCREMENT,\n&quot; +
@@ -32,8 +36,13 @@ import java.sql.*;
 <span class="fc" id="L32">        try (Statement stmt = conn.createStatement()) {</span>
 <span class="fc" id="L33">            stmt.execute(sql);</span>
 <span class="fc" id="L34">            System.out.println(&quot;Users table created successfully.&quot;);</span>
+<<<<<<< HEAD
 <span class="nc" id="L35">        } catch (SQLException e) {</span>
 <span class="nc" id="L36">            System.err.println(&quot;Error creating users table: &quot; + e.getMessage());</span>
+=======
+<span class="fc" id="L35">        } catch (SQLException e) {</span>
+<span class="fc" id="L36">            System.err.println(&quot;Error creating users table: &quot; + e.getMessage());</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 <span class="fc" id="L37">        }</span>
 <span class="fc" id="L38">    }</span>
 
@@ -44,6 +53,7 @@ import java.sql.*;
      * @return User object if found, null otherwise
      */
     public User findByUsername(String username) {
+<<<<<<< HEAD
 <span class="nc" id="L47">        Connection conn = DatabaseConnection.getConnection();</span>
 <span class="nc bnc" id="L48" title="All 2 branches missed.">        if (conn == null) return null;</span>
 
@@ -65,6 +75,29 @@ import java.sql.*;
 <span class="nc" id="L65">            System.err.println(&quot;Error finding user: &quot; + e.getMessage());</span>
 <span class="nc" id="L66">        }</span>
 <span class="nc" id="L67">        return null;</span>
+=======
+<span class="fc" id="L47">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (conn == null) return null;</span>
+
+<span class="fc" id="L50">        String sql = &quot;SELECT * FROM users WHERE username = ?&quot;;</span>
+
+<span class="fc" id="L52">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L53">            pstmt.setString(1, username);</span>
+<span class="fc" id="L54">            ResultSet rs = pstmt.executeQuery();</span>
+
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L57">                return new User(</span>
+<span class="fc" id="L58">                        rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L59">                        rs.getString(&quot;username&quot;),</span>
+<span class="fc" id="L60">                        rs.getString(&quot;password_hash&quot;),</span>
+<span class="fc" id="L61">                        rs.getString(&quot;salt&quot;)</span>
+                );
+            }
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L65">            System.err.println(&quot;Error finding user: &quot; + e.getMessage());</span>
+<span class="fc" id="L66">        }</span>
+<span class="fc" id="L67">        return null;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
     }
 
     /**
@@ -76,6 +109,7 @@ import java.sql.*;
      * @return true if insertion was successful, false otherwise
      */
     public boolean insert(String username, String passwordHash, String salt) {
+<<<<<<< HEAD
 <span class="nc" id="L79">        Connection conn = DatabaseConnection.getConnection();</span>
 <span class="nc bnc" id="L80" title="All 2 branches missed.">        if (conn == null) return false;</span>
 
@@ -90,6 +124,22 @@ import java.sql.*;
 <span class="nc" id="L90">        } catch (SQLException e) {</span>
 <span class="nc" id="L91">            System.err.println(&quot;Error inserting user: &quot; + e.getMessage());</span>
 <span class="nc" id="L92">            return false;</span>
+=======
+<span class="fc" id="L79">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (conn == null) return false;</span>
+
+<span class="fc" id="L82">        String sql = &quot;INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)&quot;;</span>
+
+<span class="fc" id="L84">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L85">            pstmt.setString(1, username);</span>
+<span class="fc" id="L86">            pstmt.setString(2, passwordHash);</span>
+<span class="fc" id="L87">            pstmt.setString(3, salt);</span>
+<span class="fc" id="L88">            pstmt.executeUpdate();</span>
+<span class="fc" id="L89">            return true;</span>
+<span class="fc" id="L90">        } catch (SQLException e) {</span>
+<span class="fc" id="L91">            System.err.println(&quot;Error inserting user: &quot; + e.getMessage());</span>
+<span class="fc" id="L92">            return false;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
         }
     }
 
@@ -101,6 +151,7 @@ import java.sql.*;
      * @return true if deletion was successful, false otherwise
      */
     public boolean delete(String username) {
+<<<<<<< HEAD
 <span class="nc" id="L104">        Connection conn = DatabaseConnection.getConnection();</span>
 <span class="nc bnc" id="L105" title="All 2 branches missed.">        if (conn == null) return false;</span>
 
@@ -161,6 +212,68 @@ import java.sql.*;
 <span class="nc" id="L161">            } catch (SQLException e) {</span>
 <span class="nc" id="L162">                System.err.println(&quot;Error resetting auto-commit: &quot; + e.getMessage());</span>
 <span class="nc" id="L163">            }</span>
+=======
+<span class="fc" id="L104">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if (conn == null) return false;</span>
+
+        try {
+<span class="fc" id="L108">            conn.setAutoCommit(false);</span>
+
+            // Get user ID
+<span class="fc" id="L111">            int userId = -1;</span>
+<span class="fc" id="L112">            String findSql = &quot;SELECT id FROM users WHERE username = ?&quot;;</span>
+<span class="fc" id="L113">            try (PreparedStatement pstmt = conn.prepareStatement(findSql)) {</span>
+<span class="fc" id="L114">                pstmt.setString(1, username);</span>
+<span class="fc" id="L115">                ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                if (rs.next()) {</span>
+<span class="fc" id="L117">                    userId = rs.getInt(&quot;id&quot;);</span>
+                } else {
+<span class="fc" id="L119">                    conn.rollback();</span>
+<span class="fc" id="L120">                    return false;</span>
+                }
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">            }</span>
+
+            // Delete related records
+<span class="fc" id="L125">            String deleteBorrowSql = &quot;DELETE FROM borrow_records WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L126">            try (PreparedStatement pstmt = conn.prepareStatement(deleteBorrowSql)) {</span>
+<span class="fc" id="L127">                pstmt.setInt(1, userId);</span>
+<span class="fc" id="L128">                pstmt.executeUpdate();</span>
+            }
+
+<span class="fc" id="L131">            String deleteFinesSql = &quot;DELETE FROM user_fines WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L132">            try (PreparedStatement pstmt = conn.prepareStatement(deleteFinesSql)) {</span>
+<span class="fc" id="L133">                pstmt.setInt(1, userId);</span>
+<span class="fc" id="L134">                pstmt.executeUpdate();</span>
+            }
+
+            // Delete user
+<span class="fc" id="L138">            String deleteUserSql = &quot;DELETE FROM users WHERE id = ?&quot;;</span>
+<span class="fc" id="L139">            try (PreparedStatement pstmt = conn.prepareStatement(deleteUserSql)) {</span>
+<span class="fc" id="L140">                pstmt.setInt(1, userId);</span>
+<span class="fc" id="L141">                int affected = pstmt.executeUpdate();</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">                if (affected &gt; 0) {</span>
+<span class="fc" id="L143">                    conn.commit();</span>
+<span class="fc" id="L144">                    return true;</span>
+                } else {
+<span class="fc" id="L146">                    conn.rollback();</span>
+<span class="fc" id="L147">                    return false;</span>
+                }
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">            }</span>
+<span class="fc" id="L150">        } catch (SQLException e) {</span>
+<span class="fc" id="L151">            System.err.println(&quot;Error deleting user: &quot; + e.getMessage());</span>
+            try {
+<span class="fc" id="L153">                conn.rollback();</span>
+<span class="nc" id="L154">            } catch (SQLException ex) {</span>
+<span class="nc" id="L155">                System.err.println(&quot;Rollback error: &quot; + ex.getMessage());</span>
+<span class="fc" id="L156">            }</span>
+<span class="fc" id="L157">            return false;</span>
+        } finally {
+            try {
+<span class="fc" id="L160">                conn.setAutoCommit(true);</span>
+<span class="nc" id="L161">            } catch (SQLException e) {</span>
+<span class="nc" id="L162">                System.err.println(&quot;Error resetting auto-commit: &quot; + e.getMessage());</span>
+<span class="fc" id="L163">            }</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
         }
     }
 }

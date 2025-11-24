@@ -105,7 +105,11 @@ import java.util.List;
 <span class="fc" id="L105">            pstmt.setDouble(2, fine);</span>
 <span class="fc" id="L106">            pstmt.setInt(3, recordId);</span>
 <span class="fc" id="L107">            int rowsAffected = pstmt.executeUpdate();</span>
+<<<<<<< HEAD
 <span class="pc bpc" id="L108" title="1 of 2 branches missed.">            return rowsAffected &gt; 0;</span>
+=======
+<span class="fc bfc" id="L108" title="All 2 branches covered.">            return rowsAffected &gt; 0;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 <span class="fc" id="L109">        } catch (SQLException e) {</span>
 <span class="fc" id="L110">            System.err.println(&quot;Error marking record as returned: &quot; + e.getMessage());</span>
 <span class="fc" id="L111">            return false;</span>
@@ -119,6 +123,7 @@ import java.util.List;
      * @return List of MediaRecord objects representing active borrows
      */
     public List&lt;MediaRecord&gt; findActiveByUserId(int userId) {
+<<<<<<< HEAD
 <span class="nc" id="L122">        List&lt;MediaRecord&gt; records = new ArrayList&lt;&gt;();</span>
 <span class="nc" id="L123">        Connection conn = DatabaseConnection.getConnection();</span>
 <span class="nc bnc" id="L124" title="All 2 branches missed.">        if (conn == null) return records;</span>
@@ -159,10 +164,53 @@ import java.util.List;
 <span class="nc bnc" id="L159" title="All 2 branches missed.">                        if (cdRs.next()) {</span>
 <span class="nc" id="L160">                            media = new CD(mediaId, title, cdRs.getString(&quot;artist&quot;),</span>
 <span class="nc" id="L161">                                    cdRs.getString(&quot;genre&quot;), cdRs.getInt(&quot;duration&quot;), false);</span>
+=======
+<span class="fc" id="L122">        List&lt;MediaRecord&gt; records = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L123">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (conn == null) return records;</span>
+
+<span class="fc" id="L126">        String sql = &quot;SELECT br.*, m.media_type FROM borrow_records br &quot; +</span>
+                &quot;JOIN media m ON br.media_id = m.id &quot; +
+                &quot;WHERE br.user_id = ? AND br.returned = 0&quot;;
+
+<span class="fc" id="L130">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L131">            pstmt.setInt(1, userId);</span>
+<span class="fc" id="L132">            ResultSet rs = pstmt.executeQuery();</span>
+
+<span class="fc bfc" id="L134" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L135">                int mediaId = rs.getInt(&quot;media_id&quot;);</span>
+<span class="fc" id="L136">                String mediaType = rs.getString(&quot;media_type&quot;);</span>
+<span class="fc" id="L137">                String title = rs.getString(&quot;media_title&quot;);</span>
+<span class="fc" id="L138">                LocalDate dueDate = LocalDate.parse(rs.getString(&quot;due_date&quot;));</span>
+<span class="fc" id="L139">                int recordId = rs.getInt(&quot;id&quot;);</span>
+
+<span class="fc" id="L141">                Media media = null;</span>
+
+<span class="fc bfc" id="L143" title="All 2 branches covered.">                if (mediaType.equals(&quot;book&quot;)) {</span>
+<span class="fc" id="L144">                    BookDAO bookDAO = new BookDAO();</span>
+<span class="fc" id="L145">                    String bookSql = &quot;SELECT b.author, b.isbn FROM books b WHERE b.id = ?&quot;;</span>
+<span class="fc" id="L146">                    try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {</span>
+<span class="fc" id="L147">                        bookStmt.setInt(1, mediaId);</span>
+<span class="fc" id="L148">                        ResultSet bookRs = bookStmt.executeQuery();</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">                        if (bookRs.next()) {</span>
+<span class="fc" id="L150">                            media = new Book(mediaId, title, bookRs.getString(&quot;author&quot;),</span>
+<span class="fc" id="L151">                                    bookRs.getString(&quot;isbn&quot;), false);</span>
+                        }
+                    }
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">                } else if (mediaType.equals(&quot;cd&quot;)) {</span>
+<span class="fc" id="L155">                    String cdSql = &quot;SELECT c.artist, c.genre, c.duration FROM cds c WHERE c.id = ?&quot;;</span>
+<span class="fc" id="L156">                    try (PreparedStatement cdStmt = conn.prepareStatement(cdSql)) {</span>
+<span class="fc" id="L157">                        cdStmt.setInt(1, mediaId);</span>
+<span class="fc" id="L158">                        ResultSet cdRs = cdStmt.executeQuery();</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">                        if (cdRs.next()) {</span>
+<span class="fc" id="L160">                            media = new CD(mediaId, title, cdRs.getString(&quot;artist&quot;),</span>
+<span class="fc" id="L161">                                    cdRs.getString(&quot;genre&quot;), cdRs.getInt(&quot;duration&quot;), false);</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
                         }
                     }
                 }
 
+<<<<<<< HEAD
 <span class="nc bnc" id="L166" title="All 2 branches missed.">                if (media != null) {</span>
 <span class="nc" id="L167">                    records.add(new MediaRecord(recordId, media, dueDate));</span>
                 }
@@ -171,6 +219,16 @@ import java.util.List;
 <span class="nc" id="L171">            System.err.println(&quot;Error loading borrowed media: &quot; + e.getMessage());</span>
 <span class="nc" id="L172">        }</span>
 <span class="nc" id="L173">        return records;</span>
+=======
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">                if (media != null) {</span>
+<span class="fc" id="L167">                    records.add(new MediaRecord(recordId, media, dueDate));</span>
+                }
+<span class="fc" id="L169">            }</span>
+<span class="fc" id="L170">        } catch (SQLException e) {</span>
+<span class="fc" id="L171">            System.err.println(&quot;Error loading borrowed media: &quot; + e.getMessage());</span>
+<span class="fc" id="L172">        }</span>
+<span class="fc" id="L173">        return records;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
     }
 
     /**
@@ -211,6 +269,7 @@ import java.util.List;
      * @return List of overdue MediaRecord objects
      */
     public List&lt;MediaRecord&gt; findOverdueByUserId(int userId) {
+<<<<<<< HEAD
 <span class="nc" id="L214">        List&lt;MediaRecord&gt; overdueRecords = new ArrayList&lt;&gt;();</span>
 <span class="nc" id="L215">        List&lt;MediaRecord&gt; allRecords = findActiveByUserId(userId);</span>
 
@@ -220,6 +279,17 @@ import java.util.List;
             }
 <span class="nc" id="L221">        }</span>
 <span class="nc" id="L222">        return overdueRecords;</span>
+=======
+<span class="fc" id="L214">        List&lt;MediaRecord&gt; overdueRecords = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L215">        List&lt;MediaRecord&gt; allRecords = findActiveByUserId(userId);</span>
+
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        for (MediaRecord record : allRecords) {</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">            if (record.isOverdue()) {</span>
+<span class="fc" id="L219">                overdueRecords.add(record);</span>
+            }
+<span class="fc" id="L221">        }</span>
+<span class="fc" id="L222">        return overdueRecords;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
     }
 
     /**

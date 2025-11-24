@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: BookTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.073 s -- in BookTest
+=======
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.091 s -- in BookTest
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02

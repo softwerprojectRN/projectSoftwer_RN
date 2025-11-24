@@ -43,7 +43,11 @@ import java.sql.*;
      */
     public double getFineBalance(int userId) {
 <span class="fc" id="L45">        Connection conn = DatabaseConnection.getConnection();</span>
+<<<<<<< HEAD
 <span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (conn == null) return 0.0;</span>
+=======
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (conn == null) return 0.0;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 
 <span class="fc" id="L48">        String sql = &quot;SELECT total_fine FROM user_fines WHERE user_id = ?&quot;;</span>
 
@@ -71,7 +75,11 @@ import java.sql.*;
      */
     public boolean initializeFine(int userId) {
 <span class="fc" id="L73">        Connection conn = DatabaseConnection.getConnection();</span>
+<<<<<<< HEAD
 <span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (conn == null) return false;</span>
+=======
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (conn == null) return false;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 
 <span class="fc" id="L76">        String sql = &quot;INSERT INTO user_fines (user_id, total_fine) VALUES (?, 0.0)&quot;;</span>
 
@@ -108,8 +116,13 @@ import java.sql.*;
             }
 <span class="fc" id="L109">            return true;</span>
 <span class="pc bpc" id="L110" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<<<<<<< HEAD
 <span class="nc" id="L111">            System.err.println(&quot;Error updating fine: &quot; + e.getMessage());</span>
 <span class="nc" id="L112">            return false;</span>
+=======
+<span class="fc" id="L111">            System.err.println(&quot;Error updating fine: &quot; + e.getMessage());</span>
+<span class="fc" id="L112">            return false;</span>
+>>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
         }
     }
 
