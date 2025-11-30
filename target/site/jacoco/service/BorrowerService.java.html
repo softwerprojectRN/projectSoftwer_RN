@@ -58,35 +58,11 @@ public class BorrowerService {
     public void generateOverdueReport(Borrower borrower) {
 <span class="fc" id="L59">        List&lt;MediaRecord&gt; overdueItems = borrower.getOverdueMedia();</span>
 
-<<<<<<< HEAD
-<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        if (overdueItems.isEmpty()) {</span>
-=======
 <span class="fc bfc" id="L61" title="All 2 branches covered.">        if (overdueItems.isEmpty()) {</span>
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 <span class="fc" id="L62">            System.out.println(&quot;You have no overdue items.&quot;);</span>
 <span class="fc" id="L63">            return;</span>
         }
 
-<<<<<<< HEAD
-<span class="nc" id="L66">        System.out.println(&quot;\n=== Overdue Items Report ===&quot;);</span>
-<span class="nc" id="L67">        double totalFine = 0.0;</span>
-
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        for (MediaRecord record : overdueItems) {</span>
-<span class="nc" id="L70">            long overdueDays = record.getOverdueDays();</span>
-<span class="nc" id="L71">            double finePerDay = BorrowingService.getFinePerDay(record.getMedia().getMediaType());</span>
-<span class="nc" id="L72">            double itemFine = overdueDays * finePerDay;</span>
-<span class="nc" id="L73">            totalFine += itemFine;</span>
-
-<span class="nc bnc" id="L75" title="All 2 branches missed.">            String mediaType = record.getMedia().getMediaType().equals(&quot;book&quot;) ? &quot;Book&quot; : &quot;CD&quot;;</span>
-<span class="nc" id="L76">            System.out.printf(&quot;- Title: '%s', Type: %s, Overdue Days: %d, Fine: %.2f\n&quot;,</span>
-<span class="nc" id="L77">                    record.getMedia().getTitle(), mediaType, overdueDays, itemFine);</span>
-<span class="nc" id="L78">        }</span>
-
-<span class="nc" id="L80">        System.out.println(&quot;-----------------------------&quot;);</span>
-<span class="nc" id="L81">        System.out.printf(&quot;Total Overdue Fines: %.2f\n&quot;, totalFine);</span>
-<span class="nc" id="L82">        System.out.println(&quot;=============================\n&quot;);</span>
-<span class="nc" id="L83">    }</span>
-=======
 <span class="fc" id="L66">        System.out.println(&quot;\n=== Overdue Items Report ===&quot;);</span>
 <span class="fc" id="L67">        double totalFine = 0.0;</span>
 
@@ -105,7 +81,6 @@ public class BorrowerService {
 <span class="fc" id="L81">        System.out.printf(&quot;Total Overdue Fines: %.2f\n&quot;, totalFine);</span>
 <span class="fc" id="L82">        System.out.println(&quot;=============================\n&quot;);</span>
 <span class="fc" id="L83">    }</span>
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 
     /**
      * Processes a fine payment for a borrower.
@@ -137,26 +112,6 @@ public class BorrowerService {
      * @param borrower The borrower whose borrowed media will be displayed.
      */
     public void displayBorrowedMedia(Borrower borrower) {
-<<<<<<< HEAD
-<span class="nc" id="L115">        List&lt;MediaRecord&gt; borrowed = borrower.getBorrowedMedia();</span>
-
-<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (borrowed.isEmpty()) {</span>
-<span class="nc" id="L118">            System.out.println(&quot;You have no borrowed items.&quot;);</span>
-<span class="nc" id="L119">            return;</span>
-        }
-
-<span class="nc" id="L122">        System.out.println(&quot;\n=== Your Borrowed Items ===&quot;);</span>
-<span class="nc bnc" id="L123" title="All 2 branches missed.">        for (MediaRecord record : borrowed) {</span>
-<span class="nc" id="L124">            System.out.println(record.getMedia());</span>
-<span class="nc" id="L125">            System.out.println(&quot;Due Date: &quot; + record.getDueDate());</span>
-<span class="nc bnc" id="L126" title="All 2 branches missed.">            if (record.isOverdue()) {</span>
-<span class="nc" id="L127">                System.out.println(&quot;⚠️  OVERDUE by &quot; + record.getOverdueDays() + &quot; days&quot;);</span>
-            }
-<span class="nc" id="L129">            System.out.println(&quot;---&quot;);</span>
-<span class="nc" id="L130">        }</span>
-<span class="nc" id="L131">        System.out.println(&quot;===========================\n&quot;);</span>
-<span class="nc" id="L132">    }</span>
-=======
 <span class="fc" id="L115">        List&lt;MediaRecord&gt; borrowed = borrower.getBorrowedMedia();</span>
 
 <span class="fc bfc" id="L117" title="All 2 branches covered.">        if (borrowed.isEmpty()) {</span>
@@ -175,6 +130,5 @@ public class BorrowerService {
 <span class="fc" id="L130">        }</span>
 <span class="fc" id="L131">        System.out.println(&quot;===========================\n&quot;);</span>
 <span class="fc" id="L132">    }</span>
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

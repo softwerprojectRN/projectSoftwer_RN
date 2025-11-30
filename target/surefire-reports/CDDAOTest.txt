@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: CDDAOTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.060 s -- in CDDAOTest
-=======
-Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.291 s -- in CDDAOTest
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
+Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.076 s -- in CDDAOTest

@@ -1,26 +1,14 @@
 EmailServerTest.class
 BorrowRecordDAOTest.class
 EmailNotifierTest.class
-<<<<<<< HEAD
-=======
-CDTest.class
-model\UserTest.class
-MediaTest.class
-BorrowerServiceTest$1.class
-UserWithOverdueBooksTest.class
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 BookServiceTest.class
 AdminTest.class
 BookDAOTest.class
-MediaDAOTest.class
 MediaRecordTest.class
 BorrowingServiceTest.class
 FineDAOTest.class
-<<<<<<< HEAD
 SearchByAuthorTest.class
-=======
 UserDAOTest.class
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
 BookTest.class
 UserServiceTest.class
 CDServiceTest.class
@@ -28,13 +16,16 @@ AdminDAOTest.class
 AdminServiceTest.class
 CDDAOTest.class
 BookSearcherTest.class
+CDTest.class
 model\UserTest.class
 PasswordUtilTest.class
 MediaTest.class
 PasswordUtilTest$HashPasswordTests.class
 PasswordUtilTest$GenerateSaltTests.class
+BorrowerServiceTest$1.class
 SearchByTitleTest.class
 UserWithOverdueBooksTest.class
+MediaDAOTest.class
 DatabaseConnectionTest.class
 model\BorrowerTest.class
 BorrowerServiceTest.class

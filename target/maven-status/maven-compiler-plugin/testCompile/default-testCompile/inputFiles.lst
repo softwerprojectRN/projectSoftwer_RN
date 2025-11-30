@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\AdminDADTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\AdminServiceTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\AdminTest.java
@@ -12,41 +11,19 @@ C:\Users\lenovo\projectSoftwer_RN\src\test\java\BorrowingServiceTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\BorrowrRecoredDAOTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\CDDAOTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\CDServiceTest.java
+C:\Users\lenovo\projectSoftwer_RN\src\test\java\CDTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\DatabaseConnectionTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\EmailNotifierTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\EmailServerTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\FineDAOTest.java
-C:\Users\lenovo\projectSoftwer_RN\src\test\java\MediaRecord.java
+C:\Users\lenovo\projectSoftwer_RN\src\test\java\MediaDAOTest.java
+C:\Users\lenovo\projectSoftwer_RN\src\test\java\MediaRecordTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\MediaTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\PasswordUtilTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\SearchByAuthorTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\SearchByISBNTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\SearchByTitleTest.java
+C:\Users\lenovo\projectSoftwer_RN\src\test\java\UserDAOTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\UserServiceTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\UserTest.java
 C:\Users\lenovo\projectSoftwer_RN\src\test\java\UserWithOverdueBooksTest.java
-=======
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\AdminDADTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\AdminServiceTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\AdminTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\BookDAOTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\BookServiceTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\BookTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\BorrowerServiceTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\BorrowerTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\BorrowingServiceTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\BorrowrRecoredDAOTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\CDDAOTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\CDServiceTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\CDTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\EmailNotifierTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\EmailServerTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\FineDAOTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\MediaDAOTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\MediaRecordTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\MediaTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\UserDAOTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\UserServiceTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\UserTest.java
-C:\Users\ly\OneDrive\Desktop\intiliji_all files\githup-inti-demo\src\test\java\UserWithOverdueBooksTest.java
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02

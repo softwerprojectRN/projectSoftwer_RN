@@ -124,6 +124,9 @@ public class EmailServer {
         if (to == null || to.isEmpty()) {
             throw new IllegalArgumentException("Recipient email address cannot be null or empty");
         }
+        if (body == null) {
+            body = "";
+        }
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

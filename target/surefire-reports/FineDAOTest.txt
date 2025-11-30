@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: FineDAOTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 s -- in FineDAOTest
-=======
-Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.196 s -- in FineDAOTest
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
+Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s -- in FineDAOTest

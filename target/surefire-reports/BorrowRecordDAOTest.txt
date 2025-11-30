@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: BorrowRecordDAOTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 s -- in BorrowRecordDAOTest
-=======
-Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.587 s -- in BorrowRecordDAOTest
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
+Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.184 s -- in BorrowRecordDAOTest

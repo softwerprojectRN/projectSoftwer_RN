@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="UserServiceTest" time="0.042" tests="6" errors="0" skipped="0" failures="0">
-=======
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="UserServiceTest" time="0.155" tests="6" errors="0" skipped="0" failures="0">
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="UserServiceTest" time="0.045" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="C:\Users\lenovo\projectSoftwer_RN\target\test-classes;C:\Users\lenovo\projectSoftwer_RN\target\classes;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\xerial\sqlite-jdbc\3.50.3.0\sqlite-jdbc-3.50.3.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-core\5.0.0\mockito-core-5.0.0.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy\1.12.22\byte-buddy-1.12.22.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.12.22\byte-buddy-agent-1.12.22.jar;C:\Users\lenovo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-junit-jupiter\5.8.0\mockito-junit-jupiter-5.8.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-inline\5.0.0\mockito-inline-5.0.0.jar;C:\Users\lenovo\.m2\repository\com\sun\mail\jakarta.mail\2.0.1\jakarta.mail-2.0.1.jar;C:\Users\lenovo\.m2\repository\com\sun\activation\jakarta.activation\2.0.1\jakarta.activation-2.0.1.jar;C:\Users\lenovo\.m2\repository\io\github\cdimascio\java-dotenv\5.2.2\java-dotenv-5.2.2.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.4.0\kotlin-stdlib-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.4.0\kotlin-stdlib-common-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;"/>
+    <property name="java.class.path" value="C:\Users\lenovo\projectSoftwer_RN\target\test-classes;C:\Users\lenovo\projectSoftwer_RN\target\classes;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\xerial\sqlite-jdbc\3.50.3.0\sqlite-jdbc-3.50.3.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-core\5.8.0\mockito-core-5.8.0.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy\1.14.10\byte-buddy-1.14.10.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.10\byte-buddy-agent-1.14.10.jar;C:\Users\lenovo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-junit-jupiter\5.8.0\mockito-junit-jupiter-5.8.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-inline\5.0.0\mockito-inline-5.0.0.jar;C:\Users\lenovo\.m2\repository\com\sun\mail\jakarta.mail\2.0.1\jakarta.mail-2.0.1.jar;C:\Users\lenovo\.m2\repository\com\sun\activation\jakarta.activation\2.0.1\jakarta.activation-2.0.1.jar;C:\Users\lenovo\.m2\repository\io\github\cdimascio\java-dotenv\5.2.2\java-dotenv-5.2.2.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.4.0\kotlin-stdlib-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.4.0\kotlin-stdlib-common-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
@@ -20,13 +16,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-<<<<<<< HEAD
-    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire8434705163087034071\surefirebooter-20251124155048044_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire8434705163087034071 2025-11-24T15-50-47_788-jvmRun1 surefire-20251124155048044_1tmp surefire_0-20251124155048044_2tmp"/>
-=======
-    <property name="sun.java.command" value="C:\Users\ly\AppData\Local\Temp\surefire14445397581092345317\surefirebooter-20251124154729197_3.jar C:\Users\ly\AppData\Local\Temp\surefire14445397581092345317 ????-??-??T??-??-??_???-jvmRun1 surefire-20251124154729197_1tmp surefire_0-20251124154729197_2tmp"/>
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
+    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire14146250217590144298\surefirebooter-20251130043137323_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire14146250217590144298 2025-11-30T04-31-37_054-jvmRun1 surefire-20251130043137323_1tmp surefire_0-20251130043137323_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="C:\Users\lenovo\projectSoftwer_RN\target\test-classes;C:\Users\lenovo\projectSoftwer_RN\target\classes;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\xerial\sqlite-jdbc\3.50.3.0\sqlite-jdbc-3.50.3.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-core\5.0.0\mockito-core-5.0.0.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy\1.12.22\byte-buddy-1.12.22.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.12.22\byte-buddy-agent-1.12.22.jar;C:\Users\lenovo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-junit-jupiter\5.8.0\mockito-junit-jupiter-5.8.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-inline\5.0.0\mockito-inline-5.0.0.jar;C:\Users\lenovo\.m2\repository\com\sun\mail\jakarta.mail\2.0.1\jakarta.mail-2.0.1.jar;C:\Users\lenovo\.m2\repository\com\sun\activation\jakarta.activation\2.0.1\jakarta.activation-2.0.1.jar;C:\Users\lenovo\.m2\repository\io\github\cdimascio\java-dotenv\5.2.2\java-dotenv-5.2.2.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.4.0\kotlin-stdlib-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.4.0\kotlin-stdlib-common-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;"/>
+    <property name="surefire.test.class.path" value="C:\Users\lenovo\projectSoftwer_RN\target\test-classes;C:\Users\lenovo\projectSoftwer_RN\target\classes;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\xerial\sqlite-jdbc\3.50.3.0\sqlite-jdbc-3.50.3.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-core\5.8.0\mockito-core-5.8.0.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy\1.14.10\byte-buddy-1.14.10.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.10\byte-buddy-agent-1.14.10.jar;C:\Users\lenovo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-junit-jupiter\5.8.0\mockito-junit-jupiter-5.8.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-inline\5.0.0\mockito-inline-5.0.0.jar;C:\Users\lenovo\.m2\repository\com\sun\mail\jakarta.mail\2.0.1\jakarta.mail-2.0.1.jar;C:\Users\lenovo\.m2\repository\com\sun\activation\jakarta.activation\2.0.1\jakarta.activation-2.0.1.jar;C:\Users\lenovo\.m2\repository\io\github\cdimascio\java-dotenv\5.2.2\java-dotenv-5.2.2.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.4.0\kotlin-stdlib-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.4.0\kotlin-stdlib-common-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\lenovo"/>
     <property name="user.language" value="en"/>
@@ -39,11 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-<<<<<<< HEAD
-    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire8434705163087034071\surefirebooter-20251124155048044_3.jar"/>
-=======
-    <property name="surefire.real.class.path" value="C:\Users\ly\AppData\Local\Temp\surefire14445397581092345317\surefirebooter-20251124154729197_3.jar"/>
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
+    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire14146250217590144298\surefirebooter-20251130043137323_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -70,19 +58,10 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-<<<<<<< HEAD
-  <testcase name="testLogin_Fails_UserNotFound" classname="UserServiceTest" time="0.007"/>
-  <testcase name="testRegister_Fails_EmptyFields" classname="UserServiceTest" time="0.004"/>
-  <testcase name="testLogin_Success" classname="UserServiceTest" time="0.005"/>
-  <testcase name="testRegister_Fails_UserExists" classname="UserServiceTest" time="0.005"/>
-  <testcase name="testRegister_Success" classname="UserServiceTest" time="0.007"/>
-  <testcase name="testLogin_Fails_WrongPassword" classname="UserServiceTest" time="0.004"/>
-=======
-  <testcase name="testLogin_Fails_UserNotFound" classname="UserServiceTest" time="0.004"/>
+  <testcase name="testLogin_Fails_UserNotFound" classname="UserServiceTest" time="0.005"/>
   <testcase name="testRegister_Fails_EmptyFields" classname="UserServiceTest" time="0.005"/>
-  <testcase name="testLogin_Success" classname="UserServiceTest" time="0.01"/>
-  <testcase name="testRegister_Fails_UserExists" classname="UserServiceTest" time="0.077"/>
-  <testcase name="testRegister_Success" classname="UserServiceTest" time="0.036"/>
-  <testcase name="testLogin_Fails_WrongPassword" classname="UserServiceTest" time="0.01"/>
->>>>>>> ccf78eb16dd689fc8aaff360d3e6dd89e78f9e02
+  <testcase name="testLogin_Success" classname="UserServiceTest" time="0.008"/>
+  <testcase name="testRegister_Fails_UserExists" classname="UserServiceTest" time="0.007"/>
+  <testcase name="testRegister_Success" classname="UserServiceTest" time="0.009"/>
+  <testcase name="testLogin_Fails_WrongPassword" classname="UserServiceTest" time="0.004"/>
 </testsuite>
