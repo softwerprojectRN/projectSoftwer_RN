@@ -124,7 +124,8 @@ public class BorrowerService {
             System.out.println(record.getMedia());
             System.out.println("Due Date: " + record.getDueDate());
             if (record.isOverdue()) {
-                System.out.println("⚠️  OVERDUE by " + record.getOverdueDays() + " days");
+                System.out.println("WARNING: OVERDUE by " + record.getOverdueDays() + " days");
+
             }
             System.out.println("---");
         }

@@ -7,17 +7,17 @@ import java.util.Base64;
 
 /**
  * Utility class for password hashing and salt generation with enhanced error handling.
- * <p>
+ *
  * Provides methods to generate a cryptographically secure salt and hash passwords
  * using SHA-256 combined with the salt. Includes explicit null checks and validation
  * for Base64-encoded salts.
- * <p>
+ *
  * Usage example:
- * <pre>
+ *
  * String salt = PasswordUtil.generateSalt();
  * String hashedPassword = PasswordUtil.hashPassword("myPassword", salt);
- * </pre>
- * </p>
+ *
+ *
  * Author: Library Management System
  * Version: 1.0
  */

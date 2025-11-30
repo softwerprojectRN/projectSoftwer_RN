@@ -9,16 +9,16 @@ import java.util.Properties;
 
 /**
  * Represents an email server that can send emails and track sent messages.
- * <p>
+ *
  * Supports loading credentials from a .env file or directly via constructor.
  * Provides methods to send emails, view sent emails, and clear email history.
- * <p>
+ *
  * Usage example:
- * <pre>
+ *
  * EmailServer server = new EmailServer();
  * server.sendEmail("recipient@example.com", "Subject", "Body");
- * </pre>
- * </p>
+ *
+ *
  * Author: Library Management System
  * Version: 1.0
  */
