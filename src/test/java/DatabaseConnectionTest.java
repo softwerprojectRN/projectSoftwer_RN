@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import util.DatabaseConnection;
+import dao.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

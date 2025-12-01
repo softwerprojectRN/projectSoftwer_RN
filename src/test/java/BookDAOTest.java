@@ -33,8 +33,8 @@ class BookDAOTest {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             bookDAO.initializeTable();
 
@@ -56,8 +56,8 @@ class BookDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             bookDAO.initializeTable();
 
@@ -70,8 +70,8 @@ class BookDAOTest {
 
     @Test
     void testInitializeTable_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             assertDoesNotThrow(() -> bookDAO.initializeTable());
         }
     }
@@ -93,8 +93,8 @@ class BookDAOTest {
         when(mockRs.getString("isbn")).thenReturn("123456");
         when(mockRs.getInt("available")).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             Book book = bookDAO.findByISBN("123456");
 
@@ -117,8 +117,8 @@ class BookDAOTest {
         when(mockStmt.executeQuery()).thenReturn(mockRs);
         when(mockRs.next()).thenReturn(false);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             Book book = bookDAO.findByISBN("123456");
             assertNull(book);
@@ -127,8 +127,8 @@ class BookDAOTest {
 
     @Test
     void testFindByISBN_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
 
             Book book = bookDAO.findByISBN("123456");
             assertNull(book);
@@ -145,8 +145,8 @@ class BookDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             Book book = bookDAO.findByISBN("123456");
             assertNull(book);
@@ -168,8 +168,8 @@ class BookDAOTest {
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
         when(mockStmt.executeUpdate()).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             int id = bookDAO.insert(1, "Author", "123456");
             assertEquals(1, id);
@@ -191,8 +191,8 @@ class BookDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             int id = bookDAO.insert(1, "Author", "123456");
             assertEquals(-1, id);
@@ -206,8 +206,8 @@ class BookDAOTest {
 
     @Test
     void testInsert_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             int id = bookDAO.insert(1, "Author", "123456");
             assertEquals(-1, id);
         }
@@ -230,8 +230,8 @@ class BookDAOTest {
         when(mockRs.getString("isbn")).thenReturn("123456");
         when(mockRs.getInt("available")).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<Book> books = bookDAO.findAll();
             assertEquals(1, books.size());
@@ -241,8 +241,8 @@ class BookDAOTest {
 
     @Test
     void testFindAll_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             List<Book> books = bookDAO.findAll();
             assertTrue(books.isEmpty());
         }
@@ -258,8 +258,8 @@ class BookDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<Book> books = bookDAO.findAll();
             assertTrue(books.isEmpty());
@@ -286,8 +286,8 @@ class BookDAOTest {
         when(mockRs.getString("isbn")).thenReturn("123456");
         when(mockRs.getInt("available")).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<Book> books = bookDAO.searchByTitle("Title");
             assertEquals(1, books.size());
@@ -297,8 +297,8 @@ class BookDAOTest {
 
     @Test
     void testSearchByTitle_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             List<Book> books = bookDAO.searchByTitle("Title");
             assertTrue(books.isEmpty());
         }
@@ -321,8 +321,8 @@ class BookDAOTest {
         when(mockRs.getString("isbn")).thenReturn("123456");
         when(mockRs.getInt("available")).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<Book> books = bookDAO.searchByAuthor("Author");
             assertEquals(1, books.size());
@@ -332,8 +332,8 @@ class BookDAOTest {
 
     @Test
     void testSearchByAuthor_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             List<Book> books = bookDAO.searchByAuthor("Author");
             assertTrue(books.isEmpty());
         }
@@ -356,8 +356,8 @@ class BookDAOTest {
         when(mockRs.getString("isbn")).thenReturn("123456");
         when(mockRs.getInt("available")).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<Book> books = bookDAO.searchByISBNPattern("123");
             assertEquals(1, books.size());
@@ -367,8 +367,8 @@ class BookDAOTest {
 
     @Test
     void testSearchByISBNPattern_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             List<Book> books = bookDAO.searchByISBNPattern("123");
             assertTrue(books.isEmpty());
         }

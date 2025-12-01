@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import strategy.BookSearcher;
-import strategy.SearchStrategy;
+import service.BookSearcher;
+import service.SearchStrategy;
 
 import java.util.Arrays;
 import java.util.Collections;

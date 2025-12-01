@@ -8,9 +8,9 @@ import model.UserWithOverdueBooks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import util.EmailNotifier;
-import util.EmailServer;
-import util.PasswordUtil;
+import service.EmailNotifier;
+import service.EmailServer;
+import dao.PasswordUtil;
 
 import java.lang.reflect.Field;
 import java.util.List;

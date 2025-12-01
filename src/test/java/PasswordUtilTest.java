@@ -3,7 +3,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
-import util.PasswordUtil;
+import dao.PasswordUtil;
 
 import java.util.Base64;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: CDServiceTest
 -------------------------------------------------------------------------------
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.157 s -- in CDServiceTest
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.272 s -- in CDServiceTest

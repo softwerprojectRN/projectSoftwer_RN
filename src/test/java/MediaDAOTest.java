@@ -3,7 +3,7 @@ import dao.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-import util.DatabaseConnection;
+import dao.DatabaseConnection;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

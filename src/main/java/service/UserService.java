@@ -2,7 +2,7 @@ package service;
 
 import dao.UserDAO;
 import model.User;
-import util.PasswordUtil;
+import dao.PasswordUtil;
 
 /**
  * Service class that handles user registration and login operations.

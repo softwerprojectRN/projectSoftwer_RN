@@ -33,8 +33,8 @@ class BorrowRecordDAOTest {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             borrowRecordDAO.initializeTable();
 
@@ -55,8 +55,8 @@ class BorrowRecordDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             borrowRecordDAO.initializeTable();
             assertTrue(errContent.toString().contains("Error creating borrow_records table: Create table failed"));
@@ -67,8 +67,8 @@ class BorrowRecordDAOTest {
 
     @Test
     void testInitializeTable_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             assertDoesNotThrow(() -> borrowRecordDAO.initializeTable());
         }
     }
@@ -86,8 +86,8 @@ class BorrowRecordDAOTest {
         when(mockRs.next()).thenReturn(true);
         when(mockRs.getInt(1)).thenReturn(42);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             int id = borrowRecordDAO.insert(1, 2, "book", "Title", LocalDate.now(), LocalDate.now().plusDays(7));
             assertEquals(42, id);
@@ -105,8 +105,8 @@ class BorrowRecordDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             int id = borrowRecordDAO.insert(1, 2, "book", "Title", LocalDate.now(), LocalDate.now().plusDays(7));
             assertEquals(-1, id);
@@ -118,8 +118,8 @@ class BorrowRecordDAOTest {
 
     @Test
     void testInsert_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             int id = borrowRecordDAO.insert(1, 2, "book", "Title", LocalDate.now(), LocalDate.now().plusDays(7));
             assertEquals(-1, id);
         }
@@ -133,8 +133,8 @@ class BorrowRecordDAOTest {
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
         when(mockStmt.executeUpdate()).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             boolean result = borrowRecordDAO.markAsReturned(1, LocalDate.now(), 5.0);
             assertTrue(result);
@@ -151,8 +151,8 @@ class BorrowRecordDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             boolean result = borrowRecordDAO.markAsReturned(1, LocalDate.now(), 5.0);
             assertFalse(result);
@@ -164,8 +164,8 @@ class BorrowRecordDAOTest {
 
     @Test
     void testMarkAsReturned_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             boolean result = borrowRecordDAO.markAsReturned(1, LocalDate.now(), 5.0);
             assertFalse(result);
         }
@@ -182,8 +182,8 @@ class BorrowRecordDAOTest {
         when(mockRs.next()).thenReturn(true);
         when(mockRs.getInt("count")).thenReturn(3);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             int count = borrowRecordDAO.countActiveByUserId(1);
             assertEquals(3, count);
         }
@@ -191,8 +191,8 @@ class BorrowRecordDAOTest {
 
     @Test
     void testCountActiveByUserId_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             int count = borrowRecordDAO.countActiveByUserId(1);
             assertEquals(0, count);
         }
@@ -208,8 +208,8 @@ class BorrowRecordDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             int count = borrowRecordDAO.countActiveByUserId(1);
             assertEquals(0, count);
             assertTrue(errContent.toString().contains("Error counting active records: Query failed"));
@@ -232,8 +232,8 @@ class BorrowRecordDAOTest {
         when(mockRs.getString("username")).thenReturn("user1");
         when(mockRs.getInt("overdue_count")).thenReturn(2);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<UserWithOverdueBooks> users = borrowRecordDAO.getUsersWithOverdueBooks();
             assertEquals(1, users.size());
@@ -244,8 +244,8 @@ class BorrowRecordDAOTest {
 
     @Test
     void testGetUsersWithOverdueBooks_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
 
             List<UserWithOverdueBooks> users = borrowRecordDAO.getUsersWithOverdueBooks();
             assertTrue(users.isEmpty());
@@ -262,8 +262,8 @@ class BorrowRecordDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<UserWithOverdueBooks> users = borrowRecordDAO.getUsersWithOverdueBooks();
             assertTrue(users.isEmpty());
@@ -296,8 +296,8 @@ class BorrowRecordDAOTest {
         when(mockBookRs.getString("author")).thenReturn("Author A");
         when(mockBookRs.getString("isbn")).thenReturn("12345");
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             List<MediaRecord> records = borrowRecordDAO.findActiveByUserId(1);
 
             assertEquals(1, records.size());
@@ -330,8 +330,8 @@ class BorrowRecordDAOTest {
         when(mockCdRs.getString("genre")).thenReturn("Pop");
         when(mockCdRs.getInt("duration")).thenReturn(60);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             List<MediaRecord> records = borrowRecordDAO.findActiveByUserId(1);
 
             assertEquals(1, records.size());
@@ -350,8 +350,8 @@ class BorrowRecordDAOTest {
         when(mockStmt.executeQuery()).thenReturn(mockRs);
         when(mockRs.next()).thenReturn(false);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             List<MediaRecord> records = borrowRecordDAO.findActiveByUserId(1);
             assertTrue(records.isEmpty());
         }
@@ -359,8 +359,8 @@ class BorrowRecordDAOTest {
 
     @Test
     void testFindActiveByUserId_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             List<MediaRecord> records = borrowRecordDAO.findActiveByUserId(1);
             assertTrue(records.isEmpty());
         }
@@ -377,8 +377,8 @@ class BorrowRecordDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             List<MediaRecord> records = borrowRecordDAO.findActiveByUserId(1);
             assertTrue(records.isEmpty());
             assertTrue(errContent.toString().contains("Error loading borrowed media"));
@@ -407,8 +407,8 @@ class BorrowRecordDAOTest {
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
         when(mockStmt.executeUpdate()).thenReturn(0);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             assertFalse(borrowRecordDAO.markAsReturned(1, LocalDate.now(), 5.0));
         }
     }

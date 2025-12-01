@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FineDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">FineDAO.java</span></div><h1>FineDAO.java</h1><pre class="source lang-java linenums">package dao;
 
-import util.DatabaseConnection;
 import java.sql.*;
 
 /**
@@ -10,29 +9,29 @@ import java.sql.*;
  * @author Library Management System
  * @version 1.0
  */
-<span class="fc" id="L13">public class FineDAO {</span>
+<span class="fc" id="L12">public class FineDAO {</span>
 
     /**
      * Initializes the user_fines table in the database.
      * Creates the table with a foreign key relationship to the users table.
      */
     public void initializeTable() {
-<span class="fc" id="L20">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (conn == null) return;</span>
+<span class="fc" id="L19">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (conn == null) return;</span>
 
-<span class="fc" id="L23">        String sql = &quot;CREATE TABLE IF NOT EXISTS user_fines (\n&quot; +</span>
+<span class="fc" id="L22">        String sql = &quot;CREATE TABLE IF NOT EXISTS user_fines (\n&quot; +</span>
                 &quot; user_id INTEGER PRIMARY KEY,\n&quot; +
                 &quot; total_fine REAL DEFAULT 0.0,\n&quot; +
                 &quot; FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE\n&quot; +
                 &quot;);&quot;;
 
-<span class="fc" id="L29">        try (Statement stmt = conn.createStatement()) {</span>
-<span class="fc" id="L30">            stmt.execute(sql);</span>
-<span class="fc" id="L31">            System.out.println(&quot;User fines table created successfully.&quot;);</span>
-<span class="fc" id="L32">        } catch (SQLException e) {</span>
-<span class="fc" id="L33">            System.err.println(&quot;Error creating user_fines table: &quot; + e.getMessage());</span>
-<span class="fc" id="L34">        }</span>
-<span class="fc" id="L35">    }</span>
+<span class="fc" id="L28">        try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L29">            stmt.execute(sql);</span>
+<span class="fc" id="L30">            System.out.println(&quot;User fines table created successfully.&quot;);</span>
+<span class="fc" id="L31">        } catch (SQLException e) {</span>
+<span class="fc" id="L32">            System.err.println(&quot;Error creating user_fines table: &quot; + e.getMessage());</span>
+<span class="fc" id="L33">        }</span>
+<span class="fc" id="L34">    }</span>
 
     /**
      * Retrieves the current fine balance for a user.
@@ -42,24 +41,24 @@ import java.sql.*;
      * @return the current fine balance
      */
     public double getFineBalance(int userId) {
-<span class="fc" id="L45">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (conn == null) return 0.0;</span>
+<span class="fc" id="L44">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (conn == null) return 0.0;</span>
 
-<span class="fc" id="L48">        String sql = &quot;SELECT total_fine FROM user_fines WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L47">        String sql = &quot;SELECT total_fine FROM user_fines WHERE user_id = ?&quot;;</span>
 
-<span class="fc" id="L50">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L51">            pstmt.setInt(1, userId);</span>
-<span class="fc" id="L52">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc" id="L49">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L50">            pstmt.setInt(1, userId);</span>
+<span class="fc" id="L51">            ResultSet rs = pstmt.executeQuery();</span>
 
-<span class="fc bfc" id="L54" title="All 2 branches covered.">            if (rs.next()) {</span>
-<span class="fc" id="L55">                return rs.getDouble(&quot;total_fine&quot;);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L54">                return rs.getDouble(&quot;total_fine&quot;);</span>
             } else {
-<span class="fc" id="L57">                initializeFine(userId);</span>
-<span class="fc" id="L58">                return 0.0;</span>
+<span class="fc" id="L56">                initializeFine(userId);</span>
+<span class="fc" id="L57">                return 0.0;</span>
             }
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="nc" id="L61">            System.err.println(&quot;Error getting fine balance: &quot; + e.getMessage());</span>
-<span class="nc" id="L62">            return 0.0;</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L60">            System.err.println(&quot;Error getting fine balance: &quot; + e.getMessage());</span>
+<span class="nc" id="L61">            return 0.0;</span>
         }
     }
 
@@ -70,18 +69,18 @@ import java.sql.*;
      * @return true if initialization was successful, false otherwise
      */
     public boolean initializeFine(int userId) {
-<span class="fc" id="L73">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (conn == null) return false;</span>
+<span class="fc" id="L72">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (conn == null) return false;</span>
 
-<span class="fc" id="L76">        String sql = &quot;INSERT INTO user_fines (user_id, total_fine) VALUES (?, 0.0)&quot;;</span>
+<span class="fc" id="L75">        String sql = &quot;INSERT INTO user_fines (user_id, total_fine) VALUES (?, 0.0)&quot;;</span>
 
-<span class="fc" id="L78">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L79">            pstmt.setInt(1, userId);</span>
-<span class="fc" id="L80">            pstmt.executeUpdate();</span>
-<span class="fc" id="L81">            return true;</span>
-<span class="fc" id="L82">        } catch (SQLException e) {</span>
-<span class="fc" id="L83">            System.err.println(&quot;Error initializing fine: &quot; + e.getMessage());</span>
-<span class="fc" id="L84">            return false;</span>
+<span class="fc" id="L77">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L78">            pstmt.setInt(1, userId);</span>
+<span class="fc" id="L79">            pstmt.executeUpdate();</span>
+<span class="fc" id="L80">            return true;</span>
+<span class="fc" id="L81">        } catch (SQLException e) {</span>
+<span class="fc" id="L82">            System.err.println(&quot;Error initializing fine: &quot; + e.getMessage());</span>
+<span class="fc" id="L83">            return false;</span>
         }
     }
 
@@ -93,23 +92,23 @@ import java.sql.*;
      * @return true if update was successful, false otherwise
      */
     public boolean updateFine(int userId, double totalFine) {
-<span class="fc" id="L96">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (conn == null) return false;</span>
+<span class="fc" id="L95">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if (conn == null) return false;</span>
 
-<span class="fc" id="L99">        String sql = &quot;UPDATE user_fines SET total_fine = ? WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L98">        String sql = &quot;UPDATE user_fines SET total_fine = ? WHERE user_id = ?&quot;;</span>
 
-<span class="fc" id="L101">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L102">            pstmt.setDouble(1, totalFine);</span>
-<span class="fc" id="L103">            pstmt.setInt(2, userId);</span>
-<span class="fc" id="L104">            int rowsAffected = pstmt.executeUpdate();</span>
+<span class="fc" id="L100">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L101">            pstmt.setDouble(1, totalFine);</span>
+<span class="fc" id="L102">            pstmt.setInt(2, userId);</span>
+<span class="fc" id="L103">            int rowsAffected = pstmt.executeUpdate();</span>
 
-<span class="fc bfc" id="L106" title="All 2 branches covered.">            if (rowsAffected == 0) {</span>
-<span class="fc" id="L107">                return initializeFine(userId);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            if (rowsAffected == 0) {</span>
+<span class="fc" id="L106">                return initializeFine(userId);</span>
             }
-<span class="fc" id="L109">            return true;</span>
-<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="fc" id="L111">            System.err.println(&quot;Error updating fine: &quot; + e.getMessage());</span>
-<span class="fc" id="L112">            return false;</span>
+<span class="fc" id="L108">            return true;</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L110">            System.err.println(&quot;Error updating fine: &quot; + e.getMessage());</span>
+<span class="fc" id="L111">            return false;</span>
         }
     }
 
@@ -121,8 +120,8 @@ import java.sql.*;
      * @return true if addition was successful, false otherwise
      */
     public boolean addFine(int userId, double amount) {
-<span class="fc" id="L124">        double currentFine = getFineBalance(userId);</span>
-<span class="fc" id="L125">        return updateFine(userId, currentFine + amount);</span>
+<span class="fc" id="L123">        double currentFine = getFineBalance(userId);</span>
+<span class="fc" id="L124">        return updateFine(userId, currentFine + amount);</span>
     }
 
     /**
@@ -133,13 +132,13 @@ import java.sql.*;
      * @return true if payment was successful, false otherwise
      */
     public boolean payFine(int userId, double amount) {
-<span class="fc" id="L136">        double currentFine = getFineBalance(userId);</span>
+<span class="fc" id="L135">        double currentFine = getFineBalance(userId);</span>
 
-<span class="fc bfc" id="L138" title="All 4 branches covered.">        if (amount &lt;= 0 || amount &gt; currentFine) {</span>
-<span class="fc" id="L139">            System.err.println(&quot;Invalid payment amount.&quot;);</span>
-<span class="fc" id="L140">            return false;</span>
+<span class="fc bfc" id="L137" title="All 4 branches covered.">        if (amount &lt;= 0 || amount &gt; currentFine) {</span>
+<span class="fc" id="L138">            System.err.println(&quot;Invalid payment amount.&quot;);</span>
+<span class="fc" id="L139">            return false;</span>
         }
-<span class="fc" id="L142">        return updateFine(userId, currentFine - amount);</span>
+<span class="fc" id="L141">        return updateFine(userId, currentFine - amount);</span>
     }
 
     /**
@@ -149,7 +148,7 @@ import java.sql.*;
      * @return true if clearing was successful, false otherwise
      */
     public boolean clearFine(int userId) {
-<span class="fc" id="L152">        return updateFine(userId, 0.0);</span>
+<span class="fc" id="L151">        return updateFine(userId, 0.0);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

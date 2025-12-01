@@ -124,11 +124,12 @@ public class BorrowerService {
 <span class="fc" id="L124">            System.out.println(record.getMedia());</span>
 <span class="fc" id="L125">            System.out.println(&quot;Due Date: &quot; + record.getDueDate());</span>
 <span class="fc bfc" id="L126" title="All 2 branches covered.">            if (record.isOverdue()) {</span>
-<span class="fc" id="L127">                System.out.println(&quot;⚠️  OVERDUE by &quot; + record.getOverdueDays() + &quot; days&quot;);</span>
+<span class="fc" id="L127">                System.out.println(&quot;WARNING: OVERDUE by &quot; + record.getOverdueDays() + &quot; days&quot;);</span>
+
             }
-<span class="fc" id="L129">            System.out.println(&quot;---&quot;);</span>
-<span class="fc" id="L130">        }</span>
-<span class="fc" id="L131">        System.out.println(&quot;===========================\n&quot;);</span>
-<span class="fc" id="L132">    }</span>
+<span class="fc" id="L130">            System.out.println(&quot;---&quot;);</span>
+<span class="fc" id="L131">        }</span>
+<span class="fc" id="L132">        System.out.println(&quot;===========================\n&quot;);</span>
+<span class="fc" id="L133">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

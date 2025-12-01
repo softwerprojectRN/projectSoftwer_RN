@@ -1,4 +1,4 @@
-package strategy;
+package service;
 
 import dao.BookDAO;
 import model.Book;

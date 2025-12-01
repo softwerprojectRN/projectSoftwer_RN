@@ -2,7 +2,7 @@ import dao.UserDAO;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.PasswordUtil;
+import dao.PasswordUtil;
 import service.UserService;
 import java.lang.reflect.Field;
 

@@ -32,8 +32,8 @@ class CDDAOTest {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             cdDAO.initializeTable();
             verify(mockStmt).execute(anyString());
@@ -53,8 +53,8 @@ class CDDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             cdDAO.initializeTable();
             assertTrue(errContent.toString().contains("Error creating CDs table: Create failed"));
@@ -65,8 +65,8 @@ class CDDAOTest {
 
     @Test
     void testInitializeTable_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             assertDoesNotThrow(() -> cdDAO.initializeTable());
         }
     }
@@ -78,8 +78,8 @@ class CDDAOTest {
         PreparedStatement mockStmt = mock(PreparedStatement.class);
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             int id = cdDAO.insert(1, "Artist", "Pop", 60);
             assertEquals(1, id);
@@ -97,8 +97,8 @@ class CDDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             int id = cdDAO.insert(1, "Artist", "Pop", 60);
             assertEquals(-1, id);
@@ -110,8 +110,8 @@ class CDDAOTest {
 
     @Test
     void testInsert_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             int id = cdDAO.insert(1, "Artist", "Pop", 60);
             assertEquals(-1, id);
         }
@@ -134,8 +134,8 @@ class CDDAOTest {
         when(mockRs.getInt("duration")).thenReturn(60);
         when(mockRs.getInt("available")).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             CD cd = cdDAO.findById(1);
             assertNotNull(cd);
@@ -153,8 +153,8 @@ class CDDAOTest {
         when(mockStmt.executeQuery()).thenReturn(mockRs);
         when(mockRs.next()).thenReturn(false);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             CD cd = cdDAO.findById(1);
             assertNull(cd);
@@ -163,8 +163,8 @@ class CDDAOTest {
 
     @Test
     void testFindById_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             CD cd = cdDAO.findById(1);
             assertNull(cd);
         }
@@ -190,8 +190,8 @@ class CDDAOTest {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<CD> cds = cdDAO.findAll();
             assertEquals(2, cds.size());
@@ -220,8 +220,8 @@ class CDDAOTest {
         when(mockRs.getInt("duration")).thenReturn(50, 60);
         when(mockRs.getInt("available")).thenReturn(1, 0);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<CD> cds = cdDAO.searchByTitle("CD");
             assertEquals(2, cds.size());
@@ -240,8 +240,8 @@ class CDDAOTest {
         when(mockStmt.executeQuery()).thenReturn(mockRs);
         when(mockRs.next()).thenReturn(false);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<CD> cds = cdDAO.searchByTitle("NonExist");
             assertTrue(cds.isEmpty());
@@ -256,8 +256,8 @@ class CDDAOTest {
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
         doThrow(new SQLException("Query failed")).when(mockStmt).executeQuery();
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<CD> cds = cdDAO.searchByTitle("Any");
             assertTrue(cds.isEmpty());
@@ -266,8 +266,8 @@ class CDDAOTest {
 
     @Test
     void testSearchByTitle_nullConnection() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             List<CD> cds = cdDAO.searchByTitle("Any");
             assertTrue(cds.isEmpty());
         }
@@ -290,8 +290,8 @@ class CDDAOTest {
         when(mockRs.getInt("duration")).thenReturn(40);
         when(mockRs.getInt("available")).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             List<CD> cds = cdDAO.searchByArtist("Artist1");
             assertEquals(1, cds.size());
@@ -308,8 +308,8 @@ class CDDAOTest {
         when(mockStmt.executeQuery()).thenReturn(mockRs);
         when(mockRs.next()).thenReturn(false);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             List<CD> cds = cdDAO.searchByArtist("NoOne");
             assertTrue(cds.isEmpty());
         }
@@ -332,8 +332,8 @@ class CDDAOTest {
         when(mockRs.getInt("duration")).thenReturn(45);
         when(mockRs.getInt("available")).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             List<CD> cds = cdDAO.searchByGenre("Jazz");
             assertEquals(1, cds.size());
             assertEquals("Jazz", cds.get(0).getGenre());
@@ -350,8 +350,8 @@ class CDDAOTest {
         when(mockStmt.executeQuery()).thenReturn(mockRs);
         when(mockRs.next()).thenReturn(false);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             List<CD> cds = cdDAO.searchByGenre("NoGenre");
             assertTrue(cds.isEmpty());
         }
@@ -359,8 +359,8 @@ class CDDAOTest {
 
     @Test
     void testSearchByGenre_nullConnection() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             List<CD> cds = cdDAO.searchByGenre("Any");
             assertTrue(cds.isEmpty());
         }

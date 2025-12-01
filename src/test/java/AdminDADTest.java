@@ -30,8 +30,8 @@ class AdminDAOTest {
 
         when(mockConn.createStatement()).thenReturn(mockStmt);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             adminDAO.initializeTable();
 
@@ -41,8 +41,8 @@ class AdminDAOTest {
 
     @Test
     void testInitializeTable_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             assertDoesNotThrow(() -> adminDAO.initializeTable());
         }
     }
@@ -55,8 +55,8 @@ class AdminDAOTest {
         when(mockConn.createStatement()).thenReturn(mockStmt);
         doThrow(new SQLException("Create table failed")).when(mockStmt).execute(anyString());
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
             assertDoesNotThrow(() -> adminDAO.initializeTable());
         }
     }
@@ -77,8 +77,8 @@ class AdminDAOTest {
         when(mockRs.getString("password_hash")).thenReturn("hash");
         when(mockRs.getString("salt")).thenReturn("salt");
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             Admin admin = adminDAO.findByUsername("admin");
 
@@ -100,8 +100,8 @@ class AdminDAOTest {
         when(mockStmt.executeQuery()).thenReturn(mockRs);
         when(mockRs.next()).thenReturn(false);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             Admin admin = adminDAO.findByUsername("nonexistent");
             assertNull(admin);
@@ -110,8 +110,8 @@ class AdminDAOTest {
 
     @Test
     void testFindByUsername_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
 
             Admin admin = adminDAO.findByUsername("admin");
             assertNull(admin);
@@ -126,8 +126,8 @@ class AdminDAOTest {
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
         when(mockStmt.executeQuery()).thenThrow(new SQLException("Query failed"));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             Admin admin = adminDAO.findByUsername("admin");
             assertNull(admin);
@@ -144,8 +144,8 @@ class AdminDAOTest {
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
         when(mockStmt.executeUpdate()).thenReturn(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             boolean result = adminDAO.insert("admin", "hash", "salt");
 
@@ -165,8 +165,8 @@ class AdminDAOTest {
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
         doThrow(new SQLException("Insert failed")).when(mockStmt).executeUpdate();
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             boolean result = adminDAO.insert("admin", "hash", "salt");
             assertFalse(result);
@@ -175,8 +175,8 @@ class AdminDAOTest {
 
     @Test
     void testInsert_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
 
             boolean result = adminDAO.insert("admin", "hash", "salt");
             assertFalse(result);
@@ -192,8 +192,8 @@ class AdminDAOTest {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             adminDAO.initializeTable();
 
@@ -216,8 +216,8 @@ class AdminDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             adminDAO.initializeTable();
 
@@ -242,8 +242,8 @@ class AdminDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             Admin admin = adminDAO.findByUsername("admin");
             assertNull(admin);
@@ -267,8 +267,8 @@ class AdminDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             boolean result = adminDAO.insert("admin", "hash", "salt");
             assertFalse(result);

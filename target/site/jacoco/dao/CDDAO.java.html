@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CDDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">CDDAO.java</span></div><h1>CDDAO.java</h1><pre class="source lang-java linenums">package dao;
 
 import model.CD;
-import util.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +12,17 @@ import java.util.List;
  * @author Library Management System
  * @version 1.0
  */
-<span class="fc" id="L16">public class CDDAO {</span>
+<span class="fc" id="L15">public class CDDAO {</span>
 
     /**
      * Initializes the cds table in the database.
      * Creates the table with a foreign key relationship to the media table.
      */
     public void initializeTable() {
-<span class="fc" id="L23">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (conn == null) return;</span>
+<span class="fc" id="L22">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        if (conn == null) return;</span>
 
-<span class="fc" id="L26">        String sql = &quot;CREATE TABLE IF NOT EXISTS cds (\n&quot; +</span>
+<span class="fc" id="L25">        String sql = &quot;CREATE TABLE IF NOT EXISTS cds (\n&quot; +</span>
                 &quot; id INTEGER PRIMARY KEY,\n&quot; +
                 &quot; artist TEXT NOT NULL,\n&quot; +
                 &quot; genre TEXT,\n&quot; +
@@ -31,13 +30,13 @@ import java.util.List;
                 &quot; FOREIGN KEY (id) REFERENCES media(id) ON DELETE CASCADE\n&quot; +
                 &quot;);&quot;;
 
-<span class="fc" id="L34">        try (Statement stmt = conn.createStatement()) {</span>
-<span class="fc" id="L35">            stmt.execute(sql);</span>
-<span class="fc" id="L36">            System.out.println(&quot;CDs table created successfully.&quot;);</span>
-<span class="fc" id="L37">        } catch (SQLException e) {</span>
-<span class="fc" id="L38">            System.err.println(&quot;Error creating CDs table: &quot; + e.getMessage());</span>
-<span class="fc" id="L39">        }</span>
-<span class="fc" id="L40">    }</span>
+<span class="fc" id="L33">        try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L34">            stmt.execute(sql);</span>
+<span class="fc" id="L35">            System.out.println(&quot;CDs table created successfully.&quot;);</span>
+<span class="fc" id="L36">        } catch (SQLException e) {</span>
+<span class="fc" id="L37">            System.err.println(&quot;Error creating CDs table: &quot; + e.getMessage());</span>
+<span class="fc" id="L38">        }</span>
+<span class="fc" id="L39">    }</span>
 
     /**
      * Finds a CD by its ID.
@@ -46,30 +45,30 @@ import java.util.List;
      * @return CD object if found, null otherwise
      */
     public CD findById(int id) {
-<span class="fc" id="L49">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (conn == null) return null;</span>
+<span class="fc" id="L48">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (conn == null) return null;</span>
 
-<span class="fc" id="L52">        String sql = &quot;SELECT m.id, m.title, m.available, c.artist, c.genre, c.duration &quot; +</span>
+<span class="fc" id="L51">        String sql = &quot;SELECT m.id, m.title, m.available, c.artist, c.genre, c.duration &quot; +</span>
                 &quot;FROM media m JOIN cds c ON m.id = c.id WHERE m.id = ?&quot;;
 
-<span class="fc" id="L55">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L56">            pstmt.setInt(1, id);</span>
-<span class="fc" id="L57">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc" id="L54">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L55">            pstmt.setInt(1, id);</span>
+<span class="fc" id="L56">            ResultSet rs = pstmt.executeQuery();</span>
 
-<span class="fc bfc" id="L59" title="All 2 branches covered.">            if (rs.next()) {</span>
-<span class="fc" id="L60">                return new CD(</span>
-<span class="fc" id="L61">                        rs.getInt(&quot;id&quot;),</span>
-<span class="fc" id="L62">                        rs.getString(&quot;title&quot;),</span>
-<span class="fc" id="L63">                        rs.getString(&quot;artist&quot;),</span>
-<span class="fc" id="L64">                        rs.getString(&quot;genre&quot;),</span>
-<span class="fc" id="L65">                        rs.getInt(&quot;duration&quot;),</span>
-<span class="pc bpc" id="L66" title="1 of 2 branches missed.">                        rs.getInt(&quot;available&quot;) == 1</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L59">                return new CD(</span>
+<span class="fc" id="L60">                        rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L61">                        rs.getString(&quot;title&quot;),</span>
+<span class="fc" id="L62">                        rs.getString(&quot;artist&quot;),</span>
+<span class="fc" id="L63">                        rs.getString(&quot;genre&quot;),</span>
+<span class="fc" id="L64">                        rs.getInt(&quot;duration&quot;),</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">                        rs.getInt(&quot;available&quot;) == 1</span>
                 );
             }
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="nc" id="L70">            System.err.println(&quot;Error finding CD: &quot; + e.getMessage());</span>
-<span class="fc" id="L71">        }</span>
-<span class="fc" id="L72">        return null;</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L69">            System.err.println(&quot;Error finding CD: &quot; + e.getMessage());</span>
+<span class="fc" id="L70">        }</span>
+<span class="fc" id="L71">        return null;</span>
     }
 
     /**
@@ -82,21 +81,21 @@ import java.util.List;
      * @return the media ID if successful, -1 otherwise
      */
     public int insert(int mediaId, String artist, String genre, int duration) {
-<span class="fc" id="L85">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (conn == null) return -1;</span>
+<span class="fc" id="L84">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (conn == null) return -1;</span>
 
-<span class="fc" id="L88">        String sql = &quot;INSERT INTO cds (id, artist, genre, duration) VALUES (?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L87">        String sql = &quot;INSERT INTO cds (id, artist, genre, duration) VALUES (?, ?, ?, ?)&quot;;</span>
 
-<span class="fc" id="L90">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L91">            pstmt.setInt(1, mediaId);</span>
-<span class="fc" id="L92">            pstmt.setString(2, artist);</span>
-<span class="fc" id="L93">            pstmt.setString(3, genre);</span>
-<span class="fc" id="L94">            pstmt.setInt(4, duration);</span>
-<span class="fc" id="L95">            pstmt.executeUpdate();</span>
-<span class="fc" id="L96">            return mediaId;</span>
-<span class="fc" id="L97">        } catch (SQLException e) {</span>
-<span class="fc" id="L98">            System.err.println(&quot;Error inserting CD: &quot; + e.getMessage());</span>
-<span class="fc" id="L99">            return -1;</span>
+<span class="fc" id="L89">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L90">            pstmt.setInt(1, mediaId);</span>
+<span class="fc" id="L91">            pstmt.setString(2, artist);</span>
+<span class="fc" id="L92">            pstmt.setString(3, genre);</span>
+<span class="fc" id="L93">            pstmt.setInt(4, duration);</span>
+<span class="fc" id="L94">            pstmt.executeUpdate();</span>
+<span class="fc" id="L95">            return mediaId;</span>
+<span class="fc" id="L96">        } catch (SQLException e) {</span>
+<span class="fc" id="L97">            System.err.println(&quot;Error inserting CD: &quot; + e.getMessage());</span>
+<span class="fc" id="L98">            return -1;</span>
         }
     }
 
@@ -106,31 +105,31 @@ import java.util.List;
      * @return List of all CD objects
      */
     public List&lt;CD&gt; findAll() {
-<span class="fc" id="L109">        List&lt;CD&gt; cds = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L110">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if (conn == null) return cds;</span>
+<span class="fc" id="L108">        List&lt;CD&gt; cds = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L109">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (conn == null) return cds;</span>
 
-<span class="fc" id="L113">        String sql = &quot;SELECT m.id, m.title, m.available, c.artist, c.genre, c.duration &quot; +</span>
+<span class="fc" id="L112">        String sql = &quot;SELECT m.id, m.title, m.available, c.artist, c.genre, c.duration &quot; +</span>
                 &quot;FROM media m JOIN cds c ON m.id = c.id WHERE m.media_type = 'cd'&quot;;
 
-<span class="fc" id="L116">        try (Statement stmt = conn.createStatement();</span>
-<span class="fc" id="L117">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+<span class="fc" id="L115">        try (Statement stmt = conn.createStatement();</span>
+<span class="fc" id="L116">             ResultSet rs = stmt.executeQuery(sql)) {</span>
 
-<span class="fc bfc" id="L119" title="All 2 branches covered.">            while (rs.next()) {</span>
-<span class="fc" id="L120">                cds.add(new CD(</span>
-<span class="fc" id="L121">                        rs.getInt(&quot;id&quot;),</span>
-<span class="fc" id="L122">                        rs.getString(&quot;title&quot;),</span>
-<span class="fc" id="L123">                        rs.getString(&quot;artist&quot;),</span>
-<span class="fc" id="L124">                        rs.getString(&quot;genre&quot;),</span>
-<span class="fc" id="L125">                        rs.getInt(&quot;duration&quot;),</span>
-<span class="fc bfc" id="L126" title="All 2 branches covered.">                        rs.getInt(&quot;available&quot;) == 1</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L119">                cds.add(new CD(</span>
+<span class="fc" id="L120">                        rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L121">                        rs.getString(&quot;title&quot;),</span>
+<span class="fc" id="L122">                        rs.getString(&quot;artist&quot;),</span>
+<span class="fc" id="L123">                        rs.getString(&quot;genre&quot;),</span>
+<span class="fc" id="L124">                        rs.getInt(&quot;duration&quot;),</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">                        rs.getInt(&quot;available&quot;) == 1</span>
                 ));
             }
-<span class="fc" id="L129">            System.out.println(&quot;Retrieved &quot; + cds.size() + &quot; CDs from database.&quot;);</span>
-<span class="nc" id="L130">        } catch (SQLException e) {</span>
-<span class="nc" id="L131">            System.err.println(&quot;Error fetching CDs: &quot; + e.getMessage());</span>
-<span class="fc" id="L132">        }</span>
-<span class="fc" id="L133">        return cds;</span>
+<span class="fc" id="L128">            System.out.println(&quot;Retrieved &quot; + cds.size() + &quot; CDs from database.&quot;);</span>
+<span class="nc" id="L129">        } catch (SQLException e) {</span>
+<span class="nc" id="L130">            System.err.println(&quot;Error fetching CDs: &quot; + e.getMessage());</span>
+<span class="fc" id="L131">        }</span>
+<span class="fc" id="L132">        return cds;</span>
     }
 
     /**
@@ -140,32 +139,32 @@ import java.util.List;
      * @return List of matching CD objects
      */
     public List&lt;CD&gt; searchByTitle(String title) {
-<span class="fc" id="L143">        List&lt;CD&gt; cds = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L144">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (conn == null) return cds;</span>
+<span class="fc" id="L142">        List&lt;CD&gt; cds = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L143">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        if (conn == null) return cds;</span>
 
-<span class="fc" id="L147">        String sql = &quot;SELECT m.id, m.title, m.available, c.artist, c.genre, c.duration &quot; +</span>
+<span class="fc" id="L146">        String sql = &quot;SELECT m.id, m.title, m.available, c.artist, c.genre, c.duration &quot; +</span>
                 &quot;FROM media m JOIN cds c ON m.id = c.id &quot; +
                 &quot;WHERE m.media_type = 'cd' AND m.title LIKE ?&quot;;
 
-<span class="fc" id="L151">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L152">            pstmt.setString(1, &quot;%&quot; + title + &quot;%&quot;);</span>
-<span class="fc" id="L153">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc" id="L150">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L151">            pstmt.setString(1, &quot;%&quot; + title + &quot;%&quot;);</span>
+<span class="fc" id="L152">            ResultSet rs = pstmt.executeQuery();</span>
 
-<span class="fc bfc" id="L155" title="All 2 branches covered.">            while (rs.next()) {</span>
-<span class="fc" id="L156">                cds.add(new CD(</span>
-<span class="fc" id="L157">                        rs.getInt(&quot;id&quot;),</span>
-<span class="fc" id="L158">                        rs.getString(&quot;title&quot;),</span>
-<span class="fc" id="L159">                        rs.getString(&quot;artist&quot;),</span>
-<span class="fc" id="L160">                        rs.getString(&quot;genre&quot;),</span>
-<span class="fc" id="L161">                        rs.getInt(&quot;duration&quot;),</span>
-<span class="fc bfc" id="L162" title="All 2 branches covered.">                        rs.getInt(&quot;available&quot;) == 1</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L155">                cds.add(new CD(</span>
+<span class="fc" id="L156">                        rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L157">                        rs.getString(&quot;title&quot;),</span>
+<span class="fc" id="L158">                        rs.getString(&quot;artist&quot;),</span>
+<span class="fc" id="L159">                        rs.getString(&quot;genre&quot;),</span>
+<span class="fc" id="L160">                        rs.getInt(&quot;duration&quot;),</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">                        rs.getInt(&quot;available&quot;) == 1</span>
                 ));
             }
-<span class="fc" id="L165">        } catch (SQLException e) {</span>
-<span class="fc" id="L166">            System.err.println(&quot;Error searching CDs by title: &quot; + e.getMessage());</span>
-<span class="fc" id="L167">        }</span>
-<span class="fc" id="L168">        return cds;</span>
+<span class="fc" id="L164">        } catch (SQLException e) {</span>
+<span class="fc" id="L165">            System.err.println(&quot;Error searching CDs by title: &quot; + e.getMessage());</span>
+<span class="fc" id="L166">        }</span>
+<span class="fc" id="L167">        return cds;</span>
     }
 
     /**
@@ -175,32 +174,32 @@ import java.util.List;
      * @return List of matching CD objects
      */
     public List&lt;CD&gt; searchByArtist(String artist) {
-<span class="fc" id="L178">        List&lt;CD&gt; cds = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L179">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="pc bpc" id="L180" title="1 of 2 branches missed.">        if (conn == null) return cds;</span>
+<span class="fc" id="L177">        List&lt;CD&gt; cds = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L178">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">        if (conn == null) return cds;</span>
 
-<span class="fc" id="L182">        String sql = &quot;SELECT m.id, m.title, m.available, c.artist, c.genre, c.duration &quot; +</span>
+<span class="fc" id="L181">        String sql = &quot;SELECT m.id, m.title, m.available, c.artist, c.genre, c.duration &quot; +</span>
                 &quot;FROM media m JOIN cds c ON m.id = c.id &quot; +
                 &quot;WHERE m.media_type = 'cd' AND c.artist LIKE ?&quot;;
 
-<span class="fc" id="L186">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L187">            pstmt.setString(1, &quot;%&quot; + artist + &quot;%&quot;);</span>
-<span class="fc" id="L188">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc" id="L185">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L186">            pstmt.setString(1, &quot;%&quot; + artist + &quot;%&quot;);</span>
+<span class="fc" id="L187">            ResultSet rs = pstmt.executeQuery();</span>
 
-<span class="fc bfc" id="L190" title="All 2 branches covered.">            while (rs.next()) {</span>
-<span class="fc" id="L191">                cds.add(new CD(</span>
-<span class="fc" id="L192">                        rs.getInt(&quot;id&quot;),</span>
-<span class="fc" id="L193">                        rs.getString(&quot;title&quot;),</span>
-<span class="fc" id="L194">                        rs.getString(&quot;artist&quot;),</span>
-<span class="fc" id="L195">                        rs.getString(&quot;genre&quot;),</span>
-<span class="fc" id="L196">                        rs.getInt(&quot;duration&quot;),</span>
-<span class="pc bpc" id="L197" title="1 of 2 branches missed.">                        rs.getInt(&quot;available&quot;) == 1</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L190">                cds.add(new CD(</span>
+<span class="fc" id="L191">                        rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L192">                        rs.getString(&quot;title&quot;),</span>
+<span class="fc" id="L193">                        rs.getString(&quot;artist&quot;),</span>
+<span class="fc" id="L194">                        rs.getString(&quot;genre&quot;),</span>
+<span class="fc" id="L195">                        rs.getInt(&quot;duration&quot;),</span>
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">                        rs.getInt(&quot;available&quot;) == 1</span>
                 ));
             }
-<span class="nc" id="L200">        } catch (SQLException e) {</span>
-<span class="nc" id="L201">            System.err.println(&quot;Error searching CDs by artist: &quot; + e.getMessage());</span>
-<span class="fc" id="L202">        }</span>
-<span class="fc" id="L203">        return cds;</span>
+<span class="nc" id="L199">        } catch (SQLException e) {</span>
+<span class="nc" id="L200">            System.err.println(&quot;Error searching CDs by artist: &quot; + e.getMessage());</span>
+<span class="fc" id="L201">        }</span>
+<span class="fc" id="L202">        return cds;</span>
     }
 
     /**
@@ -210,32 +209,32 @@ import java.util.List;
      * @return List of matching CD objects
      */
     public List&lt;CD&gt; searchByGenre(String genre) {
-<span class="fc" id="L213">        List&lt;CD&gt; cds = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L214">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L215" title="All 2 branches covered.">        if (conn == null) return cds;</span>
+<span class="fc" id="L212">        List&lt;CD&gt; cds = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L213">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        if (conn == null) return cds;</span>
 
-<span class="fc" id="L217">        String sql = &quot;SELECT m.id, m.title, m.available, c.artist, c.genre, c.duration &quot; +</span>
+<span class="fc" id="L216">        String sql = &quot;SELECT m.id, m.title, m.available, c.artist, c.genre, c.duration &quot; +</span>
                 &quot;FROM media m JOIN cds c ON m.id = c.id &quot; +
                 &quot;WHERE m.media_type = 'cd' AND c.genre LIKE ?&quot;;
 
-<span class="fc" id="L221">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L222">            pstmt.setString(1, &quot;%&quot; + genre + &quot;%&quot;);</span>
-<span class="fc" id="L223">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc" id="L220">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L221">            pstmt.setString(1, &quot;%&quot; + genre + &quot;%&quot;);</span>
+<span class="fc" id="L222">            ResultSet rs = pstmt.executeQuery();</span>
 
-<span class="fc bfc" id="L225" title="All 2 branches covered.">            while (rs.next()) {</span>
-<span class="fc" id="L226">                cds.add(new CD(</span>
-<span class="fc" id="L227">                        rs.getInt(&quot;id&quot;),</span>
-<span class="fc" id="L228">                        rs.getString(&quot;title&quot;),</span>
-<span class="fc" id="L229">                        rs.getString(&quot;artist&quot;),</span>
-<span class="fc" id="L230">                        rs.getString(&quot;genre&quot;),</span>
-<span class="fc" id="L231">                        rs.getInt(&quot;duration&quot;),</span>
-<span class="pc bpc" id="L232" title="1 of 2 branches missed.">                        rs.getInt(&quot;available&quot;) == 1</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L225">                cds.add(new CD(</span>
+<span class="fc" id="L226">                        rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L227">                        rs.getString(&quot;title&quot;),</span>
+<span class="fc" id="L228">                        rs.getString(&quot;artist&quot;),</span>
+<span class="fc" id="L229">                        rs.getString(&quot;genre&quot;),</span>
+<span class="fc" id="L230">                        rs.getInt(&quot;duration&quot;),</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">                        rs.getInt(&quot;available&quot;) == 1</span>
                 ));
             }
-<span class="nc" id="L235">        } catch (SQLException e) {</span>
-<span class="nc" id="L236">            System.err.println(&quot;Error searching CDs by genre: &quot; + e.getMessage());</span>
-<span class="fc" id="L237">        }</span>
-<span class="fc" id="L238">        return cds;</span>
+<span class="nc" id="L234">        } catch (SQLException e) {</span>
+<span class="nc" id="L235">            System.err.println(&quot;Error searching CDs by genre: &quot; + e.getMessage());</span>
+<span class="fc" id="L236">        }</span>
+<span class="fc" id="L237">        return cds;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

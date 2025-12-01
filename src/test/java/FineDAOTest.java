@@ -30,8 +30,8 @@ class FineDAOTest {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             fineDAO.initializeTable();
             verify(mockStmt).execute(anyString());
@@ -51,8 +51,8 @@ class FineDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             fineDAO.initializeTable();
             assertTrue(errContent.toString().contains("Error creating user_fines table: Create failed"));
@@ -63,8 +63,8 @@ class FineDAOTest {
 
     @Test
     void testInitializeTable_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             assertDoesNotThrow(() -> fineDAO.initializeTable());
         }
     }
@@ -76,8 +76,8 @@ class FineDAOTest {
         PreparedStatement mockStmt = mock(PreparedStatement.class);
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             assertTrue(fineDAO.initializeFine(1));
             verify(mockStmt).executeUpdate();
@@ -94,8 +94,8 @@ class FineDAOTest {
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();
         System.setErr(new PrintStream(errContent));
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             assertFalse(fineDAO.initializeFine(1));
             assertTrue(errContent.toString().contains("Error initializing fine: Insert failed"));
@@ -116,8 +116,8 @@ class FineDAOTest {
         when(mockRs.next()).thenReturn(true);
         when(mockRs.getDouble("total_fine")).thenReturn(10.0);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             double fine = fineDAO.getFineBalance(1);
             assertEquals(10.0, fine);
@@ -137,8 +137,8 @@ class FineDAOTest {
         FineDAO spyDAO = spy(fineDAO);
         doReturn(true).when(spyDAO).initializeFine(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             double fine = spyDAO.getFineBalance(1);
             assertEquals(0.0, fine);
@@ -154,8 +154,8 @@ class FineDAOTest {
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
         when(mockStmt.executeUpdate()).thenReturn(1); // updated one row
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             assertTrue(fineDAO.updateFine(1, 20.0));
         }
@@ -171,8 +171,8 @@ class FineDAOTest {
         FineDAO spyDAO = spy(fineDAO);
         doReturn(true).when(spyDAO).initializeFine(1);
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             assertTrue(spyDAO.updateFine(1, 20.0));
             verify(spyDAO).initializeFine(1);
@@ -228,8 +228,8 @@ class FineDAOTest {
     // ------------------ getFineBalance null connection ------------------
     @Test
     void testGetFineBalance_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             assertEquals(0.0, fineDAO.getFineBalance(1));
         }
     }
@@ -237,8 +237,8 @@ class FineDAOTest {
     // ------------------ initializeFine null connection ------------------
     @Test
     void testInitializeFine_connectionNull() {
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(null);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
             assertFalse(fineDAO.initializeFine(1));
         }
     }
@@ -251,8 +251,8 @@ class FineDAOTest {
         when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
         doThrow(new SQLException("Update failed")).when(mockStmt).executeUpdate();
 
-        try (MockedStatic<util.DatabaseConnection> dbMock = mockStatic(util.DatabaseConnection.class)) {
-            dbMock.when(util.DatabaseConnection::getConnection).thenReturn(mockConn);
+        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
+            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 
             assertFalse(fineDAO.updateFine(1, 20.0));
         }

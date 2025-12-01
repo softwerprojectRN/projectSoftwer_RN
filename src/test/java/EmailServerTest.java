@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import util.EmailServer;
+import service.EmailServer;
 
 import java.lang.reflect.Field;
 import java.util.List;

@@ -8,18 +8,22 @@ github-inti-demo,dao,BookDAO,23,352,6,30,6,105,6,20,0,8
 github-inti-demo,dao,CDDAO,31,368,6,30,7,111,6,20,0,8
 github-inti-demo,dao,FineDAO,10,184,3,17,2,53,3,15,0,8
 github-inti-demo,dao,MediaDAO,1,119,2,12,1,35,2,9,0,4
-github-inti-demo,util,EmailNotifier,0,50,0,6,0,17,0,5,0,2
-github-inti-demo,util,DatabaseConnection,3,11,0,0,1,4,1,1,1,1
-github-inti-demo,util,EmailServer.Email,0,27,0,0,0,10,0,5,0,5
-github-inti-demo,util,EmailServer.new Authenticator() {...},10,6,0,0,1,1,1,1,1,1
-github-inti-demo,util,PasswordUtil,11,52,0,4,3,12,1,4,1,2
-github-inti-demo,util,EmailServer,63,227,10,24,21,54,9,14,1,5
+github-inti-demo,dao,PasswordUtil,11,52,0,4,3,12,1,4,1,2
+github-inti-demo,dao,DatabaseConnection,3,11,0,0,1,4,1,1,1,1
 github-inti-demo,service,BorrowingService,3,284,2,16,2,67,2,14,0,7
+github-inti-demo,service,EmailServer,63,227,10,24,21,54,9,14,1,5
 github-inti-demo,service,UserService,2,99,1,15,1,28,1,10,0,3
+github-inti-demo,service,SearchByAuthor,0,13,0,0,0,4,0,2,0,2
 github-inti-demo,service,AdminService,26,160,3,13,8,46,3,12,0,7
+github-inti-demo,service,EmailNotifier,0,50,0,6,0,17,0,5,0,2
+github-inti-demo,service,EmailServer.Email,0,27,0,0,0,10,0,5,0,5
+github-inti-demo,service,SearchByISBN,0,13,0,0,0,4,0,2,0,2
 github-inti-demo,service,CDService,1,142,4,20,0,33,4,14,0,5
 github-inti-demo,service,BorrowerService,0,232,0,18,0,52,0,14,0,5
+github-inti-demo,service,EmailServer.new Authenticator() {...},10,6,0,0,1,1,1,1,1,1
+github-inti-demo,service,SearchByTitle,0,13,0,0,0,4,0,2,0,2
 github-inti-demo,service,BookService,0,144,4,22,0,34,4,14,0,4
+github-inti-demo,service,BookSearcher,0,29,0,4,0,9,0,5,0,3
 github-inti-demo,model,Book,0,27,0,0,0,7,0,4,0,4
 github-inti-demo,model,Media,0,47,0,2,0,14,0,8,0,7
 github-inti-demo,model,User,0,67,0,2,0,27,0,13,0,12
@@ -28,7 +32,3 @@ github-inti-demo,model,MediaRecord,0,45,0,2,0,15,0,9,0,8
 github-inti-demo,model,Borrower,0,57,0,4,0,16,0,8,0,6
 github-inti-demo,model,Admin,0,13,0,0,0,4,0,2,0,2
 github-inti-demo,model,UserWithOverdueBooks,0,21,0,0,0,8,0,4,0,4
-github-inti-demo,strategy,BookSearcher,0,29,0,4,0,9,0,5,0,3
-github-inti-demo,strategy,SearchByAuthor,0,13,0,0,0,4,0,2,0,2
-github-inti-demo,strategy,SearchByISBN,0,13,0,0,0,4,0,2,0,2
-github-inti-demo,strategy,SearchByTitle,0,13,0,0,0,4,0,2,0,2

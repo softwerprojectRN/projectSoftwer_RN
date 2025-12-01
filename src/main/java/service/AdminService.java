@@ -4,9 +4,7 @@ import dao.AdminDAO;
 import dao.UserDAO;
 import model.Admin;
 import model.UserWithOverdueBooks;
-import util.EmailNotifier;
-import util.EmailServer;
-import util.PasswordUtil;
+import dao.PasswordUtil;
 
 import java.util.List;
 

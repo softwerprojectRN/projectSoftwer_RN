@@ -1,4 +1,4 @@
-package util;
+package service;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.*;

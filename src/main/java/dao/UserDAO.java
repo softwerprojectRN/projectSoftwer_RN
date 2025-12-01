@@ -1,8 +1,6 @@
 package dao;
 
 import model.User;
-import util.DatabaseConnection;
-import util.PasswordUtil;
 import java.sql.*;
 
 /**

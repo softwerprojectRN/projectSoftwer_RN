@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MediaDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">MediaDAO.java</span></div><h1>MediaDAO.java</h1><pre class="source lang-java linenums">package dao;
 
-import util.DatabaseConnection;
 import java.sql.*;
 
 /**
@@ -10,30 +9,30 @@ import java.sql.*;
  * @author Library Management System
  * @version 1.0
  */
-<span class="fc" id="L13">public class MediaDAO {</span>
+<span class="fc" id="L12">public class MediaDAO {</span>
 
     /**
      * Initializes the media table in the database.
      * Creates the base table for all media types.
      */
     public void initializeTable() {
-<span class="fc" id="L20">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (conn == null) return;</span>
+<span class="fc" id="L19">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (conn == null) return;</span>
 
-<span class="fc" id="L23">        String sql = &quot;CREATE TABLE IF NOT EXISTS media (\n&quot; +</span>
+<span class="fc" id="L22">        String sql = &quot;CREATE TABLE IF NOT EXISTS media (\n&quot; +</span>
                 &quot; id INTEGER PRIMARY KEY AUTOINCREMENT,\n&quot; +
                 &quot; title TEXT NOT NULL,\n&quot; +
                 &quot; media_type TEXT NOT NULL,\n&quot; +
                 &quot; available INTEGER NOT NULL DEFAULT 1\n&quot; +
                 &quot;);&quot;;
 
-<span class="fc" id="L30">        try (Statement stmt = conn.createStatement()) {</span>
-<span class="fc" id="L31">            stmt.execute(sql);</span>
-<span class="fc" id="L32">            System.out.println(&quot;Media table created successfully.&quot;);</span>
-<span class="fc" id="L33">        } catch (SQLException e) {</span>
-<span class="fc" id="L34">            System.err.println(&quot;Error creating media table: &quot; + e.getMessage());</span>
-<span class="fc" id="L35">        }</span>
-<span class="fc" id="L36">    }</span>
+<span class="fc" id="L29">        try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L30">            stmt.execute(sql);</span>
+<span class="fc" id="L31">            System.out.println(&quot;Media table created successfully.&quot;);</span>
+<span class="fc" id="L32">        } catch (SQLException e) {</span>
+<span class="fc" id="L33">            System.err.println(&quot;Error creating media table: &quot; + e.getMessage());</span>
+<span class="fc" id="L34">        }</span>
+<span class="fc" id="L35">    }</span>
 
     /**
      * Inserts a new media record into the database.
@@ -43,24 +42,24 @@ import java.sql.*;
      * @return the generated media ID if successful, -1 otherwise
      */
     public int insert(String title, String mediaType) {
-<span class="fc" id="L46">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (conn == null) return -1;</span>
+<span class="fc" id="L45">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (conn == null) return -1;</span>
 
-<span class="fc" id="L49">        String sql = &quot;INSERT INTO media (title, media_type, available) VALUES (?, ?, 1)&quot;;</span>
+<span class="fc" id="L48">        String sql = &quot;INSERT INTO media (title, media_type, available) VALUES (?, ?, 1)&quot;;</span>
 
-<span class="fc" id="L51">        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
-<span class="fc" id="L52">            pstmt.setString(1, title);</span>
-<span class="fc" id="L53">            pstmt.setString(2, mediaType);</span>
-<span class="fc" id="L54">            pstmt.executeUpdate();</span>
+<span class="fc" id="L50">        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="fc" id="L51">            pstmt.setString(1, title);</span>
+<span class="fc" id="L52">            pstmt.setString(2, mediaType);</span>
+<span class="fc" id="L53">            pstmt.executeUpdate();</span>
 
-<span class="fc" id="L56">            ResultSet generatedKeys = pstmt.getGeneratedKeys();</span>
-<span class="pc bpc" id="L57" title="1 of 2 branches missed.">            if (generatedKeys.next()) {</span>
-<span class="fc" id="L58">                return generatedKeys.getInt(1);</span>
+<span class="fc" id="L55">            ResultSet generatedKeys = pstmt.getGeneratedKeys();</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">            if (generatedKeys.next()) {</span>
+<span class="fc" id="L57">                return generatedKeys.getInt(1);</span>
             }
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="fc" id="L61">            System.err.println(&quot;Error inserting media: &quot; + e.getMessage());</span>
-<span class="nc" id="L62">        }</span>
-<span class="fc" id="L63">        return -1;</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L60">            System.err.println(&quot;Error inserting media: &quot; + e.getMessage());</span>
+<span class="nc" id="L61">        }</span>
+<span class="fc" id="L62">        return -1;</span>
     }
 
     /**
@@ -71,19 +70,19 @@ import java.sql.*;
      * @return true if update was successful, false otherwise
      */
     public boolean updateAvailability(int mediaId, boolean available) {
-<span class="fc" id="L74">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (conn == null) return false;</span>
+<span class="fc" id="L73">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (conn == null) return false;</span>
 
-<span class="fc" id="L77">        String sql = &quot;UPDATE media SET available = ? WHERE id = ?&quot;;</span>
+<span class="fc" id="L76">        String sql = &quot;UPDATE media SET available = ? WHERE id = ?&quot;;</span>
 
-<span class="fc" id="L79">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc bfc" id="L80" title="All 2 branches covered.">            pstmt.setInt(1, available ? 1 : 0);</span>
-<span class="fc" id="L81">            pstmt.setInt(2, mediaId);</span>
-<span class="fc" id="L82">            int rowsAffected = pstmt.executeUpdate();</span>
-<span class="fc bfc" id="L83" title="All 2 branches covered.">            return rowsAffected &gt; 0;</span>
-<span class="fc" id="L84">        } catch (SQLException e) {</span>
-<span class="fc" id="L85">            System.err.println(&quot;Error updating media availability: &quot; + e.getMessage());</span>
-<span class="fc" id="L86">            return false;</span>
+<span class="fc" id="L78">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            pstmt.setInt(1, available ? 1 : 0);</span>
+<span class="fc" id="L80">            pstmt.setInt(2, mediaId);</span>
+<span class="fc" id="L81">            int rowsAffected = pstmt.executeUpdate();</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">            return rowsAffected &gt; 0;</span>
+<span class="fc" id="L83">        } catch (SQLException e) {</span>
+<span class="fc" id="L84">            System.err.println(&quot;Error updating media availability: &quot; + e.getMessage());</span>
+<span class="fc" id="L85">            return false;</span>
         }
     }
 }
