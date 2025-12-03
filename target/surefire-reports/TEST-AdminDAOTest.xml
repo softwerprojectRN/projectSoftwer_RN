@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="AdminDAOTest" time="7.209" tests="14" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="AdminDAOTest" time="6.593" tests="14" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire15519267934621896522\surefirebooter-20251201140629021_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire15519267934621896522 2025-12-01T14-06-28_636-jvmRun1 surefire-20251201140629021_1tmp surefire_0-20251201140629021_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire324016526466296350\surefirebooter-20251203123257686_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire324016526466296350 2025-12-03T12-32-57_443-jvmRun1 surefire-20251203123257686_1tmp surefire_0-20251203123257686_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\lenovo\projectSoftwer_RN\target\test-classes;C:\Users\lenovo\projectSoftwer_RN\target\classes;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\xerial\sqlite-jdbc\3.50.3.0\sqlite-jdbc-3.50.3.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-core\5.8.0\mockito-core-5.8.0.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy\1.14.10\byte-buddy-1.14.10.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.10\byte-buddy-agent-1.14.10.jar;C:\Users\lenovo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-junit-jupiter\5.8.0\mockito-junit-jupiter-5.8.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-inline\5.0.0\mockito-inline-5.0.0.jar;C:\Users\lenovo\.m2\repository\com\sun\mail\jakarta.mail\2.0.1\jakarta.mail-2.0.1.jar;C:\Users\lenovo\.m2\repository\com\sun\activation\jakarta.activation\2.0.1\jakarta.activation-2.0.1.jar;C:\Users\lenovo\.m2\repository\io\github\cdimascio\java-dotenv\5.2.2\java-dotenv-5.2.2.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.4.0\kotlin-stdlib-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.4.0\kotlin-stdlib-common-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -31,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire15519267934621896522\surefirebooter-20251201140629021_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire324016526466296350\surefirebooter-20251203123257686_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -58,27 +58,27 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testInitializeTable_success" classname="AdminDAOTest" time="5.802">
+  <testcase name="testInitializeTable_success" classname="AdminDAOTest" time="2.486">
     <system-out><![CDATA[Admins table created successfully.
 ]]></system-out>
   </testcase>
-  <testcase name="testFindByUsername_sqlException" classname="AdminDAOTest" time="0.457">
+  <testcase name="testFindByUsername_sqlException" classname="AdminDAOTest" time="0.444">
     <system-err><![CDATA[Error finding admin: Query failed
 ]]></system-err>
   </testcase>
-  <testcase name="testInitializeTable_sqlException" classname="AdminDAOTest" time="0.015">
+  <testcase name="testInitializeTable_sqlException" classname="AdminDAOTest" time="0.014">
     <system-err><![CDATA[Error creating admins table: Create table failed
 ]]></system-err>
   </testcase>
-  <testcase name="testFindByUsername_printError" classname="AdminDAOTest" time="0.021"/>
-  <testcase name="testInsert_printError" classname="AdminDAOTest" time="0.016"/>
-  <testcase name="testInitializeTable_printError" classname="AdminDAOTest" time="0.005"/>
-  <testcase name="testFindByUsername_connectionNull" classname="AdminDAOTest" time="0.003"/>
-  <testcase name="testInsert_success" classname="AdminDAOTest" time="0.008"/>
-  <testcase name="testInitializeTable_connectionNull" classname="AdminDAOTest" time="0.01"/>
-  <testcase name="testFindByUsername_notFound" classname="AdminDAOTest" time="0.681"/>
-  <testcase name="testFindByUsername_found" classname="AdminDAOTest" time="0.025"/>
-  <testcase name="testInsert_failure" classname="AdminDAOTest" time="0.012"/>
-  <testcase name="testInitializeTable_printSuccess" classname="AdminDAOTest" time="0.007"/>
-  <testcase name="testInsert_connectionNull" classname="AdminDAOTest" time="0.004"/>
+  <testcase name="testFindByUsername_printError" classname="AdminDAOTest" time="0.016"/>
+  <testcase name="testInsert_printError" classname="AdminDAOTest" time="0.008"/>
+  <testcase name="testInitializeTable_printError" classname="AdminDAOTest" time="0.007"/>
+  <testcase name="testFindByUsername_connectionNull" classname="AdminDAOTest" time="0.002"/>
+  <testcase name="testInsert_success" classname="AdminDAOTest" time="0.007"/>
+  <testcase name="testInitializeTable_connectionNull" classname="AdminDAOTest" time="0.003"/>
+  <testcase name="testFindByUsername_notFound" classname="AdminDAOTest" time="3.142"/>
+  <testcase name="testFindByUsername_found" classname="AdminDAOTest" time="0.066"/>
+  <testcase name="testInsert_failure" classname="AdminDAOTest" time="0.014"/>
+  <testcase name="testInitializeTable_printSuccess" classname="AdminDAOTest" time="0.006"/>
+  <testcase name="testInsert_connectionNull" classname="AdminDAOTest" time="0.132"/>
 </testsuite>

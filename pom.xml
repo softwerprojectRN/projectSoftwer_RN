@@ -10,7 +10,12 @@
         <maven.compiler.source>17</maven.compiler.source> <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.1</junit.version>
+        <sonar.organization>softwerprojectRN</sonar.organization>
+        <sonar.projectKey>softwerprojectRN_projectSoftwer_RN</sonar.projectKey>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
+
+
 
     <dependencies>
         <dependency>
