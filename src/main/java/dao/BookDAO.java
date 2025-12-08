@@ -13,7 +13,11 @@ import java.util.List;
  * @version 1.0
  */
 public class BookDAO {
-
+    private static final String COL_TITLE = "title";
+    private static final String COL_AUTHOR = "author";
+    private static final String COL_AVAILABLE = "available";
+    private static final String COL_ISBN = "isbn";
+    private static final String COL_ID = "id";
     /**
      * Initializes the books table in the database.
      * Creates the table with a foreign key relationship to the media table.
@@ -56,11 +60,11 @@ public class BookDAO {
 
             if (rs.next()) {
                 return new Book(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getString("isbn"),
-                        rs.getInt("available") == 1
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TITLE),
+                        rs.getString(COL_AUTHOR),
+                        rs.getString(COL_ISBN),
+                        rs.getInt(COL_AVAILABLE) == 1
                 );
             }
         } catch (SQLException e) {
@@ -113,11 +117,11 @@ public class BookDAO {
 
             while (rs.next()) {
                 books.add(new Book(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getString("isbn"),
-                        rs.getInt("available") == 1
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TITLE),
+                        rs.getString(COL_AUTHOR),
+                        rs.getString(COL_ISBN),
+                        rs.getInt(COL_AVAILABLE) == 1
                 ));
             }
         } catch (SQLException e) {
@@ -147,11 +151,11 @@ public class BookDAO {
 
             while (rs.next()) {
                 books.add(new Book(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getString("isbn"),
-                        rs.getInt("available") == 1
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TITLE),
+                        rs.getString(COL_AUTHOR),
+                        rs.getString(COL_ISBN),
+                        rs.getInt(COL_AVAILABLE) == 1
                 ));
             }
         } catch (SQLException e) {
@@ -181,11 +185,11 @@ public class BookDAO {
 
             while (rs.next()) {
                 books.add(new Book(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getString("isbn"),
-                        rs.getInt("available") == 1
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TITLE),
+                        rs.getString(COL_AUTHOR),
+                        rs.getString(COL_ISBN),
+                        rs.getInt(COL_AVAILABLE) == 1
                 ));
             }
         } catch (SQLException e) {
@@ -215,11 +219,11 @@ public class BookDAO {
 
             while (rs.next()) {
                 books.add(new Book(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getString("isbn"),
-                        rs.getInt("available") == 1
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TITLE),
+                        rs.getString(COL_AUTHOR),
+                        rs.getString(COL_ISBN),
+                        rs.getInt(COL_AVAILABLE) == 1
                 ));
             }
         } catch (SQLException e) {
