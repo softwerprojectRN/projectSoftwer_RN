@@ -131,7 +131,7 @@ public class CDDAO {
                         rs.getInt(COL_AVAILABLE) == 1
                 ));
             }
-            logger.info("Retrieved " + cds.size() + " CDs from database.");
+            System.out.println("Retrieved " + cds.size() + " CDs from database.");
         } catch (SQLException e) {
             logger.severe("Error fetching CDs: " + e.getMessage());
         }
