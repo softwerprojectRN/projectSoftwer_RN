@@ -31,6 +31,10 @@ public class DatabaseConnection {
      *
      * @return a {@link Connection} object if successful, or {@code null} if a connection cannot be established
      */
+
+    private DatabaseConnection() {
+        throw new IllegalStateException("Utility class");
+    }
     public static Connection getConnection() {
         try {
             return DriverManager.getConnection(URL);
