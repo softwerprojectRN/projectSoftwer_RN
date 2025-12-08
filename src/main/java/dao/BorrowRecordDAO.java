@@ -212,9 +212,9 @@ public class BorrowRecordDAO {
         List<MediaRecord> overdueRecords = new ArrayList<>();
         List<MediaRecord> allRecords = findActiveByUserId(userId);
 
-        for (MediaRecord record : allRecords) {
-            if (record.isOverdue()) {
-                overdueRecords.add(record);
+        for (MediaRecord mediaRecord  : allRecords) {
+            if (mediaRecord .isOverdue()) {
+                overdueRecords.add(mediaRecord );
             }
         }
         return overdueRecords;
