@@ -58,7 +58,7 @@ public class PasswordUtil {
             byte[] hashedBytes = md.digest(password.getBytes());
             return Base64.getEncoder().encodeToString(hashedBytes);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Hashing algorithm not found: " + e.getMessage());
+            throw new IllegalArgumentException("Hashing algorithm not found: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid salt format. Salt must be a valid Base64 string.", e);
         }
