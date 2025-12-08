@@ -23,6 +23,9 @@ import java.util.Base64;
  */
 public class PasswordUtil {
 
+    private PasswordUtil() {
+        throw new IllegalStateException("Utility class");
+    }
     /**
      * Generates a random salt encoded in Base64.
      *
