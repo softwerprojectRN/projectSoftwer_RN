@@ -140,7 +140,6 @@ public class BorrowRecordDAO {
                 Media media = null;
 
                 if (mediaType.equals("book")) {
-                    BookDAO bookDAO = new BookDAO();
                     String bookSql = "SELECT b.author, b.isbn FROM books b WHERE b.id = ?";
                     try (PreparedStatement bookStmt = conn.prepareStatement(bookSql)) {
                         bookStmt.setInt(1, mediaId);

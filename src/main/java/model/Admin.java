@@ -1,4 +1,5 @@
 package model;
+import java.util.logging.Logger;
 
 /**
  * Represents an administrator user in the library system.
@@ -8,7 +9,7 @@ package model;
  * @version 1.0
  */
 public class Admin extends User {
-
+    private static final Logger logger = Logger.getLogger(Admin.class.getName());
     /**
      * Constructs an Admin object.
      *
@@ -25,6 +26,6 @@ public class Admin extends User {
      * Displays admin information to the console.
      */
     public void showAdminInfo() {
-        System.out.println("Admin username: " + getUsername());
+        logger.info("Admin username: " + getUsername());
     }
 }
