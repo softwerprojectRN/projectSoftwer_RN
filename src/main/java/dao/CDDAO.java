@@ -13,6 +13,12 @@ import java.util.List;
  * @version 1.0
  */
 public class CDDAO {
+    private static final String COL_TITLE = "title";
+    private static final String COL_ARTIST = "artist";
+    private static final String COL_GENRE = "genre";
+    private static final String COL_DURATION = "duration";
+    private static final String COL_AVAILABLE = "available";
+    private static final String COL_ID = "id";
 
     /**
      * Initializes the cds table in the database.
@@ -57,12 +63,12 @@ public class CDDAO {
 
             if (rs.next()) {
                 return new CD(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("artist"),
-                        rs.getString("genre"),
-                        rs.getInt("duration"),
-                        rs.getInt("available") == 1
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TITLE),
+                        rs.getString(COL_ARTIST),
+                        rs.getString(COL_GENRE),
+                        rs.getInt(COL_DURATION),
+                        rs.getInt(COL_AVAILABLE) == 1
                 );
             }
         } catch (SQLException e) {
@@ -117,12 +123,12 @@ public class CDDAO {
 
             while (rs.next()) {
                 cds.add(new CD(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("artist"),
-                        rs.getString("genre"),
-                        rs.getInt("duration"),
-                        rs.getInt("available") == 1
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TITLE),
+                        rs.getString(COL_ARTIST),
+                        rs.getString(COL_GENRE),
+                        rs.getInt(COL_DURATION),
+                        rs.getInt(COL_AVAILABLE) == 1
                 ));
             }
             System.out.println("Retrieved " + cds.size() + " CDs from database.");
@@ -153,12 +159,12 @@ public class CDDAO {
 
             while (rs.next()) {
                 cds.add(new CD(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("artist"),
-                        rs.getString("genre"),
-                        rs.getInt("duration"),
-                        rs.getInt("available") == 1
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TITLE),
+                        rs.getString(COL_ARTIST),
+                        rs.getString(COL_GENRE),
+                        rs.getInt(COL_DURATION),
+                        rs.getInt(COL_AVAILABLE) == 1
                 ));
             }
         } catch (SQLException e) {
@@ -188,12 +194,12 @@ public class CDDAO {
 
             while (rs.next()) {
                 cds.add(new CD(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("artist"),
-                        rs.getString("genre"),
-                        rs.getInt("duration"),
-                        rs.getInt("available") == 1
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TITLE),
+                        rs.getString(COL_ARTIST),
+                        rs.getString(COL_GENRE),
+                        rs.getInt(COL_DURATION),
+                        rs.getInt(COL_AVAILABLE) == 1
                 ));
             }
         } catch (SQLException e) {
@@ -223,12 +229,12 @@ public class CDDAO {
 
             while (rs.next()) {
                 cds.add(new CD(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("artist"),
-                        rs.getString("genre"),
-                        rs.getInt("duration"),
-                        rs.getInt("available") == 1
+                        rs.getInt(COL_ID),
+                        rs.getString(COL_TITLE),
+                        rs.getString(COL_ARTIST),
+                        rs.getString(COL_GENRE),
+                        rs.getInt(COL_DURATION),
+                        rs.getInt(COL_AVAILABLE) == 1
                 ));
             }
         } catch (SQLException e) {
