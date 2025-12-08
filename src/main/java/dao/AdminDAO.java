@@ -45,7 +45,7 @@ public class AdminDAO {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return null;
 
-        String sql = "SELECT id, username, password_hash, salt FROM admins WHERE username = ?";
+        String sql = "SELECT * FROM admins WHERE username = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
