@@ -1,5 +1,4 @@
 package dao;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -22,7 +21,6 @@ import java.util.Base64;
  * Version: 1.0
  */
 public class PasswordUtil {
-
     private PasswordUtil() {
         throw new IllegalStateException("Utility class");
     }

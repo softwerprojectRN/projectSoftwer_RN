@@ -1,5 +1,5 @@
 package dao;
-
+import java.util.logging.Logger;
 import java.sql.*;
 
 /**
@@ -10,7 +10,7 @@ import java.sql.*;
  * @version 1.0
  */
 public class FineDAO {
-
+    private static final Logger logger = Logger.getLogger(FineDAO.class.getName());
     /**
      * Initializes the user_fines table in the database.
      * Creates the table with a foreign key relationship to the users table.
@@ -27,9 +27,9 @@ public class FineDAO {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("User fines table created successfully.");
+            logger.info("User fines table created successfully.");
         } catch (SQLException e) {
-            System.err.println("Error creating user_fines table: " + e.getMessage());
+            logger.severe("Error creating user_fines table: " + e.getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ public class FineDAO {
                 return 0.0;
             }
         } catch (SQLException e) {
-            System.err.println("Error getting fine balance: " + e.getMessage());
+            logger.severe("Error getting fine balance: " + e.getMessage());
             return 0.0;
         }
     }
@@ -79,7 +79,7 @@ public class FineDAO {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            System.err.println("Error initializing fine: " + e.getMessage());
+            logger.severe("Error initializing fine: " + e.getMessage());
             return false;
         }
     }
@@ -107,7 +107,7 @@ public class FineDAO {
             }
             return true;
         } catch (SQLException e) {
-            System.err.println("Error updating fine: " + e.getMessage());
+            logger.severe("Error updating fine: " + e.getMessage());
             return false;
         }
     }
@@ -135,7 +135,7 @@ public class FineDAO {
         double currentFine = getFineBalance(userId);
 
         if (amount <= 0 || amount > currentFine) {
-            System.err.println("Invalid payment amount.");
+            logger.severe("Invalid payment amount.");
             return false;
         }
         return updateFine(userId, currentFine - amount);

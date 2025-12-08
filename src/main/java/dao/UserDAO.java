@@ -1,5 +1,5 @@
 package dao;
-
+import java.util.logging.Logger;
 import model.User;
 import java.sql.*;
 
@@ -11,7 +11,7 @@ import java.sql.*;
  * @version 1.0
  */
 public class UserDAO {
-
+    private static final Logger logger = Logger.getLogger(UserDAO.class.getName());
     /**
      * Initializes the users table in the database.
      * Creates the table with columns for authentication and user management.
@@ -29,9 +29,9 @@ public class UserDAO {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Users table created successfully.");
+            logger.info("Users table created successfully.");
         } catch (SQLException e) {
-            System.err.println("Error creating users table: " + e.getMessage());
+            logger.severe("Error creating users table: " + e.getMessage());
         }
     }
 
@@ -60,7 +60,7 @@ public class UserDAO {
                 );
             }
         } catch (SQLException e) {
-            System.err.println("Error finding user: " + e.getMessage());
+            logger.severe("Error finding user: " + e.getMessage());
         }
         return null;
     }
@@ -86,7 +86,7 @@ public class UserDAO {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            System.err.println("Error inserting user: " + e.getMessage());
+            logger.severe("Error inserting user: " + e.getMessage());
             return false;
         }
     }
@@ -146,18 +146,18 @@ public class UserDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error deleting user: " + e.getMessage());
+            logger.severe("Error deleting user: " + e.getMessage());
             try {
                 conn.rollback();
             } catch (SQLException ex) {
-                System.err.println("Rollback error: " + ex.getMessage());
+                logger.severe("Rollback error: " + ex.getMessage());
             }
             return false;
         } finally {
             try {
                 conn.setAutoCommit(true);
             } catch (SQLException e) {
-                System.err.println("Error resetting auto-commit: " + e.getMessage());
+                logger.severe("Error resetting auto-commit: " + e.getMessage());
             }
         }
     }

@@ -1,5 +1,5 @@
 package dao;
-
+import java.util.logging.Logger;
 import model.Admin;
 import java.sql.*;
 
@@ -11,7 +11,7 @@ import java.sql.*;
  * @version 1.0
  */
 public class AdminDAO {
-
+    private static final Logger logger = Logger.getLogger(AdminDAO.class.getName());
     /**
      * Initializes the admins table in the database.
      * Creates the table if it doesn't exist with columns for id, username, password_hash, and salt.
@@ -29,9 +29,9 @@ public class AdminDAO {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Admins table created successfully.");
+            logger.info("Admins table created successfully.");
         } catch (SQLException e) {
-            System.err.println("Error creating admins table: " + e.getMessage());
+            logger.severe("Error creating admins table: " + e.getMessage());
         }
     }
 
@@ -60,7 +60,7 @@ public class AdminDAO {
                 );
             }
         } catch (SQLException e) {
-            System.err.println("Error finding admin: " + e.getMessage());
+            logger.severe("Error finding admin: " + e.getMessage());
         }
         return null;
     }
@@ -86,7 +86,7 @@ public class AdminDAO {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            System.err.println("Error inserting admin: " + e.getMessage());
+            logger.severe("Error inserting admin: " + e.getMessage());
             return false;
         }
     }

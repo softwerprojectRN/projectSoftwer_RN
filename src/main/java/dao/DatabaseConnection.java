@@ -1,5 +1,5 @@
 package dao;
-
+import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ import java.sql.SQLException;
  * Version: 1.0
  */
 public class DatabaseConnection {
-
+    private static final Logger logger = Logger.getLogger(DatabaseConnection.class.getName());
     /** JDBC URL for the SQLite database */
     private static final String URL = "jdbc:sqlite:database.db";
 
@@ -39,7 +39,7 @@ public class DatabaseConnection {
         try {
             return DriverManager.getConnection(URL);
         } catch (SQLException e) {
-            System.err.println("Database connection error: " + e.getMessage());
+            logger.severe("Database connection error: " + e.getMessage());
             return null;
         }
     }

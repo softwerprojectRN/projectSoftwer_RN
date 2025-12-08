@@ -1,5 +1,5 @@
 package dao;
-
+import java.util.logging.Logger;
 import model.CD;
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class CDDAO {
     private static final String COL_DURATION = "duration";
     private static final String COL_AVAILABLE = "available";
     private static final String COL_ID = "id";
-
+    private static final Logger logger = Logger.getLogger(CDDAO.class.getName());
     /**
      * Initializes the cds table in the database.
      * Creates the table with a foreign key relationship to the media table.
@@ -38,9 +38,9 @@ public class CDDAO {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("CDs table created successfully.");
+            logger.info("CDs table created successfully.");
         } catch (SQLException e) {
-            System.err.println("Error creating CDs table: " + e.getMessage());
+            logger.severe("Error creating CDs table: " + e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class CDDAO {
                 );
             }
         } catch (SQLException e) {
-            System.err.println("Error finding CD: " + e.getMessage());
+            logger.severe("Error finding CD: " + e.getMessage());
         }
         return null;
     }
@@ -100,7 +100,7 @@ public class CDDAO {
             pstmt.executeUpdate();
             return mediaId;
         } catch (SQLException e) {
-            System.err.println("Error inserting CD: " + e.getMessage());
+            logger.severe("Error inserting CD: " + e.getMessage());
             return -1;
         }
     }
@@ -131,9 +131,9 @@ public class CDDAO {
                         rs.getInt(COL_AVAILABLE) == 1
                 ));
             }
-            System.out.println("Retrieved " + cds.size() + " CDs from database.");
+            logger.info("Retrieved " + cds.size() + " CDs from database.");
         } catch (SQLException e) {
-            System.err.println("Error fetching CDs: " + e.getMessage());
+            logger.severe("Error fetching CDs: " + e.getMessage());
         }
         return cds;
     }
@@ -168,7 +168,7 @@ public class CDDAO {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Error searching CDs by title: " + e.getMessage());
+            logger.severe("Error searching CDs by title: " + e.getMessage());
         }
         return cds;
     }
@@ -203,7 +203,7 @@ public class CDDAO {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Error searching CDs by artist: " + e.getMessage());
+            logger.severe("Error searching CDs by artist: " + e.getMessage());
         }
         return cds;
     }
@@ -238,7 +238,7 @@ public class CDDAO {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Error searching CDs by genre: " + e.getMessage());
+            logger.severe("Error searching CDs by genre: " + e.getMessage());
         }
         return cds;
     }

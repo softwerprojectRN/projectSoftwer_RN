@@ -4,6 +4,7 @@ import model.Book;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Data Access Object for Book entity.
@@ -18,6 +19,7 @@ public class BookDAO {
     private static final String COL_AVAILABLE = "available";
     private static final String COL_ISBN = "isbn";
     private static final String COL_ID = "id";
+    private static final Logger logger = Logger.getLogger(BookDAO.class.getName());
     /**
      * Initializes the books table in the database.
      * Creates the table with a foreign key relationship to the media table.
@@ -35,9 +37,9 @@ public class BookDAO {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Books table created successfully.");
+            logger.info("Books table created successfully.");
         } catch (SQLException e) {
-            System.err.println("Error creating books table: " + e.getMessage());
+            logger.severe("Error creating books table: " + e.getMessage());
         }
     }
 
@@ -68,7 +70,7 @@ public class BookDAO {
                 );
             }
         } catch (SQLException e) {
-            System.err.println("Error finding book: " + e.getMessage());
+            logger.severe("Error finding book: " + e.getMessage());
         }
         return null;
     }
@@ -94,7 +96,7 @@ public class BookDAO {
             pstmt.executeUpdate();
             return mediaId;
         } catch (SQLException e) {
-            System.err.println("Error inserting book: " + e.getMessage());
+            logger.severe("Error inserting book: " + e.getMessage());
             return -1;
         }
     }
@@ -125,7 +127,7 @@ public class BookDAO {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Error fetching books: " + e.getMessage());
+            logger.severe("Error fetching books: " + e.getMessage());
         }
         return books;
     }
@@ -159,7 +161,7 @@ public class BookDAO {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Error searching books by title: " + e.getMessage());
+            logger.severe("Error searching books by title: " + e.getMessage());
         }
         return books;
     }
@@ -193,7 +195,7 @@ public class BookDAO {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Error searching books by author: " + e.getMessage());
+            logger.severe("Error searching books by author: " + e.getMessage());
         }
         return books;
     }
@@ -227,7 +229,7 @@ public class BookDAO {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("Error searching books by ISBN: " + e.getMessage());
+            logger.severe("Error searching books by ISBN: " + e.getMessage());
         }
         return books;
     }

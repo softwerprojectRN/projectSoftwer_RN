@@ -1,5 +1,5 @@
 package dao;
-
+import java.util.logging.Logger;
 import model.*;
 import java.sql.*;
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ import java.util.List;
  * @version 1.0
  */
 public class BorrowRecordDAO {
-
+    private static final Logger logger = Logger.getLogger(BorrowRecordDAO.class.getName());
     /**
      * Initializes the borrow_records table in the database.
      * Creates the table with foreign key relationships to users and media tables.
@@ -41,9 +41,9 @@ public class BorrowRecordDAO {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Borrow records table created successfully.");
+            logger.info("Borrow records table created successfully.");
         } catch (SQLException e) {
-            System.err.println("Error creating borrow_records table: " + e.getMessage());
+            logger.severe("Error creating borrow_records table: " + e.getMessage());
         }
     }
 
@@ -80,7 +80,7 @@ public class BorrowRecordDAO {
                 return generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
-            System.err.println("Error inserting borrow record: " + e.getMessage());
+            logger.severe("Error inserting borrow record: " + e.getMessage());
         }
         return -1;
     }
@@ -106,7 +106,7 @@ public class BorrowRecordDAO {
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
-            System.err.println("Error marking record as returned: " + e.getMessage());
+            logger.severe("Error marking record as returned: " + e.getMessage());
             return false;
         }
     }
@@ -167,7 +167,7 @@ public class BorrowRecordDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error loading borrowed media: " + e.getMessage());
+            logger.severe("Error loading borrowed media: " + e.getMessage());
         }
         return records;
     }
@@ -198,7 +198,7 @@ public class BorrowRecordDAO {
                 usersWithOverdueBooks.add(new UserWithOverdueBooks(userId, username, overdueCount));
             }
         } catch (SQLException e) {
-            System.err.println("Error getting users with overdue books: " + e.getMessage());
+            logger.severe("Error getting users with overdue books: " + e.getMessage());
         }
         return usersWithOverdueBooks;
     }
@@ -242,7 +242,7 @@ public class BorrowRecordDAO {
                 return rs.getInt("count");
             }
         } catch (SQLException e) {
-            System.err.println("Error counting active records: " + e.getMessage());
+            logger.severe("Error counting active records: " + e.getMessage());
         }
         return 0;
     }

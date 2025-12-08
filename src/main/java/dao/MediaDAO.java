@@ -1,5 +1,5 @@
 package dao;
-
+import java.util.logging.Logger;
 import java.sql.*;
 
 /**
@@ -10,7 +10,7 @@ import java.sql.*;
  * @version 1.0
  */
 public class MediaDAO {
-
+    private static final Logger logger = Logger.getLogger(MediaDAO.class.getName());
     /**
      * Initializes the media table in the database.
      * Creates the base table for all media types.
@@ -28,9 +28,9 @@ public class MediaDAO {
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Media table created successfully.");
+            logger.info("Media table created successfully.");
         } catch (SQLException e) {
-            System.err.println("Error creating media table: " + e.getMessage());
+            logger.severe("Error creating media table: " + e.getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ public class MediaDAO {
                 return generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
-            System.err.println("Error inserting media: " + e.getMessage());
+            logger.severe("Error inserting media: " + e.getMessage());
         }
         return -1;
     }
@@ -81,7 +81,7 @@ public class MediaDAO {
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
-            System.err.println("Error updating media availability: " + e.getMessage());
+            logger.severe("Error updating media availability: " + e.getMessage());
             return false;
         }
     }
