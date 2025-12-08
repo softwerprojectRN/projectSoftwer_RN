@@ -74,11 +74,13 @@ public class Borrower extends User {
      */
     public List<MediaRecord> getOverdueMedia() {
         List<MediaRecord> overdue = new ArrayList<>();
-        for (MediaRecord record : borrowedMedia) {
-            if (record.isOverdue()) {
-                overdue.add(record);
+
+        for (MediaRecord mediaRecord : borrowedMedia) {
+            if (mediaRecord.isOverdue()) {
+                overdue.add(mediaRecord);
             }
         }
         return overdue;
     }
+
 }
