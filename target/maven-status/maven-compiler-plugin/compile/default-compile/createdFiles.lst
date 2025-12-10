@@ -4,6 +4,7 @@ service\UserService.class
 model\MediaRecord.class
 dao\AdminDAO.class
 service\BookSearcher.class
+dao\BaseDAO$ResultSetMapper.class
 service\Observer.class
 model\CD.class
 dao\BorrowRecordDAO.class
@@ -22,6 +23,7 @@ presentation\AdminMenu.class
 dao\MediaDAO.class
 dao\FineDAO.class
 dao\DatabaseConnection.class
+dao\BaseDAO.class
 service\SearchStrategy.class
 presentation\UserMenu.class
 dao\PasswordUtil.class

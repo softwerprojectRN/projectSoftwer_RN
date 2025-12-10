@@ -19,10 +19,10 @@ public class UserService {
     /**
      * Constructs a new {@code UserService} instance and initializes the users table.
      */
-<span class="fc" id="L22">    public UserService() {</span>
-<span class="fc" id="L23">        this.userDAO = new UserDAO();</span>
-<span class="fc" id="L24">        this.userDAO.initializeTable();</span>
-<span class="fc" id="L25">    }</span>
+<span class="nc" id="L22">    public UserService() {</span>
+<span class="nc" id="L23">        this.userDAO = new UserDAO();</span>
+<span class="nc" id="L24">        this.userDAO.initializeTable();</span>
+<span class="nc" id="L25">    }</span>
 
     /**
      * Registers a new user after validating inputs and hashing the password.
@@ -32,24 +32,24 @@ public class UserService {
      * @return the created {@link User} object if successful, otherwise {@code null}
      */
     public User register(String username, String password) {
-<span class="fc bfc" id="L35" title="All 6 branches covered.">        if (username == null || username.trim().isEmpty() ||</span>
-<span class="fc bfc" id="L36" title="All 2 branches covered.">                password == null || password.trim().isEmpty()) {</span>
-<span class="fc" id="L37">            System.err.println(&quot;Error: Username and password cannot be empty&quot;);</span>
-<span class="fc" id="L38">            return null;</span>
+<span class="nc bnc" id="L35" title="All 6 branches missed.">        if (username == null || username.trim().isEmpty() ||</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">                password == null || password.trim().isEmpty()) {</span>
+<span class="nc" id="L37">            System.err.println(&quot;Error: Username and password cannot be empty&quot;);</span>
+<span class="nc" id="L38">            return null;</span>
         }
 
-<span class="fc" id="L41">        User existing = userDAO.findByUsername(username);</span>
-<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (existing != null) {</span>
-<span class="fc" id="L43">            System.out.println(&quot;User already exists: &quot; + username);</span>
-<span class="fc" id="L44">            return null;</span>
+<span class="nc" id="L41">        User existing = userDAO.findByUsername(username);</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (existing != null) {</span>
+<span class="nc" id="L43">            System.out.println(&quot;User already exists: &quot; + username);</span>
+<span class="nc" id="L44">            return null;</span>
         }
 
-<span class="fc" id="L47">        String salt = PasswordUtil.generateSalt();</span>
-<span class="fc" id="L48">        String passwordHash = PasswordUtil.hashPassword(password, salt);</span>
+<span class="nc" id="L47">        String salt = PasswordUtil.generateSalt();</span>
+<span class="nc" id="L48">        String passwordHash = PasswordUtil.hashPassword(password, salt);</span>
 
-<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (userDAO.insert(username, passwordHash, salt)) {</span>
-<span class="fc" id="L51">            System.out.println(&quot;User registered successfully: &quot; + username);</span>
-<span class="fc" id="L52">            return userDAO.findByUsername(username);</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (userDAO.insert(username, passwordHash, salt)) {</span>
+<span class="nc" id="L51">            System.out.println(&quot;User registered successfully: &quot; + username);</span>
+<span class="nc" id="L52">            return userDAO.findByUsername(username);</span>
         }
 
 <span class="nc" id="L55">        return null;</span>
@@ -63,22 +63,22 @@ public class UserService {
      * @return the logged-in {@link User} object if credentials are valid, otherwise {@code null}
      */
     public User login(String username, String password) {
-<span class="fc" id="L66">        User user = userDAO.findByUsername(username);</span>
+<span class="nc" id="L66">        User user = userDAO.findByUsername(username);</span>
 
-<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (user == null) {</span>
-<span class="fc" id="L69">            System.out.println(&quot;User not found.&quot;);</span>
-<span class="fc" id="L70">            return null;</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L69">            System.out.println(&quot;User not found.&quot;);</span>
+<span class="nc" id="L70">            return null;</span>
         }
 
-<span class="fc" id="L73">        String inputHash = PasswordUtil.hashPassword(password, user.getSalt());</span>
+<span class="nc" id="L73">        String inputHash = PasswordUtil.hashPassword(password, user.getSalt());</span>
 
-<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (user.getPasswordHash().equals(inputHash)) {</span>
-<span class="fc" id="L76">            user.setLoggedIn(true);</span>
-<span class="fc" id="L77">            System.out.println(&quot;Login successful, welcome &quot; + username + &quot;!&quot;);</span>
-<span class="fc" id="L78">            return user;</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (user.getPasswordHash().equals(inputHash)) {</span>
+<span class="nc" id="L76">            user.setLoggedIn(true);</span>
+<span class="nc" id="L77">            System.out.println(&quot;Login successful, welcome &quot; + username + &quot;!&quot;);</span>
+<span class="nc" id="L78">            return user;</span>
         } else {
-<span class="fc" id="L80">            System.out.println(&quot;Invalid username or password.&quot;);</span>
-<span class="fc" id="L81">            return null;</span>
+<span class="nc" id="L80">            System.out.println(&quot;Invalid username or password.&quot;);</span>
+<span class="nc" id="L81">            return null;</span>
         }
     }
 }

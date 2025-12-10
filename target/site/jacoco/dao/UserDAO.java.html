@@ -3,163 +3,77 @@
 import model.User;
 import java.sql.*;
 
-/**
- * Data Access Object for User entity.
- * Manages database operations for user accounts including registration and authentication.
- *
- * @author Library Management System
- * @version 1.0
- */
-<span class="fc" id="L13">public class UserDAO {</span>
+<span class="nc" id="L6">public class UserDAO extends BaseDAO {</span>
 
-    /**
-     * Initializes the users table in the database.
-     * Creates the table with columns for authentication and user management.
-     */
     public void initializeTable() {
-<span class="fc" id="L20">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (conn == null) return;</span>
-
-<span class="fc" id="L23">        String sql = &quot;CREATE TABLE IF NOT EXISTS users (\n&quot; +</span>
+<span class="nc" id="L9">        String sql = &quot;CREATE TABLE IF NOT EXISTS users (\n&quot; +</span>
                 &quot; id INTEGER PRIMARY KEY AUTOINCREMENT,\n&quot; +
                 &quot; username TEXT NOT NULL UNIQUE,\n&quot; +
                 &quot; password_hash TEXT NOT NULL,\n&quot; +
                 &quot; salt TEXT NOT NULL\n&quot; +
                 &quot;);&quot;;
+<span class="nc" id="L15">        createTable(sql, &quot;Users&quot;);</span>
+<span class="nc" id="L16">    }</span>
 
-<span class="fc" id="L30">        try (Statement stmt = conn.createStatement()) {</span>
-<span class="fc" id="L31">            stmt.execute(sql);</span>
-<span class="fc" id="L32">            System.out.println(&quot;Users table created successfully.&quot;);</span>
-<span class="fc" id="L33">        } catch (SQLException e) {</span>
-<span class="fc" id="L34">            System.err.println(&quot;Error creating users table: &quot; + e.getMessage());</span>
-<span class="fc" id="L35">        }</span>
-<span class="fc" id="L36">    }</span>
-
-    /**
-     * Finds a user by username.
-     *
-     * @param username the username to search for
-     * @return User object if found, null otherwise
-     */
     public User findByUsername(String username) {
-<span class="fc" id="L45">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (conn == null) return null;</span>
-
-<span class="fc" id="L48">        String sql = &quot;SELECT * FROM users WHERE username = ?&quot;;</span>
-
-<span class="fc" id="L50">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L51">            pstmt.setString(1, username);</span>
-<span class="fc" id="L52">            ResultSet rs = pstmt.executeQuery();</span>
-
-<span class="fc bfc" id="L54" title="All 2 branches covered.">            if (rs.next()) {</span>
-<span class="fc" id="L55">                return new User(</span>
-<span class="fc" id="L56">                        rs.getInt(&quot;id&quot;),</span>
-<span class="fc" id="L57">                        rs.getString(&quot;username&quot;),</span>
-<span class="fc" id="L58">                        rs.getString(&quot;password_hash&quot;),</span>
-<span class="fc" id="L59">                        rs.getString(&quot;salt&quot;)</span>
-                );
-            }
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
-<span class="fc" id="L63">            System.err.println(&quot;Error finding user: &quot; + e.getMessage());</span>
-<span class="fc" id="L64">        }</span>
-<span class="fc" id="L65">        return null;</span>
+<span class="nc" id="L19">        String sql = &quot;SELECT id, username, password_hash, salt FROM users WHERE username = ?&quot;;</span>
+<span class="nc" id="L20">        return findOne(sql, this::mapUser, username);</span>
     }
 
-    /**
-     * Inserts a new user into the database.
-     *
-     * @param username the user's username
-     * @param passwordHash the hashed password
-     * @param salt the salt used for password hashing
-     * @return true if insertion was successful, false otherwise
-     */
     public boolean insert(String username, String passwordHash, String salt) {
-<span class="fc" id="L77">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (conn == null) return false;</span>
-
-<span class="fc" id="L80">        String sql = &quot;INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)&quot;;</span>
-
-<span class="fc" id="L82">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="fc" id="L83">            pstmt.setString(1, username);</span>
-<span class="fc" id="L84">            pstmt.setString(2, passwordHash);</span>
-<span class="fc" id="L85">            pstmt.setString(3, salt);</span>
-<span class="fc" id="L86">            pstmt.executeUpdate();</span>
-<span class="fc" id="L87">            return true;</span>
-<span class="fc" id="L88">        } catch (SQLException e) {</span>
-<span class="fc" id="L89">            System.err.println(&quot;Error inserting user: &quot; + e.getMessage());</span>
-<span class="fc" id="L90">            return false;</span>
-        }
+<span class="nc" id="L24">        String sql = &quot;INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)&quot;;</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">        return executeInsert(sql, username, passwordHash, salt) &gt; 0;</span>
     }
 
-    /**
-     * Deletes a user and all associated records from the database.
-     * Uses transaction to ensure data integrity.
-     *
-     * @param username the username of the user to delete
-     * @return true if deletion was successful, false otherwise
-     */
     public boolean delete(String username) {
-<span class="fc" id="L102">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        if (conn == null) return false;</span>
+<span class="nc" id="L29">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        if (conn == null) return false;</span>
 
         try {
-<span class="fc" id="L106">            conn.setAutoCommit(false);</span>
+<span class="nc" id="L33">            conn.setAutoCommit(false);</span>
 
-            // Get user ID
-<span class="fc" id="L109">            int userId = -1;</span>
-<span class="fc" id="L110">            String findSql = &quot;SELECT id FROM users WHERE username = ?&quot;;</span>
-<span class="fc" id="L111">            try (PreparedStatement pstmt = conn.prepareStatement(findSql)) {</span>
-<span class="fc" id="L112">                pstmt.setString(1, username);</span>
-<span class="fc" id="L113">                ResultSet rs = pstmt.executeQuery();</span>
-<span class="fc bfc" id="L114" title="All 2 branches covered.">                if (rs.next()) {</span>
-<span class="fc" id="L115">                    userId = rs.getInt(&quot;id&quot;);</span>
-                } else {
-<span class="fc" id="L117">                    conn.rollback();</span>
-<span class="fc" id="L118">                    return false;</span>
-                }
-<span class="pc bpc" id="L120" title="1 of 2 branches missed.">            }</span>
-
-            // Delete related records
-<span class="fc" id="L123">            String deleteBorrowSql = &quot;DELETE FROM borrow_records WHERE user_id = ?&quot;;</span>
-<span class="fc" id="L124">            try (PreparedStatement pstmt = conn.prepareStatement(deleteBorrowSql)) {</span>
-<span class="fc" id="L125">                pstmt.setInt(1, userId);</span>
-<span class="fc" id="L126">                pstmt.executeUpdate();</span>
+<span class="nc" id="L35">            Integer userId = findOne(&quot;SELECT id FROM users WHERE username = ?&quot;,</span>
+<span class="nc" id="L36">                    rs -&gt; rs.getInt(&quot;id&quot;), username);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">            if (userId == null) {</span>
+<span class="nc" id="L38">                conn.rollback();</span>
+<span class="nc" id="L39">                return false;</span>
             }
 
-<span class="fc" id="L129">            String deleteFinesSql = &quot;DELETE FROM user_fines WHERE user_id = ?&quot;;</span>
-<span class="fc" id="L130">            try (PreparedStatement pstmt = conn.prepareStatement(deleteFinesSql)) {</span>
-<span class="fc" id="L131">                pstmt.setInt(1, userId);</span>
-<span class="fc" id="L132">                pstmt.executeUpdate();</span>
-            }
+<span class="nc" id="L42">            executeUpdate(&quot;DELETE FROM borrow_records WHERE user_id = ?&quot;, userId);</span>
+<span class="nc" id="L43">            executeUpdate(&quot;DELETE FROM user_fines WHERE user_id = ?&quot;, userId);</span>
+<span class="nc" id="L44">            boolean deleted = executeUpdate(&quot;DELETE FROM users WHERE id = ?&quot;, userId);</span>
 
-            // Delete user
-<span class="fc" id="L136">            String deleteUserSql = &quot;DELETE FROM users WHERE id = ?&quot;;</span>
-<span class="fc" id="L137">            try (PreparedStatement pstmt = conn.prepareStatement(deleteUserSql)) {</span>
-<span class="fc" id="L138">                pstmt.setInt(1, userId);</span>
-<span class="fc" id="L139">                int affected = pstmt.executeUpdate();</span>
-<span class="fc bfc" id="L140" title="All 2 branches covered.">                if (affected &gt; 0) {</span>
-<span class="fc" id="L141">                    conn.commit();</span>
-<span class="fc" id="L142">                    return true;</span>
-                } else {
-<span class="fc" id="L144">                    conn.rollback();</span>
-<span class="fc" id="L145">                    return false;</span>
-                }
-<span class="pc bpc" id="L147" title="1 of 2 branches missed.">            }</span>
-<span class="fc" id="L148">        } catch (SQLException e) {</span>
-<span class="fc" id="L149">            System.err.println(&quot;Error deleting user: &quot; + e.getMessage());</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            if (deleted) {</span>
+<span class="nc" id="L47">                conn.commit();</span>
+<span class="nc" id="L48">                return true;</span>
+            } else {
+<span class="nc" id="L50">                conn.rollback();</span>
+<span class="nc" id="L51">                return false;</span>
+            }
+<span class="nc" id="L53">        } catch (SQLException e) {</span>
+<span class="nc" id="L54">            logger.severe(&quot;Error deleting user: &quot; + e.getMessage());</span>
             try {
-<span class="fc" id="L151">                conn.rollback();</span>
-<span class="nc" id="L152">            } catch (SQLException ex) {</span>
-<span class="nc" id="L153">                System.err.println(&quot;Rollback error: &quot; + ex.getMessage());</span>
-<span class="fc" id="L154">            }</span>
-<span class="fc" id="L155">            return false;</span>
+<span class="nc" id="L56">                conn.rollback();</span>
+<span class="nc" id="L57">            } catch (SQLException ex) {</span>
+<span class="nc" id="L58">                logger.severe(&quot;Rollback error: &quot; + ex.getMessage());</span>
+<span class="nc" id="L59">            }</span>
+<span class="nc" id="L60">            return false;</span>
         } finally {
             try {
-<span class="fc" id="L158">                conn.setAutoCommit(true);</span>
-<span class="nc" id="L159">            } catch (SQLException e) {</span>
-<span class="nc" id="L160">                System.err.println(&quot;Error resetting auto-commit: &quot; + e.getMessage());</span>
-<span class="fc" id="L161">            }</span>
+<span class="nc" id="L63">                conn.setAutoCommit(true);</span>
+<span class="nc" id="L64">            } catch (SQLException e) {</span>
+<span class="nc" id="L65">                logger.severe(&quot;Error resetting auto-commit: &quot; + e.getMessage());</span>
+<span class="nc" id="L66">            }</span>
         }
+    }
+
+    private User mapUser(ResultSet rs) throws SQLException {
+<span class="nc" id="L71">        return new User(</span>
+<span class="nc" id="L72">                rs.getInt(&quot;id&quot;),</span>
+<span class="nc" id="L73">                rs.getString(&quot;username&quot;),</span>
+<span class="nc" id="L74">                rs.getString(&quot;password_hash&quot;),</span>
+<span class="nc" id="L75">                rs.getString(&quot;salt&quot;)</span>
+        );
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

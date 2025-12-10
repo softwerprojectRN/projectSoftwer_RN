@@ -24,12 +24,12 @@ public class CDService {
     /**
      * Constructs a new {@code CDService} and initializes required tables.
      */
-<span class="fc" id="L27">    public CDService() {</span>
-<span class="fc" id="L28">        this.cdDAO = new CDDAO();</span>
-<span class="fc" id="L29">        this.mediaDAO = new MediaDAO();</span>
-<span class="fc" id="L30">        this.cdDAO.initializeTable();</span>
-<span class="fc" id="L31">        this.mediaDAO.initializeTable();</span>
-<span class="fc" id="L32">    }</span>
+<span class="nc" id="L27">    public CDService() {</span>
+<span class="nc" id="L28">        this.cdDAO = new CDDAO();</span>
+<span class="nc" id="L29">        this.mediaDAO = new MediaDAO();</span>
+<span class="nc" id="L30">        this.cdDAO.initializeTable();</span>
+<span class="nc" id="L31">        this.mediaDAO.initializeTable();</span>
+<span class="nc" id="L32">    }</span>
 
     /**
      * Adds a new CD to the system after validating the input.
@@ -42,30 +42,30 @@ public class CDService {
      */
     public CD addCD(String title, String artist, String genre, int duration) {
         // Validate input
-<span class="pc bpc" id="L45" title="2 of 6 branches missed.">        if (title == null || title.trim().isEmpty() ||</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">                artist == null || artist.trim().isEmpty()) {</span>
-<span class="fc" id="L47">            System.err.println(&quot;Error: Title and artist cannot be empty&quot;);</span>
-<span class="fc" id="L48">            return null;</span>
+<span class="nc bnc" id="L45" title="All 6 branches missed.">        if (title == null || title.trim().isEmpty() ||</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">                artist == null || artist.trim().isEmpty()) {</span>
+<span class="nc" id="L47">            System.err.println(&quot;Error: Title and artist cannot be empty&quot;);</span>
+<span class="nc" id="L48">            return null;</span>
         }
 
-<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (duration &lt;= 0) {</span>
-<span class="fc" id="L52">            System.err.println(&quot;Error: Duration must be positive&quot;);</span>
-<span class="fc" id="L53">            return null;</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (duration &lt;= 0) {</span>
+<span class="nc" id="L52">            System.err.println(&quot;Error: Duration must be positive&quot;);</span>
+<span class="nc" id="L53">            return null;</span>
         }
 
-<span class="fc" id="L56">        int mediaId = mediaDAO.insert(title.trim(), &quot;cd&quot;);</span>
-<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (mediaId == -1) {</span>
-<span class="fc" id="L58">            System.err.println(&quot;Error: Failed to create media record&quot;);</span>
-<span class="fc" id="L59">            return null;</span>
+<span class="nc" id="L56">        int mediaId = mediaDAO.insert(title.trim(), &quot;cd&quot;);</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (mediaId == -1) {</span>
+<span class="nc" id="L58">            System.err.println(&quot;Error: Failed to create media record&quot;);</span>
+<span class="nc" id="L59">            return null;</span>
         }
 
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        int cdId = cdDAO.insert(mediaId, artist.trim(), genre != null ? genre.trim() : &quot;&quot;, duration);</span>
-<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (cdId != -1) {</span>
-<span class="fc" id="L64">            System.out.println(&quot;CD added successfully: &quot; + title);</span>
-<span class="fc" id="L65">            return new CD(cdId, title, artist, genre, duration, true);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        int cdId = cdDAO.insert(mediaId, artist.trim(), genre != null ? genre.trim() : &quot;&quot;, duration);</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (cdId != -1) {</span>
+<span class="nc" id="L64">            System.out.println(&quot;CD added successfully: &quot; + title);</span>
+<span class="nc" id="L65">            return new CD(cdId, title, artist, genre, duration, true);</span>
         }
 
-<span class="fc" id="L68">        return null;</span>
+<span class="nc" id="L68">        return null;</span>
     }
 
     /**
@@ -74,7 +74,7 @@ public class CDService {
      * @return a list of {@link CD} objects
      */
     public List&lt;CD&gt; getAllCDs() {
-<span class="fc" id="L77">        return cdDAO.findAll();</span>
+<span class="nc" id="L77">        return cdDAO.findAll();</span>
     }
 
     /**
@@ -85,21 +85,21 @@ public class CDService {
      * @return a list of matching {@link CD} objects
      */
     public List&lt;CD&gt; searchCDs(String searchTerm, String searchType) {
-<span class="pc bpc" id="L88" title="1 of 4 branches missed.">        if (searchTerm == null || searchTerm.trim().isEmpty()) {</span>
-<span class="fc" id="L89">            System.out.println(&quot;Search term cannot be empty&quot;);</span>
-<span class="fc" id="L90">            return List.of();</span>
+<span class="nc bnc" id="L88" title="All 4 branches missed.">        if (searchTerm == null || searchTerm.trim().isEmpty()) {</span>
+<span class="nc" id="L89">            System.out.println(&quot;Search term cannot be empty&quot;);</span>
+<span class="nc" id="L90">            return List.of();</span>
         }
 
-<span class="fc bfc" id="L93" title="All 4 branches covered.">        switch (searchType.toLowerCase()) {</span>
+<span class="nc bnc" id="L93" title="All 4 branches missed.">        switch (searchType.toLowerCase()) {</span>
             case &quot;title&quot;:
-<span class="fc" id="L95">                return cdDAO.searchByTitle(searchTerm);</span>
+<span class="nc" id="L95">                return cdDAO.searchByTitle(searchTerm);</span>
             case &quot;artist&quot;:
-<span class="fc" id="L97">                return cdDAO.searchByArtist(searchTerm);</span>
+<span class="nc" id="L97">                return cdDAO.searchByArtist(searchTerm);</span>
             case &quot;genre&quot;:
-<span class="fc" id="L99">                return cdDAO.searchByGenre(searchTerm);</span>
+<span class="nc" id="L99">                return cdDAO.searchByGenre(searchTerm);</span>
             default:
-<span class="fc" id="L101">                System.out.println(&quot;Invalid search type. Using title search.&quot;);</span>
-<span class="fc" id="L102">                return cdDAO.searchByTitle(searchTerm);</span>
+<span class="nc" id="L101">                System.out.println(&quot;Invalid search type. Using title search.&quot;);</span>
+<span class="nc" id="L102">                return cdDAO.searchByTitle(searchTerm);</span>
         }
     }
 
@@ -110,7 +110,7 @@ public class CDService {
      * @return the matching {@link CD} or {@code null} if not found
      */
     public CD findById(int id) {
-<span class="fc" id="L113">        return cdDAO.findById(id);</span>
+<span class="nc" id="L113">        return cdDAO.findById(id);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

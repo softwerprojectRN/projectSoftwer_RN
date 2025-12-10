@@ -33,20 +33,20 @@ public class AdminService {
      * Constructs an AdminService instance, initializes required DAOs,
      * and attempts to initialize the email server.
      */
-<span class="fc" id="L36">    public AdminService() {</span>
-<span class="fc" id="L37">        this.adminDAO = new AdminDAO();</span>
-<span class="fc" id="L38">        this.userDAO = new UserDAO();</span>
-<span class="fc" id="L39">        this.adminDAO.initializeTable();</span>
+<span class="nc" id="L36">    public AdminService() {</span>
+<span class="nc" id="L37">        this.adminDAO = new AdminDAO();</span>
+<span class="nc" id="L38">        this.userDAO = new UserDAO();</span>
+<span class="nc" id="L39">        this.adminDAO.initializeTable();</span>
 
         try {
-<span class="fc" id="L42">            this.emailServer = new EmailServer();</span>
-<span class="fc" id="L43">            this.emailNotifier = new EmailNotifier(emailServer);</span>
+<span class="nc" id="L42">            this.emailServer = new EmailServer();</span>
+<span class="nc" id="L43">            this.emailNotifier = new EmailNotifier(emailServer);</span>
 <span class="nc" id="L44">        } catch (Exception e) {</span>
 <span class="nc" id="L45">            System.err.println(&quot;Warning: Email server initialization failed: &quot; + e.getMessage());</span>
 <span class="nc" id="L46">            this.emailServer = null;</span>
 <span class="nc" id="L47">            this.emailNotifier = null;</span>
-<span class="fc" id="L48">        }</span>
-<span class="fc" id="L49">    }</span>
+<span class="nc" id="L48">        }</span>
+<span class="nc" id="L49">    }</span>
 
     /**
      * Registers a new admin with a username and password.
@@ -56,18 +56,18 @@ public class AdminService {
      * @return The newly created Admin object, or null if registration fails.
      */
     public Admin register(String username, String password) {
-<span class="fc" id="L59">        Admin existing = adminDAO.findByUsername(username);</span>
-<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (existing != null) {</span>
-<span class="fc" id="L61">            System.out.println(&quot;Admin already exists: &quot; + username);</span>
-<span class="fc" id="L62">            return null;</span>
+<span class="nc" id="L59">        Admin existing = adminDAO.findByUsername(username);</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (existing != null) {</span>
+<span class="nc" id="L61">            System.out.println(&quot;Admin already exists: &quot; + username);</span>
+<span class="nc" id="L62">            return null;</span>
         }
 
-<span class="fc" id="L65">        String salt = PasswordUtil.generateSalt();</span>
-<span class="fc" id="L66">        String passwordHash = PasswordUtil.hashPassword(password, salt);</span>
+<span class="nc" id="L65">        String salt = PasswordUtil.generateSalt();</span>
+<span class="nc" id="L66">        String passwordHash = PasswordUtil.hashPassword(password, salt);</span>
 
-<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        if (adminDAO.insert(username, passwordHash, salt)) {</span>
-<span class="fc" id="L69">            System.out.println(&quot;Admin registered successfully: &quot; + username);</span>
-<span class="fc" id="L70">            return adminDAO.findByUsername(username);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (adminDAO.insert(username, passwordHash, salt)) {</span>
+<span class="nc" id="L69">            System.out.println(&quot;Admin registered successfully: &quot; + username);</span>
+<span class="nc" id="L70">            return adminDAO.findByUsername(username);</span>
         }
 
 <span class="nc" id="L73">        return null;</span>
@@ -81,22 +81,22 @@ public class AdminService {
      * @return The logged-in Admin object, or null if authentication fails.
      */
     public Admin login(String username, String password) {
-<span class="fc" id="L84">        Admin admin = adminDAO.findByUsername(username);</span>
+<span class="nc" id="L84">        Admin admin = adminDAO.findByUsername(username);</span>
 
-<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (admin == null) {</span>
-<span class="fc" id="L87">            System.out.println(&quot;Admin not found.&quot;);</span>
-<span class="fc" id="L88">            return null;</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (admin == null) {</span>
+<span class="nc" id="L87">            System.out.println(&quot;Admin not found.&quot;);</span>
+<span class="nc" id="L88">            return null;</span>
         }
 
-<span class="fc" id="L91">        String inputHash = PasswordUtil.hashPassword(password, admin.getSalt());</span>
+<span class="nc" id="L91">        String inputHash = PasswordUtil.hashPassword(password, admin.getSalt());</span>
 
-<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (admin.getPasswordHash().equals(inputHash)) {</span>
-<span class="fc" id="L94">            admin.setLoggedIn(true);</span>
-<span class="fc" id="L95">            System.out.println(&quot;Admin login successful, welcome &quot; + username + &quot;!&quot;);</span>
-<span class="fc" id="L96">            return admin;</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (admin.getPasswordHash().equals(inputHash)) {</span>
+<span class="nc" id="L94">            admin.setLoggedIn(true);</span>
+<span class="nc" id="L95">            System.out.println(&quot;Admin login successful, welcome &quot; + username + &quot;!&quot;);</span>
+<span class="nc" id="L96">            return admin;</span>
         } else {
-<span class="fc" id="L98">            System.out.println(&quot;Invalid credentials.&quot;);</span>
-<span class="fc" id="L99">            return null;</span>
+<span class="nc" id="L98">            System.out.println(&quot;Invalid credentials.&quot;);</span>
+<span class="nc" id="L99">            return null;</span>
         }
     }
 
@@ -107,7 +107,7 @@ public class AdminService {
      * @return true if deletion was successful, false otherwise.
      */
     public boolean unregisterUser(String username) {
-<span class="fc" id="L110">        return userDAO.delete(username);</span>
+<span class="nc" id="L110">        return userDAO.delete(username);</span>
     }
 
     /**
@@ -116,25 +116,25 @@ public class AdminService {
      * @param borrowingService The borrowing service used to fetch overdue records.
      */
     public void sendOverdueReminders(BorrowingService borrowingService) {
-<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (emailNotifier == null) {</span>
-<span class="fc" id="L120">            System.out.println(&quot;Warning: Email server not available. Cannot send reminders.&quot;);</span>
-<span class="fc" id="L121">            return;</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (emailNotifier == null) {</span>
+<span class="nc" id="L120">            System.out.println(&quot;Warning: Email server not available. Cannot send reminders.&quot;);</span>
+<span class="nc" id="L121">            return;</span>
         }
 
-<span class="fc" id="L124">        List&lt;UserWithOverdueBooks&gt; usersWithOverdueBooks = borrowingService.getUsersWithOverdueBooks();</span>
+<span class="nc" id="L124">        List&lt;UserWithOverdueBooks&gt; usersWithOverdueBooks = borrowingService.getUsersWithOverdueBooks();</span>
 
-<span class="fc bfc" id="L126" title="All 2 branches covered.">        for (UserWithOverdueBooks userInfo : usersWithOverdueBooks) {</span>
-<span class="fc" id="L127">            String message = &quot;You have &quot; + userInfo.getOverdueCount() + &quot; overdue book(s).&quot;;</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        for (UserWithOverdueBooks userInfo : usersWithOverdueBooks) {</span>
+<span class="nc" id="L127">            String message = &quot;You have &quot; + userInfo.getOverdueCount() + &quot; overdue book(s).&quot;;</span>
             try {
-<span class="fc" id="L129">                model.User user = userDAO.findByUsername(userInfo.getUsername());</span>
-<span class="pc bpc" id="L130" title="1 of 2 branches missed.">                if (user != null) {</span>
-<span class="fc" id="L131">                    emailNotifier.notify(user, message);</span>
+<span class="nc" id="L129">                model.User user = userDAO.findByUsername(userInfo.getUsername());</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">                if (user != null) {</span>
+<span class="nc" id="L131">                    emailNotifier.notify(user, message);</span>
                 }
 <span class="nc" id="L133">            } catch (Exception e) {</span>
 <span class="nc" id="L134">                System.err.println(&quot;Failed to send email to &quot; + userInfo.getUsername() + &quot;: &quot; + e.getMessage());</span>
-<span class="fc" id="L135">            }</span>
-<span class="fc" id="L136">        }</span>
-<span class="fc" id="L137">    }</span>
+<span class="nc" id="L135">            }</span>
+<span class="nc" id="L136">        }</span>
+<span class="nc" id="L137">    }</span>
 
     /**
      * Sets a new email server for sending notifications.
@@ -142,13 +142,13 @@ public class AdminService {
      * @param server The EmailServer instance to use.
      */
     public void setEmailServer(EmailServer server) {
-<span class="fc" id="L145">        this.emailServer = server;</span>
-<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if (server == null) {</span>
+<span class="nc" id="L145">        this.emailServer = server;</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (server == null) {</span>
 <span class="nc" id="L147">            this.emailNotifier = null;</span>
         } else {
-<span class="fc" id="L149">            this.emailNotifier = new EmailNotifier(server);</span>
+<span class="nc" id="L149">            this.emailNotifier = new EmailNotifier(server);</span>
         }
-<span class="fc" id="L151">    }</span>
+<span class="nc" id="L151">    }</span>
 
     /**
      * Retrieves the currently configured email server.
@@ -156,7 +156,7 @@ public class AdminService {
      * @return The EmailServer instance.
      */
     public EmailServer getEmailServer() {
-<span class="fc" id="L159">        return emailServer;</span>
+<span class="nc" id="L159">        return emailServer;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

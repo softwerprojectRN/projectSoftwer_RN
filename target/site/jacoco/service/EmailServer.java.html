@@ -25,7 +25,7 @@ import java.util.Properties;
 public class EmailServer {
     private final String username;
     private final String password;
-<span class="fc" id="L28">    private final List&lt;Email&gt; sentEmails = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L28">    private final List&lt;Email&gt; sentEmails = new ArrayList&lt;&gt;();</span>
 
 
 
@@ -38,27 +38,27 @@ public class EmailServer {
         private final String body;
         private final long timestamp;
 
-<span class="fc" id="L41">        public Email(String to, String subject, String body) {</span>
-<span class="fc" id="L42">            this.to = to;</span>
-<span class="fc" id="L43">            this.subject = subject;</span>
-<span class="fc" id="L44">            this.body = body;</span>
-<span class="fc" id="L45">            this.timestamp = System.currentTimeMillis();</span>
-<span class="fc" id="L46">        }</span>
+<span class="nc" id="L41">        public Email(String to, String subject, String body) {</span>
+<span class="nc" id="L42">            this.to = to;</span>
+<span class="nc" id="L43">            this.subject = subject;</span>
+<span class="nc" id="L44">            this.body = body;</span>
+<span class="nc" id="L45">            this.timestamp = System.currentTimeMillis();</span>
+<span class="nc" id="L46">        }</span>
 
         public String getTo() {
-<span class="fc" id="L49">            return to;</span>
+<span class="nc" id="L49">            return to;</span>
         }
 
         public String getSubject() {
-<span class="fc" id="L53">            return subject;</span>
+<span class="nc" id="L53">            return subject;</span>
         }
 
         public String getBody() {
-<span class="fc" id="L57">            return body;</span>
+<span class="nc" id="L57">            return body;</span>
         }
 
         public long getTimestamp() {
-<span class="fc" id="L61">            return timestamp;</span>
+<span class="nc" id="L61">            return timestamp;</span>
         }
     }
 
@@ -66,27 +66,27 @@ public class EmailServer {
      * Constructs an EmailServer and loads credentials from a .env file.
      * Throws IllegalStateException if credentials are missing.
      */
-<span class="fc" id="L69">    public EmailServer() {</span>
+<span class="nc" id="L69">    public EmailServer() {</span>
         try {
-<span class="fc" id="L71">            Dotenv dotenv = Dotenv.configure()</span>
-<span class="fc" id="L72">                    .ignoreIfMissing()</span>
-<span class="fc" id="L73">                    .load();</span>
+<span class="nc" id="L71">            Dotenv dotenv = Dotenv.configure()</span>
+<span class="nc" id="L72">                    .ignoreIfMissing()</span>
+<span class="nc" id="L73">                    .load();</span>
 
-<span class="fc" id="L75">            this.username = dotenv.get(&quot;EMAIL_USERNAME&quot;);</span>
-<span class="fc" id="L76">            this.password = dotenv.get(&quot;EMAIL_PASSWORD&quot;);</span>
+<span class="nc" id="L75">            this.username = dotenv.get(&quot;EMAIL_USERNAME&quot;);</span>
+<span class="nc" id="L76">            this.password = dotenv.get(&quot;EMAIL_PASSWORD&quot;);</span>
 
-<span class="pc bpc" id="L78" title="1 of 4 branches missed.">            if (username == null || username.isEmpty()) {</span>
-<span class="fc" id="L79">                throw new IllegalStateException(&quot;EMAIL_USERNAME not found in .env file&quot;);</span>
+<span class="nc bnc" id="L78" title="All 4 branches missed.">            if (username == null || username.isEmpty()) {</span>
+<span class="nc" id="L79">                throw new IllegalStateException(&quot;EMAIL_USERNAME not found in .env file&quot;);</span>
             }
-<span class="pc bpc" id="L81" title="1 of 4 branches missed.">            if (password == null || password.isEmpty()) {</span>
-<span class="fc" id="L82">                throw new IllegalStateException(&quot;EMAIL_PASSWORD not found in .env file&quot;);</span>
+<span class="nc bnc" id="L81" title="All 4 branches missed.">            if (password == null || password.isEmpty()) {</span>
+<span class="nc" id="L82">                throw new IllegalStateException(&quot;EMAIL_PASSWORD not found in .env file&quot;);</span>
             }
 
-<span class="fc" id="L85">            System.out.println(&quot;Email server initialized successfully&quot;);</span>
-<span class="fc" id="L86">        } catch (Exception e) {</span>
-<span class="fc" id="L87">            throw new IllegalStateException(&quot;Failed to initialize EmailServer: &quot; + e.getMessage(), e);</span>
-<span class="fc" id="L88">        }</span>
-<span class="fc" id="L89">    }</span>
+<span class="nc" id="L85">            System.out.println(&quot;Email server initialized successfully&quot;);</span>
+<span class="nc" id="L86">        } catch (Exception e) {</span>
+<span class="nc" id="L87">            throw new IllegalStateException(&quot;Failed to initialize EmailServer: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L88">        }</span>
+<span class="nc" id="L89">    }</span>
 
     /**
      * Constructs an EmailServer with explicit username and password.
@@ -94,17 +94,17 @@ public class EmailServer {
      * @param username email username
      * @param password email password
      */
-<span class="fc" id="L97">    public EmailServer(String username, String password) {</span>
-<span class="fc bfc" id="L98" title="All 4 branches covered.">        if (username == null || username.isEmpty()) {</span>
-<span class="fc" id="L99">            throw new IllegalArgumentException(&quot;Username cannot be null or empty&quot;);</span>
+<span class="nc" id="L97">    public EmailServer(String username, String password) {</span>
+<span class="nc bnc" id="L98" title="All 4 branches missed.">        if (username == null || username.isEmpty()) {</span>
+<span class="nc" id="L99">            throw new IllegalArgumentException(&quot;Username cannot be null or empty&quot;);</span>
         }
-<span class="fc bfc" id="L101" title="All 4 branches covered.">        if (password == null || password.isEmpty()) {</span>
-<span class="fc" id="L102">            throw new IllegalArgumentException(&quot;Password cannot be null or empty&quot;);</span>
+<span class="nc bnc" id="L101" title="All 4 branches missed.">        if (password == null || password.isEmpty()) {</span>
+<span class="nc" id="L102">            throw new IllegalArgumentException(&quot;Password cannot be null or empty&quot;);</span>
         }
 
-<span class="fc" id="L105">        this.username = username;</span>
-<span class="fc" id="L106">        this.password = password;</span>
-<span class="fc" id="L107">    }</span>
+<span class="nc" id="L105">        this.username = username;</span>
+<span class="nc" id="L106">        this.password = password;</span>
+<span class="nc" id="L107">    }</span>
 
     /**
      * Sends an email to a recipient with the specified subject and body.
@@ -115,28 +115,28 @@ public class EmailServer {
      * @param body email body
      */
     public void sendEmail(String to, String subject, String body) {
-<span class="pc bpc" id="L118" title="2 of 4 branches missed.">        if (username == null || username.isEmpty()) {</span>
+<span class="nc bnc" id="L118" title="All 4 branches missed.">        if (username == null || username.isEmpty()) {</span>
 <span class="nc" id="L119">            throw new IllegalStateException(&quot;Email username is not configured&quot;);</span>
         }
-<span class="pc bpc" id="L121" title="2 of 4 branches missed.">        if (password == null || password.isEmpty()) {</span>
+<span class="nc bnc" id="L121" title="All 4 branches missed.">        if (password == null || password.isEmpty()) {</span>
 <span class="nc" id="L122">            throw new IllegalStateException(&quot;Email password is not configured&quot;);</span>
         }
-<span class="fc bfc" id="L124" title="All 4 branches covered.">        if (to == null || to.isEmpty()) {</span>
-<span class="fc" id="L125">            throw new IllegalArgumentException(&quot;Recipient email address cannot be null or empty&quot;);</span>
+<span class="nc bnc" id="L124" title="All 4 branches missed.">        if (to == null || to.isEmpty()) {</span>
+<span class="nc" id="L125">            throw new IllegalArgumentException(&quot;Recipient email address cannot be null or empty&quot;);</span>
         }
-<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (body == null) {</span>
-<span class="fc" id="L128">            body = &quot;&quot;;</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (body == null) {</span>
+<span class="nc" id="L128">            body = &quot;&quot;;</span>
         }
 
-<span class="fc" id="L131">        Properties props = new Properties();</span>
-<span class="fc" id="L132">        props.put(&quot;mail.smtp.auth&quot;, &quot;true&quot;);</span>
-<span class="fc" id="L133">        props.put(&quot;mail.smtp.starttls.enable&quot;, &quot;true&quot;);</span>
-<span class="fc" id="L134">        props.put(&quot;mail.smtp.host&quot;, &quot;smtp.gmail.com&quot;);</span>
-<span class="fc" id="L135">        props.put(&quot;mail.smtp.port&quot;, &quot;587&quot;);</span>
-<span class="fc" id="L136">        props.put(&quot;mail.smtp.ssl.trust&quot;, &quot;smtp.gmail.com&quot;);</span>
-<span class="fc" id="L137">        props.put(&quot;mail.smtp.ssl.protocols&quot;, &quot;TLSv1.2&quot;);</span>
+<span class="nc" id="L131">        Properties props = new Properties();</span>
+<span class="nc" id="L132">        props.put(&quot;mail.smtp.auth&quot;, &quot;true&quot;);</span>
+<span class="nc" id="L133">        props.put(&quot;mail.smtp.starttls.enable&quot;, &quot;true&quot;);</span>
+<span class="nc" id="L134">        props.put(&quot;mail.smtp.host&quot;, &quot;smtp.gmail.com&quot;);</span>
+<span class="nc" id="L135">        props.put(&quot;mail.smtp.port&quot;, &quot;587&quot;);</span>
+<span class="nc" id="L136">        props.put(&quot;mail.smtp.ssl.trust&quot;, &quot;smtp.gmail.com&quot;);</span>
+<span class="nc" id="L137">        props.put(&quot;mail.smtp.ssl.protocols&quot;, &quot;TLSv1.2&quot;);</span>
 
-<span class="fc" id="L139">        Session session = Session.getInstance(props, new Authenticator() {</span>
+<span class="nc" id="L139">        Session session = Session.getInstance(props, new Authenticator() {</span>
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
 <span class="nc" id="L142">                return new PasswordAuthentication(username, password);</span>
@@ -144,36 +144,36 @@ public class EmailServer {
         });
 
         try {
-<span class="fc" id="L147">            Message message = new MimeMessage(session);</span>
-<span class="fc" id="L148">            message.setFrom(new InternetAddress(username));</span>
-<span class="fc" id="L149">            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));</span>
-<span class="fc" id="L150">            message.setSubject(subject);</span>
-<span class="fc" id="L151">            message.setText(body);</span>
+<span class="nc" id="L147">            Message message = new MimeMessage(session);</span>
+<span class="nc" id="L148">            message.setFrom(new InternetAddress(username));</span>
+<span class="nc" id="L149">            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));</span>
+<span class="nc" id="L150">            message.setSubject(subject);</span>
+<span class="nc" id="L151">            message.setText(body);</span>
 
-<span class="fc" id="L153">            Transport.send(message);</span>
-<span class="fc" id="L154">            System.out.println(&quot;Email sent successfully to: &quot; + to);</span>
+<span class="nc" id="L153">            Transport.send(message);</span>
+<span class="nc" id="L154">            System.out.println(&quot;Email sent successfully to: &quot; + to);</span>
 
-<span class="fc" id="L156">            sentEmails.add(new Email(to, subject, body));</span>
-<span class="fc" id="L157">        } catch (MessagingException e) {</span>
-<span class="fc" id="L158">            System.err.println(&quot;Failed to send email: &quot; + e.getMessage());</span>
-<span class="fc" id="L159">            throw new RuntimeException(&quot;Failed to send email: &quot; + e.getMessage(), e);</span>
-<span class="fc" id="L160">        }</span>
-<span class="fc" id="L161">    }</span>
+<span class="nc" id="L156">            sentEmails.add(new Email(to, subject, body));</span>
+<span class="nc" id="L157">        } catch (MessagingException e) {</span>
+<span class="nc" id="L158">            System.err.println(&quot;Failed to send email: &quot; + e.getMessage());</span>
+<span class="nc" id="L159">            throw new RuntimeException(&quot;Failed to send email: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L160">        }</span>
+<span class="nc" id="L161">    }</span>
 
     /**
      * Returns a copy of the list of sent emails.
      * @return list of sent emails
      */
     public List&lt;Email&gt; getSentEmails() {
-<span class="fc" id="L168">        return new ArrayList&lt;&gt;(sentEmails);</span>
+<span class="nc" id="L168">        return new ArrayList&lt;&gt;(sentEmails);</span>
     }
 
     /**
      * Clears the sent emails history.
      */
     public void clearSentEmails() {
-<span class="fc" id="L175">        sentEmails.clear();</span>
-<span class="fc" id="L176">    }</span>
+<span class="nc" id="L175">        sentEmails.clear();</span>
+<span class="nc" id="L176">    }</span>
 
     /**
      * Main method for testing the email server.

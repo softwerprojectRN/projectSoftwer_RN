@@ -54,8 +54,8 @@ public class User {
      * @param id the new user ID
      */
     public void setId(int id) {
-<span class="fc" id="L57">        this.id = id;</span>
-<span class="fc" id="L58">    }</span>
+<span class="nc" id="L57">        this.id = id;</span>
+<span class="nc" id="L58">    }</span>
 
     /**
      * Gets the username.
@@ -72,8 +72,8 @@ public class User {
      * @param username the new username
      */
     public void setUsername(String username) {
-<span class="fc" id="L75">        this.username = username;</span>
-<span class="fc" id="L76">    }</span>
+<span class="nc" id="L75">        this.username = username;</span>
+<span class="nc" id="L76">    }</span>
 
     /**
      * Gets the password hash.
@@ -90,8 +90,8 @@ public class User {
      * @param passwordHash the new password hash
      */
     public void setPasswordHash(String passwordHash) {
-<span class="fc" id="L93">        this.passwordHash = passwordHash;</span>
-<span class="fc" id="L94">    }</span>
+<span class="nc" id="L93">        this.passwordHash = passwordHash;</span>
+<span class="nc" id="L94">    }</span>
 
     /**
      * Gets the salt.
@@ -108,8 +108,8 @@ public class User {
      * @param salt the new salt
      */
     public void setSalt(String salt) {
-<span class="fc" id="L111">        this.salt = salt;</span>
-<span class="fc" id="L112">    }</span>
+<span class="nc" id="L111">        this.salt = salt;</span>
+<span class="nc" id="L112">    }</span>
 
     /**
      * Checks if the user is logged in.
@@ -117,7 +117,7 @@ public class User {
      * @return true if logged in, false otherwise
      */
     public boolean isLoggedIn() {
-<span class="fc" id="L120">        return loggedIn;</span>
+<span class="nc" id="L120">        return loggedIn;</span>
     }
 
     /**
@@ -126,19 +126,19 @@ public class User {
      * @param loggedIn the new login status
      */
     public void setLoggedIn(boolean loggedIn) {
-<span class="fc" id="L129">        this.loggedIn = loggedIn;</span>
-<span class="fc" id="L130">    }</span>
+<span class="nc" id="L129">        this.loggedIn = loggedIn;</span>
+<span class="nc" id="L130">    }</span>
 
     /**
      * Logs out the user.
      */
     public void logout() {
-<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (this.loggedIn) {</span>
-<span class="fc" id="L137">            this.loggedIn = false;</span>
-<span class="fc" id="L138">            System.out.println(&quot;Logged out successfully.&quot;);</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        if (this.loggedIn) {</span>
+<span class="nc" id="L137">            this.loggedIn = false;</span>
+<span class="nc" id="L138">            System.out.println(&quot;Logged out successfully.&quot;);</span>
         } else {
-<span class="fc" id="L140">            System.out.println(&quot;You are not logged in yet.&quot;);</span>
+<span class="nc" id="L140">            System.out.println(&quot;You are not logged in yet.&quot;);</span>
         }
-<span class="fc" id="L142">    }</span>
+<span class="nc" id="L142">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

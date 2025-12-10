@@ -1,368 +1,355 @@
-//import dao.*;
-//
-//import model.CD;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.MockedStatic;
-//
-//import java.io.ByteArrayOutputStream;
-//import java.io.PrintStream;
-//import java.sql.*;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.*;
-//
-//class CDDAOTest {
-//
-//    private CDDAO cdDAO;
-//
-//    @BeforeEach
-//    void setUp() {
-//        cdDAO = new CDDAO();
-//    }
-//
-//    // ------------------ initializeTable() ------------------
-//    @Test
-//    void testInitializeTable_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
-//
-//        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-//        System.setOut(new PrintStream(outContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            cdDAO.initializeTable();
-//            verify(mockStmt).execute(anyString());
-//            assertTrue(outContent.toString().contains("CDs table created successfully."));
-//        } finally {
-//            System.setOut(System.out);
-//        }
-//    }
-//
-//    @Test
-//    void testInitializeTable_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
-//        doThrow(new SQLException("Create failed")).when(mockStmt).execute(anyString());
-//
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            cdDAO.initializeTable();
-//            assertTrue(errContent.toString().contains("Error creating CDs table: Create failed"));
-//        } finally {
-//            System.setErr(System.err);
-//        }
-//    }
-//
-//    @Test
-//    void testInitializeTable_connectionNull() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            assertDoesNotThrow(() -> cdDAO.initializeTable());
-//        }
-//    }
-//
-//    // ------------------ insert() ------------------
-//    @Test
-//    void testInsert_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            int id = cdDAO.insert(1, "Artist", "Pop", 60);
-//            assertEquals(1, id);
-//            verify(mockStmt).executeUpdate();
-//        }
-//    }
-//
-//    @Test
-//    void testInsert_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        doThrow(new SQLException("Insert failed")).when(mockStmt).executeUpdate();
-//
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            int id = cdDAO.insert(1, "Artist", "Pop", 60);
-//            assertEquals(-1, id);
-//            assertTrue(errContent.toString().contains("Error inserting CD: Insert failed"));
-//        } finally {
-//            System.setErr(System.err);
-//        }
-//    }
-//
-//    @Test
-//    void testInsert_connectionNull() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            int id = cdDAO.insert(1, "Artist", "Pop", 60);
-//            assertEquals(-1, id);
-//        }
-//    }
-//
-//    // ------------------ findById() ------------------
-//    @Test
-//    void testFindById_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(true);
-//        when(mockRs.getInt("id")).thenReturn(1);
-//        when(mockRs.getString("title")).thenReturn("Album");
-//        when(mockRs.getString("artist")).thenReturn("Artist");
-//        when(mockRs.getString("genre")).thenReturn("Pop");
-//        when(mockRs.getInt("duration")).thenReturn(60);
-//        when(mockRs.getInt("available")).thenReturn(1);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            CD cd = cdDAO.findById(1);
-//            assertNotNull(cd);
-//            assertEquals("Artist", cd.getArtist());
-//            assertTrue(cd.isAvailable());
-//        }
-//    }
-//
-//    @Test
-//    void testFindById_notFound() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(false);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            CD cd = cdDAO.findById(1);
-//            assertNull(cd);
-//        }
-//    }
-//
-//    @Test
-//    void testFindById_connectionNull() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            CD cd = cdDAO.findById(1);
-//            assertNull(cd);
-//        }
-//    }
-//
-//    // ------------------ findAll() ------------------
-//    @Test
-//    void testFindAll_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery(anyString())).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(true, true, false);
-//        when(mockRs.getInt("id")).thenReturn(1, 2);
-//        when(mockRs.getString("title")).thenReturn("Album1", "Album2");
-//        when(mockRs.getString("artist")).thenReturn("Artist1", "Artist2");
-//        when(mockRs.getString("genre")).thenReturn("Pop", "Rock");
-//        when(mockRs.getInt("duration")).thenReturn(60, 70);
-//        when(mockRs.getInt("available")).thenReturn(1, 0);
-//
-//        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-//        System.setOut(new PrintStream(outContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            List<CD> cds = cdDAO.findAll();
-//            assertEquals(2, cds.size());
-//            assertEquals("Album1", cds.get(0).getTitle());
-//            assertTrue(cds.get(0).isAvailable());
-//            assertFalse(cds.get(1).isAvailable());
-//            assertTrue(outContent.toString().contains("Retrieved 2 CDs from database."));
-//        } finally {
-//            System.setOut(System.out);
-//        }
-//    }
-//
-//    @Test
-//    void testSearchByTitle_successMultiple() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(true, true, false);
-//        when(mockRs.getInt("id")).thenReturn(1, 2);
-//        when(mockRs.getString("title")).thenReturn("CD1", "CD2");
-//        when(mockRs.getString("artist")).thenReturn("A1", "A2");
-//        when(mockRs.getString("genre")).thenReturn("Pop", "Rock");
-//        when(mockRs.getInt("duration")).thenReturn(50, 60);
-//        when(mockRs.getInt("available")).thenReturn(1, 0);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            List<CD> cds = cdDAO.searchByTitle("CD");
-//            assertEquals(2, cds.size());
-//            assertTrue(cds.get(0).isAvailable());
-//            assertFalse(cds.get(1).isAvailable());
-//        }
-//    }
-//
-//    @Test
-//    void testSearchByTitle_emptyResult() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(false);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            List<CD> cds = cdDAO.searchByTitle("NonExist");
-//            assertTrue(cds.isEmpty());
-//        }
-//    }
-//
-//    @Test
-//    void testSearchByTitle_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        doThrow(new SQLException("Query failed")).when(mockStmt).executeQuery();
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            List<CD> cds = cdDAO.searchByTitle("Any");
-//            assertTrue(cds.isEmpty());
-//        }
-//    }
-//
-//    @Test
-//    void testSearchByTitle_nullConnection() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            List<CD> cds = cdDAO.searchByTitle("Any");
-//            assertTrue(cds.isEmpty());
-//        }
-//    }
-//
-//    // ------------------ searchByArtist() ------------------
-//    @Test
-//    void testSearchByArtist_successSingle() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(true, false);
-//        when(mockRs.getInt("id")).thenReturn(1);
-//        when(mockRs.getString("title")).thenReturn("Album1");
-//        when(mockRs.getString("artist")).thenReturn("Artist1");
-//        when(mockRs.getString("genre")).thenReturn("Pop");
-//        when(mockRs.getInt("duration")).thenReturn(40);
-//        when(mockRs.getInt("available")).thenReturn(1);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            List<CD> cds = cdDAO.searchByArtist("Artist1");
-//            assertEquals(1, cds.size());
-//            assertEquals("Artist1", cds.get(0).getArtist());
-//        }
-//    }
-//
-//    @Test
-//    void testSearchByArtist_empty() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(false);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//            List<CD> cds = cdDAO.searchByArtist("NoOne");
-//            assertTrue(cds.isEmpty());
-//        }
-//    }
-//
-//    // ------------------ searchByGenre() ------------------
-//    @Test
-//    void testSearchByGenre_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(true, false);
-//        when(mockRs.getInt("id")).thenReturn(1);
-//        when(mockRs.getString("title")).thenReturn("Album");
-//        when(mockRs.getString("artist")).thenReturn("Artist");
-//        when(mockRs.getString("genre")).thenReturn("Jazz");
-//        when(mockRs.getInt("duration")).thenReturn(45);
-//        when(mockRs.getInt("available")).thenReturn(1);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//            List<CD> cds = cdDAO.searchByGenre("Jazz");
-//            assertEquals(1, cds.size());
-//            assertEquals("Jazz", cds.get(0).getGenre());
-//        }
-//    }
-//
-//    @Test
-//    void testSearchByGenre_empty() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(false);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//            List<CD> cds = cdDAO.searchByGenre("NoGenre");
-//            assertTrue(cds.isEmpty());
-//        }
-//    }
-//
-//    @Test
-//    void testSearchByGenre_nullConnection() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            List<CD> cds = cdDAO.searchByGenre("Any");
-//            assertTrue(cds.isEmpty());
-//        }
-//    }
-//}
+
+import dao.CDDAO;
+import dao.DatabaseConnection;
+import model.CD;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class CDDAOTest {
+
+    @Mock
+    private Connection mockConnection;
+
+    @Mock
+    private PreparedStatement mockPreparedStatement;
+
+    @Mock
+    private Statement mockStatement;
+
+    @Mock
+    private ResultSet mockResultSet;
+
+    @Mock
+    private ResultSet mockGeneratedKeys;
+
+    private CDDAO cdDAO;
+    private MockedStatic<DatabaseConnection> mockedDatabaseConnection;
+
+    @BeforeEach
+    void setUp() {
+        // Mock the static DatabaseConnection.getConnection() method
+        mockedDatabaseConnection = mockStatic(DatabaseConnection.class);
+        mockedDatabaseConnection.when(DatabaseConnection::getConnection).thenReturn(mockConnection);
+        cdDAO = new CDDAO();
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (mockedDatabaseConnection != null) {
+            mockedDatabaseConnection.close();
+        }
+    }
+
+    @Test
+    void testInitializeTable() throws SQLException {
+        // Setup
+        when(mockConnection.createStatement()).thenReturn(mockStatement);
+
+        // Execute
+        cdDAO.initializeTable();
+
+        // Verify
+        verify(mockStatement).execute(contains("CREATE TABLE IF NOT EXISTS cds"));
+    }
+
+    @Test
+    void testInitializeTableWithSQLException() throws SQLException {
+        // Setup
+        when(mockConnection.createStatement()).thenReturn(mockStatement);
+        doThrow(new SQLException("Table creation failed")).when(mockStatement).execute(anyString());
+
+        // Execute - should not throw an exception
+        cdDAO.initializeTable();
+
+        // Verify
+        verify(mockStatement).execute(contains("CREATE TABLE IF NOT EXISTS cds"));
+    }
+
+    @Test
+    void testFindById() throws SQLException {
+        // Setup
+        int id = 1;
+        String expectedTitle = "Test CD";
+        String expectedArtist = "Test Artist";
+        String expectedGenre = "Test Genre";
+        int expectedDuration = 60;
+        boolean expectedAvailable = true;
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt("id")).thenReturn(id);
+        when(mockResultSet.getString("title")).thenReturn(expectedTitle);
+        when(mockResultSet.getString("artist")).thenReturn(expectedArtist);
+        when(mockResultSet.getString("genre")).thenReturn(expectedGenre);
+        when(mockResultSet.getInt("duration")).thenReturn(expectedDuration);
+        when(mockResultSet.getInt("available")).thenReturn(1);
+
+        // Execute
+        CD result = cdDAO.findById(id);
+
+        // Verify
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        assertEquals(expectedTitle, result.getTitle());
+        assertEquals(expectedArtist, result.getArtist());
+        assertEquals(expectedGenre, result.getGenre());
+        assertEquals(expectedDuration, result.getDuration());
+        assertEquals(expectedAvailable, result.isAvailable());
+
+        verify(mockPreparedStatement).setObject(1, id);
+        verify(mockPreparedStatement).executeQuery();
+    }
+
+    @Test
+    void testFindByIdNotFound() throws SQLException {
+        // Setup
+        int id = 999;
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(false);
+
+        // Execute
+        CD result = cdDAO.findById(id);
+
+        // Verify
+        assertNull(result);
+        verify(mockPreparedStatement).setObject(1, id);
+        verify(mockPreparedStatement).executeQuery();
+    }
+
+    @Test
+    void testInsert() throws SQLException {
+        // Setup
+        int mediaId = 1;
+        String artist = "Test Artist";
+        String genre = "Test Genre";
+        int duration = 60;
+        int expectedId = 2;
+
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
+        when(mockGeneratedKeys.next()).thenReturn(true);
+        when(mockGeneratedKeys.getInt(1)).thenReturn(expectedId);
+
+        // Execute
+        int result = cdDAO.insert(mediaId, artist, genre, duration);
+
+        // Verify
+        assertEquals(expectedId, result);
+        verify(mockPreparedStatement).setObject(1, mediaId);
+        verify(mockPreparedStatement).setObject(2, artist);
+        verify(mockPreparedStatement).setObject(3, genre);
+        verify(mockPreparedStatement).setObject(4, duration);
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+    @Test
+    void testInsertFailure() throws SQLException {
+        // Setup
+        int mediaId = 1;
+        String artist = "Test Artist";
+        String genre = "Test Genre";
+        int duration = 60;
+
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
+        when(mockGeneratedKeys.next()).thenReturn(false);
+
+        // Execute
+        int result = cdDAO.insert(mediaId, artist, genre, duration);
+
+        // Verify
+        assertEquals(-1, result);
+        verify(mockPreparedStatement).setObject(1, mediaId);
+        verify(mockPreparedStatement).setObject(2, artist);
+        verify(mockPreparedStatement).setObject(3, genre);
+        verify(mockPreparedStatement).setObject(4, duration);
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+    @Test
+    void testFindAll() throws SQLException {
+        // Setup
+        CD[] expectedCDs = {
+                new CD(1, "CD 1", "Artist 1", "Genre 1", 60, true),
+                new CD(2, "CD 2", "Artist 2", "Genre 2", 45, false),
+                new CD(3, "CD 3", "Artist 3", "Genre 3", 75, true)
+        };
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true, true, true, false);
+        when(mockResultSet.getInt("id")).thenReturn(1, 2, 3);
+        when(mockResultSet.getString("title")).thenReturn("CD 1", "CD 2", "CD 3");
+        when(mockResultSet.getString("artist")).thenReturn("Artist 1", "Artist 2", "Artist 3");
+        when(mockResultSet.getString("genre")).thenReturn("Genre 1", "Genre 2", "Genre 3");
+        when(mockResultSet.getInt("duration")).thenReturn(60, 45, 75);
+        when(mockResultSet.getInt("available")).thenReturn(1, 0, 1);
+
+        // Execute
+        List<CD> result = cdDAO.findAll();
+
+        // Verify
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        for (int i = 0; i < 3; i++) {
+            assertEquals(expectedCDs[i].getId(), result.get(i).getId());
+            assertEquals(expectedCDs[i].getTitle(), result.get(i).getTitle());
+            assertEquals(expectedCDs[i].getArtist(), result.get(i).getArtist());
+            assertEquals(expectedCDs[i].getGenre(), result.get(i).getGenre());
+            assertEquals(expectedCDs[i].getDuration(), result.get(i).getDuration());
+            assertEquals(expectedCDs[i].isAvailable(), result.get(i).isAvailable());
+        }
+
+        verify(mockPreparedStatement).executeQuery();
+    }
+
+    @Test
+    void testSearchByTitle() throws SQLException {
+        // Setup
+        String title = "Test";
+        CD[] expectedCDs = {
+                new CD(1, "Test CD 1", "Artist 1", "Genre 1", 60, true),
+                new CD(2, "Test CD 2", "Artist 2", "Genre 2", 45, false)
+        };
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true, true, false);
+        when(mockResultSet.getInt("id")).thenReturn(1, 2);
+        when(mockResultSet.getString("title")).thenReturn("Test CD 1", "Test CD 2");
+        when(mockResultSet.getString("artist")).thenReturn("Artist 1", "Artist 2");
+        when(mockResultSet.getString("genre")).thenReturn("Genre 1", "Genre 2");
+        when(mockResultSet.getInt("duration")).thenReturn(60, 45);
+        when(mockResultSet.getInt("available")).thenReturn(1, 0);
+
+        // Execute
+        List<CD> result = cdDAO.searchByTitle(title);
+
+        // Verify
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        for (int i = 0; i < 2; i++) {
+            assertEquals(expectedCDs[i].getId(), result.get(i).getId());
+            assertEquals(expectedCDs[i].getTitle(), result.get(i).getTitle());
+            assertEquals(expectedCDs[i].getArtist(), result.get(i).getArtist());
+            assertEquals(expectedCDs[i].getGenre(), result.get(i).getGenre());
+            assertEquals(expectedCDs[i].getDuration(), result.get(i).getDuration());
+            assertEquals(expectedCDs[i].isAvailable(), result.get(i).isAvailable());
+        }
+
+        verify(mockPreparedStatement).setObject(1, "%" + title + "%");
+        verify(mockPreparedStatement).executeQuery();
+    }
+
+    @Test
+    void testSearchByArtist() throws SQLException {
+        // Setup
+        String artist = "Test";
+        CD expectedCD = new CD(1, "Test CD", "Test Artist", "Genre 1", 60, true);
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true, false);
+        when(mockResultSet.getInt("id")).thenReturn(1);
+        when(mockResultSet.getString("title")).thenReturn("Test CD");
+        when(mockResultSet.getString("artist")).thenReturn("Test Artist");
+        when(mockResultSet.getString("genre")).thenReturn("Genre 1");
+        when(mockResultSet.getInt("duration")).thenReturn(60);
+        when(mockResultSet.getInt("available")).thenReturn(1);
+
+        // Execute
+        List<CD> result = cdDAO.searchByArtist(artist);
+
+        // Verify
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(expectedCD.getId(), result.get(0).getId());
+        assertEquals(expectedCD.getTitle(), result.get(0).getTitle());
+        assertEquals(expectedCD.getArtist(), result.get(0).getArtist());
+        assertEquals(expectedCD.getGenre(), result.get(0).getGenre());
+        assertEquals(expectedCD.getDuration(), result.get(0).getDuration());
+        assertEquals(expectedCD.isAvailable(), result.get(0).isAvailable());
+
+        verify(mockPreparedStatement).setObject(1, "%" + artist + "%");
+        verify(mockPreparedStatement).executeQuery();
+    }
+
+    @Test
+    void testSearchByGenre() throws SQLException {
+        // Setup
+        String genre = "Test";
+        CD[] expectedCDs = {
+                new CD(1, "CD 1", "Artist 1", "Test Genre 1", 60, true),
+                new CD(2, "CD 2", "Artist 2", "Test Genre 2", 45, false)
+        };
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true, true, false);
+        when(mockResultSet.getInt("id")).thenReturn(1, 2);
+        when(mockResultSet.getString("title")).thenReturn("CD 1", "CD 2");
+        when(mockResultSet.getString("artist")).thenReturn("Artist 1", "Artist 2");
+        when(mockResultSet.getString("genre")).thenReturn("Test Genre 1", "Test Genre 2");
+        when(mockResultSet.getInt("duration")).thenReturn(60, 45);
+        when(mockResultSet.getInt("available")).thenReturn(1, 0);
+
+        // Execute
+        List<CD> result = cdDAO.searchByGenre(genre);
+
+        // Verify
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        for (int i = 0; i < 2; i++) {
+            assertEquals(expectedCDs[i].getId(), result.get(i).getId());
+            assertEquals(expectedCDs[i].getTitle(), result.get(i).getTitle());
+            assertEquals(expectedCDs[i].getArtist(), result.get(i).getArtist());
+            assertEquals(expectedCDs[i].getGenre(), result.get(i).getGenre());
+            assertEquals(expectedCDs[i].getDuration(), result.get(i).getDuration());
+            assertEquals(expectedCDs[i].isAvailable(), result.get(i).isAvailable());
+        }
+
+        verify(mockPreparedStatement).setObject(1, "%" + genre + "%");
+        verify(mockPreparedStatement).executeQuery();
+    }
+
+    @Test
+    void testSearchMethodsReturnEmptyList() throws SQLException {
+        // Setup
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(false);
+
+        // Execute
+        List<CD> result1 = cdDAO.searchByTitle("Nonexistent");
+        List<CD> result2 = cdDAO.searchByArtist("Nonexistent");
+        List<CD> result3 = cdDAO.searchByGenre("Nonexistent");
+
+        // Verify
+        assertTrue(result1.isEmpty());
+        assertTrue(result2.isEmpty());
+        assertTrue(result3.isEmpty());
+    }
+}

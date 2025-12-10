@@ -68,7 +68,7 @@ public class Media {
      * @return the media type (book or cd)
      */
     public String getMediaType() {
-<span class="fc" id="L71">        return mediaType;</span>
+<span class="nc" id="L71">        return mediaType;</span>
     }
 
     /**
@@ -77,8 +77,8 @@ public class Media {
      * @param available the new availability status
      */
     public void setAvailable(boolean available) {
-<span class="fc" id="L80">        this.isAvailable = available;</span>
-<span class="fc" id="L81">    }</span>
+<span class="nc" id="L80">        this.isAvailable = available;</span>
+<span class="nc" id="L81">    }</span>
 
     /**
      * Returns a string representation of the media.
@@ -87,8 +87,8 @@ public class Media {
      */
     @Override
     public String toString() {
-<span class="fc bfc" id="L90" title="All 2 branches covered.">        String available = isAvailable ? &quot;Yes&quot; : &quot;No&quot;;</span>
-<span class="fc" id="L91">        return &quot;ID: &quot; + id + &quot;, Title: '&quot; + title + &quot;', Type: &quot; + mediaType +</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        String available = isAvailable ? &quot;Yes&quot; : &quot;No&quot;;</span>
+<span class="nc" id="L91">        return &quot;ID: &quot; + id + &quot;, Title: '&quot; + title + &quot;', Type: &quot; + mediaType +</span>
                 &quot;, Available: &quot; + available;
     }
 }

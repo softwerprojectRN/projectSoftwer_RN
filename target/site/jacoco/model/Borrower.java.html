@@ -26,10 +26,10 @@ public class Borrower extends User {
      * @param salt the salt used for password hashing
      */
     public Borrower(int id, String username, String passwordHash, String salt) {
-<span class="fc" id="L29">        super(id, username, passwordHash, salt);</span>
-<span class="fc" id="L30">        this.borrowedMedia = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L31">        this.fineBalance = 0.0;</span>
-<span class="fc" id="L32">    }</span>
+<span class="nc" id="L29">        super(id, username, passwordHash, salt);</span>
+<span class="nc" id="L30">        this.borrowedMedia = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L31">        this.fineBalance = 0.0;</span>
+<span class="nc" id="L32">    }</span>
 
     /**
      * Gets a copy of the list of borrowed media.
@@ -37,7 +37,7 @@ public class Borrower extends User {
      * @return List of MediaRecord objects
      */
     public List&lt;MediaRecord&gt; getBorrowedMedia() {
-<span class="fc" id="L40">        return new ArrayList&lt;&gt;(borrowedMedia);</span>
+<span class="nc" id="L40">        return new ArrayList&lt;&gt;(borrowedMedia);</span>
     }
 
     /**
@@ -46,8 +46,8 @@ public class Borrower extends User {
      * @param borrowedMedia the list of borrowed media records
      */
     public void setBorrowedMedia(List&lt;MediaRecord&gt; borrowedMedia) {
-<span class="fc" id="L49">        this.borrowedMedia = borrowedMedia;</span>
-<span class="fc" id="L50">    }</span>
+<span class="nc" id="L49">        this.borrowedMedia = borrowedMedia;</span>
+<span class="nc" id="L50">    }</span>
 
     /**
      * Gets the current fine balance.
@@ -55,7 +55,7 @@ public class Borrower extends User {
      * @return the fine balance amount
      */
     public double getFineBalance() {
-<span class="fc" id="L58">        return fineBalance;</span>
+<span class="nc" id="L58">        return fineBalance;</span>
     }
 
     /**
@@ -64,8 +64,8 @@ public class Borrower extends User {
      * @param fineBalance the new fine balance
      */
     public void setFineBalance(double fineBalance) {
-<span class="fc" id="L67">        this.fineBalance = fineBalance;</span>
-<span class="fc" id="L68">    }</span>
+<span class="nc" id="L67">        this.fineBalance = fineBalance;</span>
+<span class="nc" id="L68">    }</span>
 
     /**
      * Gets all overdue media items.
@@ -73,13 +73,15 @@ public class Borrower extends User {
      * @return List of overdue MediaRecord objects
      */
     public List&lt;MediaRecord&gt; getOverdueMedia() {
-<span class="fc" id="L76">        List&lt;MediaRecord&gt; overdue = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L77" title="All 2 branches covered.">        for (MediaRecord record : borrowedMedia) {</span>
-<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (record.isOverdue()) {</span>
-<span class="fc" id="L79">                overdue.add(record);</span>
+<span class="nc" id="L76">        List&lt;MediaRecord&gt; overdue = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        for (MediaRecord mediaRecord : borrowedMedia) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">            if (mediaRecord.isOverdue()) {</span>
+<span class="nc" id="L80">                overdue.add(mediaRecord);</span>
             }
-<span class="fc" id="L81">        }</span>
-<span class="fc" id="L82">        return overdue;</span>
+<span class="nc" id="L82">        }</span>
+<span class="nc" id="L83">        return overdue;</span>
     }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
