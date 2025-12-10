@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package service;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=٤;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package service;
 
 import dao.UserDAO;
 import model.User;
@@ -37,10 +37,17 @@ public class UserService {
      * &lt;/p&gt;
      */
 
+<<<<<<< HEAD
 <span class="nc" id="L40">    public UserService() {</span>
 <span class="nc" id="L41">        this.userDAO = new UserDAO();</span>
 <span class="nc" id="L42">        this.userDAO.initializeTable();</span>
 <span class="nc" id="L43">    }</span>
+=======
+<span class="fc" id="L40">    public UserService() {</span>
+<span class="fc" id="L41">        this.userDAO = new UserDAO();</span>
+<span class="fc" id="L42">        this.userDAO.initializeTable();</span>
+<span class="fc" id="L43">    }</span>
+>>>>>>> 082c0f1 ("rahaf")
 
     /**
      * Registers a new user after validating input fields and securely hashing
@@ -60,6 +67,7 @@ public class UserService {
      */
 
     public User register(String username, String password) {
+<<<<<<< HEAD
 <span class="nc bnc" id="L63" title="All 6 branches missed.">        if (username == null || username.trim().isEmpty() ||</span>
 <span class="nc bnc" id="L64" title="All 2 branches missed.">                password == null || password.trim().isEmpty()) {</span>
 <span class="nc" id="L65">            System.err.println(&quot;Error: Username and password cannot be empty&quot;);</span>
@@ -78,6 +86,26 @@ public class UserService {
 <span class="nc bnc" id="L78" title="All 2 branches missed.">        if (userDAO.insert(username, passwordHash, salt)) {</span>
 <span class="nc" id="L79">            System.out.println(&quot;User registered successfully: &quot; + username);</span>
 <span class="nc" id="L80">            return userDAO.findByUsername(username);</span>
+=======
+<span class="fc bfc" id="L63" title="All 6 branches covered.">        if (username == null || username.trim().isEmpty() ||</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">                password == null || password.trim().isEmpty()) {</span>
+<span class="fc" id="L65">            System.err.println(&quot;Error: Username and password cannot be empty&quot;);</span>
+<span class="fc" id="L66">            return null;</span>
+        }
+
+<span class="fc" id="L69">        User existing = userDAO.findByUsername(username);</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (existing != null) {</span>
+<span class="fc" id="L71">            System.out.println(&quot;User already exists: &quot; + username);</span>
+<span class="fc" id="L72">            return null;</span>
+        }
+
+<span class="fc" id="L75">        String salt = PasswordUtil.generateSalt();</span>
+<span class="fc" id="L76">        String passwordHash = PasswordUtil.hashPassword(password, salt);</span>
+
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (userDAO.insert(username, passwordHash, salt)) {</span>
+<span class="fc" id="L79">            System.out.println(&quot;User registered successfully: &quot; + username);</span>
+<span class="fc" id="L80">            return userDAO.findByUsername(username);</span>
+>>>>>>> 082c0f1 ("rahaf")
         }
 
 <span class="nc" id="L83">        return null;</span>
@@ -99,6 +127,7 @@ public class UserService {
      *         or {@code null} if authentication fails
      */
     public User login(String username, String password) {
+<<<<<<< HEAD
 <span class="nc" id="L102">        User user = userDAO.findByUsername(username);</span>
 
 <span class="nc bnc" id="L104" title="All 2 branches missed.">        if (user == null) {</span>
@@ -115,6 +144,24 @@ public class UserService {
         } else {
 <span class="nc" id="L116">            System.out.println(&quot;Invalid username or password.&quot;);</span>
 <span class="nc" id="L117">            return null;</span>
+=======
+<span class="fc" id="L102">        User user = userDAO.findByUsername(username);</span>
+
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (user == null) {</span>
+<span class="fc" id="L105">            System.out.println(&quot;User not found.&quot;);</span>
+<span class="fc" id="L106">            return null;</span>
+        }
+
+<span class="fc" id="L109">        String inputHash = PasswordUtil.hashPassword(password, user.getSalt());</span>
+
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (user.getPasswordHash().equals(inputHash)) {</span>
+<span class="fc" id="L112">            user.setLoggedIn(true);</span>
+<span class="fc" id="L113">            System.out.println(&quot;Login successful, welcome &quot; + username + &quot;!&quot;);</span>
+<span class="fc" id="L114">            return user;</span>
+        } else {
+<span class="fc" id="L116">            System.out.println(&quot;Invalid username or password.&quot;);</span>
+<span class="fc" id="L117">            return null;</span>
+>>>>>>> 082c0f1 ("rahaf")
         }
     }
 }

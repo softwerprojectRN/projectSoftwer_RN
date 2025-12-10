@@ -148,7 +148,7 @@ public class BorrowRecordDAO extends BaseDAO {
         return null;
     }
 
-    private Book fetchBookDetails(Connection conn, int mediaId) throws SQLException {
+    public Book fetchBookDetails(Connection conn, int mediaId) throws SQLException {
         String sql = "SELECT m.title, b.author, b.isbn FROM media m " +
                 "JOIN books b ON m.id = b.id WHERE m.id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -162,7 +162,7 @@ public class BorrowRecordDAO extends BaseDAO {
         return null;
     }
 
-    private CD fetchCDDetails(Connection conn, int mediaId) throws SQLException {
+    public CD fetchCDDetails(Connection conn, int mediaId) throws SQLException {
         String sql = "SELECT m.title, c.artist, c.genre, c.duration FROM media m " +
                 "JOIN cds c ON m.id = c.id WHERE m.id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

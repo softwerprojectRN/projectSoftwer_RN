@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class BookDAOTest {
+class BookTest {
 
     @Mock
     private Connection mockConnection;
@@ -333,5 +333,119 @@ class BookDAOTest {
         assertTrue(result1.isEmpty());
         assertTrue(result2.isEmpty());
         assertTrue(result3.isEmpty());
+
     }
+
+
+
+
+
+    // ------------------ initializeTable() with null connection ------------------
+    @Test
+    void testInitializeTable_connectionNull() {
+        mockedDatabaseConnection.when(DatabaseConnection::getConnection).thenReturn(null);
+        assertDoesNotThrow(() -> bookDAO.initializeTable());
+    }
+
+    // ------------------ findByISBN with SQLException ------------------
+    @Test
+    void testFindByISBN_sqlException() throws SQLException {
+        String isbn = "123";
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        doThrow(new SQLException("Query failed")).when(mockPreparedStatement).executeQuery();
+
+        Book result = bookDAO.findByISBN(isbn);
+        assertNull(result);
+        verify(mockPreparedStatement).setObject(1, isbn);
+    }
+
+    // ------------------ insert with SQLException ------------------
+    @Test
+    void testInsert_sqlException() throws SQLException {
+        int mediaId = 1;
+        String author = "Author";
+        String isbn = "ISBN123";
+
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(mockPreparedStatement);
+        doThrow(new SQLException("Insert failed")).when(mockPreparedStatement).executeUpdate();
+
+        int result = bookDAO.insert(mediaId, author, isbn);
+        assertEquals(-1, result);
+    }
+
+    // ------------------ searchByTitle with SQLException ------------------
+    @Test
+    void testSearchByTitle_sqlException() throws SQLException {
+        String title = "Test";
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        doThrow(new SQLException("Query failed")).when(mockPreparedStatement).executeQuery();
+
+        List<Book> result = bookDAO.searchByTitle(title);
+        assertTrue(result.isEmpty());
+        verify(mockPreparedStatement).setObject(1, "%" + title + "%");
+    }
+
+    // ------------------ searchByAuthor with SQLException ------------------
+    @Test
+    void testSearchByAuthor_sqlException() throws SQLException {
+        String author = "Author";
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        doThrow(new SQLException("Query failed")).when(mockPreparedStatement).executeQuery();
+
+        List<Book> result = bookDAO.searchByAuthor(author);
+        assertTrue(result.isEmpty());
+        verify(mockPreparedStatement).setObject(1, "%" + author + "%");
+    }
+
+    // ------------------ searchByISBNPattern with SQLException ------------------
+    @Test
+    void testSearchByISBNPattern_sqlException() throws SQLException {
+        String isbnPattern = "123";
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        doThrow(new SQLException("Query failed")).when(mockPreparedStatement).executeQuery();
+
+        List<Book> result = bookDAO.searchByISBNPattern(isbnPattern);
+        assertTrue(result.isEmpty());
+        verify(mockPreparedStatement).setObject(1, "%" + isbnPattern + "%");
+    }
+
+    // ------------------ findAll with SQLException ------------------
+    @Test
+    void testFindAll_sqlException() throws SQLException {
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        doThrow(new SQLException("Query failed")).when(mockPreparedStatement).executeQuery();
+
+        List<Book> result = bookDAO.findAll();
+        assertTrue(result.isEmpty());
+    }
+    @Test
+    void testToString_availableBook() {
+        Book book = new Book(1, "Java Programming", "John Doe", "1234567890", true);
+
+        String expected = "ID: 1, Title: 'Java Programming', Type: book, Available: Yes, Author: 'John Doe', ISBN: 1234567890";
+
+        assertEquals(expected, book.toString());
+    }
+
+    @Test
+    void testToString_unavailableBook() {
+        Book book = new Book(2, "Algorithms", "CLRS", "9876543210", false);
+
+        String expected = "ID: 2, Title: 'Algorithms', Type: book, Available: No, Author: 'CLRS', ISBN: 9876543210";
+
+        assertEquals(expected, book.toString());
+    }
+
+
+    @Test
+    void testToString_emptyFields() {
+        Book book = new Book(3, "", "", "", true);
+
+        String expected = "ID: 3, Title: '', Type: book, Available: Yes, Author: '', ISBN: ";
+
+        assertEquals(expected, book.toString());
+    }
+
+
 }
