@@ -2,11 +2,14 @@ package model;
 
 /**
  * Represents a CD in the library system.
- * Extends Media with CD-specific attributes.
  *
- * @author Library Management System
- * @version 1.0
+ * <p>Extends {@link Media} with CD-specific attributes such as artist, genre,
+ * and duration. This class is used to model audio CDs available in the library.</p>
+ *
+ * @author Library
+ * @version 1.1
  */
+
 public class CD extends Media {
     /** The artist of the CD */
     private String artist;

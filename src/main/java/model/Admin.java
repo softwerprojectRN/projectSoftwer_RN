@@ -2,16 +2,22 @@ package model;
 import java.util.logging.Logger;
 
 /**
- * Represents an administrator user in the library system.
- * Extends User with administrative privileges.
+ * Represents an administrator in the library system.
  *
- * @author Library Management System
- * @version 1.0
+ * <p>Extends {@link User} to provide administrative privileges, such as
+ * managing users, sending reminders, and overseeing library operations.</p>
+ *
+ * <p>Provides methods for displaying admin information.</p>
+ *
+ * <p>Logging is done using {@link Logger}.</p>
+ *
+ * @author Library
+ * @version 1.1
  */
 public class Admin extends User {
     private static final Logger logger = Logger.getLogger(Admin.class.getName());
     /**
-     * Constructs an Admin object.
+     * Constructs a new {@code Admin}.
      *
      * @param id the admin's unique identifier
      * @param username the admin's username

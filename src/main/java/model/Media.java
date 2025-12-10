@@ -1,11 +1,13 @@
 package model;
 
 /**
- * Abstract base class representing media items in the library.
- * Serves as the parent class for Book and CD.
+ * Represents a media item in the library system.
  *
- * @author Library Management System
- * @version 1.0
+ * <p>This is the base class for all types of media, such as {@link Book} and {@link CD}.
+ * It tracks common attributes including ID, title, availability status, and media type.</p>
+ *
+ * @author Library
+ * @version 1.1
  */
 public class Media {
     /** The unique identifier for the media */
@@ -80,11 +82,8 @@ public class Media {
         this.isAvailable = available;
     }
 
-    /**
-     * Returns a string representation of the media.
-     *
-     * @return formatted string with media details
-     */
+    /** Returns a string representation of the media. */
+
     @Override
     public String toString() {
         String available = isAvailable ? "Yes" : "No";

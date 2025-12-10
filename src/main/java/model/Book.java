@@ -2,10 +2,15 @@ package model;
 
 /**
  * Represents a book in the library system.
- * Extends Media with book-specific attributes.
  *
- * @author Library Management System
- * @version 1.0
+ * <p>Extends {@link Media} to include book-specific attributes such as
+ * author and ISBN.</p>
+ *
+ * <p>Provides methods to access book information and a string representation
+ * suitable for display.</p>
+ *
+ * @author Library
+ * @version 1.1
  */
 public class Book extends Media {
     /** The author of the book */
@@ -47,11 +52,8 @@ public class Book extends Media {
         return isbn;
     }
 
-    /**
-     * Returns a string representation of the book.
-     *
-     * @return formatted string with book details
-     */
+    /** Returns a formatted string representation of the book. */
+
     @Override
     public String toString() {
         return super.toString() + ", Author: '" + author + "', ISBN: " + isbn;

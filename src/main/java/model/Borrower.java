@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a borrower (library patron) in the system.
- * Extends User with borrowing-specific functionality.
+ * Represents a library borrower (patron) in the system.
  *
- * @author Library Management System
- * @version 1.0
+ * <p>Extends {@link User} to include borrowing-specific attributes such as
+ * a list of borrowed media items and the borrower's fine balance.</p>
+ *
+ * <p>Provides methods to access borrowed media, set fine balances, and
+ * retrieve overdue items.</p>
+ *
+ * @author Library
+ * @version 1.1
  */
 public class Borrower extends User {
     /** List of currently borrowed media items */
@@ -68,9 +73,9 @@ public class Borrower extends User {
     }
 
     /**
-     * Gets all overdue media items.
+     * Returns all borrowed media items that are currently overdue.
      *
-     * @return List of overdue MediaRecord objects
+     * @return a list of overdue {@link MediaRecord} objects
      */
     public List<MediaRecord> getOverdueMedia() {
         List<MediaRecord> overdue = new ArrayList<>();
