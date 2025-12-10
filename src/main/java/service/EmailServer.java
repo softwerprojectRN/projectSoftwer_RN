@@ -220,42 +220,6 @@ public class EmailServer {
         sentEmails.clear();
     }
 
-    /**
-     * A demonstration entry point used for testing the EmailServer.
-     *
-     * <p>The method attempts to load credentials from a .env file and sends
-     * a test message to a specified address. It is intended for manual testing
-     * rather than production use.</p>
-     *
-     * @param args command-line arguments (unused)
-     */
 
-    public static void main(String[] args) {
-        try {
-            System.out.println("Current working directory: " + System.getProperty("user.dir"));
 
-            Dotenv dotenv = Dotenv.configure()
-                    .ignoreIfMissing()
-                    .load();
-
-            String username = dotenv.get("EMAIL_USERNAME");
-            String password = dotenv.get("EMAIL_PASSWORD");
-
-            if (username == null || password == null) {
-                System.err.println("Email credentials not found in .env file");
-                return;
-            }
-
-            EmailServer emailService = new EmailServer(username, password);
-            String subject = "Test Email";
-            String body = "This is a test email from the Library System";
-
-            emailService.sendEmail("s12216975@stu.najah.edu", subject, body);
-
-            System.out.println("Email sent successfully!");
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 }

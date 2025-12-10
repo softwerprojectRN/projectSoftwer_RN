@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BookDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=٤;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">BookDAO.java</span></div><h1>BookDAO.java</h1><pre class="source lang-java linenums">package dao;
+
+import model.Book;
+import java.sql.*;
+import java.util.List;
+
+<span class="fc" id="L7">public class BookDAO extends BaseDAO {</span>
+    private static final String BASE_QUERY =
+            &quot;SELECT m.id, m.title, m.available, b.author, b.isbn &quot; +
+                    &quot;FROM media m JOIN books b ON m.id = b.id &quot;;
+
+    public void initializeTable() {
+<span class="fc" id="L13">        String sql = &quot;CREATE TABLE IF NOT EXISTS books (\n&quot; +</span>
+                &quot; id INTEGER PRIMARY KEY,\n&quot; +
+                &quot; author TEXT NOT NULL,\n&quot; +
+                &quot; isbn TEXT NOT NULL UNIQUE,\n&quot; +
+                &quot; FOREIGN KEY (id) REFERENCES media(id) ON DELETE CASCADE\n&quot; +
+                &quot;);&quot;;
+<span class="fc" id="L19">        createTable(sql, &quot;Books&quot;);</span>
+<span class="fc" id="L20">    }</span>
+
+    public Book findByISBN(String isbn) {
+<span class="fc" id="L23">        return findOne(BASE_QUERY + &quot;WHERE b.isbn = ?&quot;, this::mapBook, isbn);</span>
+    }
+
+    public int insert(int mediaId, String author, String isbn) {
+<span class="fc" id="L27">        return executeInsert(&quot;INSERT INTO books (id, author, isbn) VALUES (?, ?, ?)&quot;,</span>
+<span class="fc" id="L28">                mediaId, author, isbn);</span>
+    }
+
+    public List&lt;Book&gt; findAll() {
+<span class="fc" id="L32">        return findMany(BASE_QUERY + &quot;WHERE m.media_type = 'book'&quot;, this::mapBook);</span>
+    }
+
+    public List&lt;Book&gt; searchByTitle(String title) {
+<span class="fc" id="L36">        return findMany(BASE_QUERY + &quot;WHERE m.media_type = 'book' AND m.title LIKE ?&quot;,</span>
+                this::mapBook, &quot;%&quot; + title + &quot;%&quot;);
+    }
+
+    public List&lt;Book&gt; searchByAuthor(String author) {
+<span class="fc" id="L41">        return findMany(BASE_QUERY + &quot;WHERE m.media_type = 'book' AND b.author LIKE ?&quot;,</span>
+                this::mapBook, &quot;%&quot; + author + &quot;%&quot;);
+    }
+
+    public List&lt;Book&gt; searchByISBNPattern(String isbn) {
+<span class="fc" id="L46">        return findMany(BASE_QUERY + &quot;WHERE m.media_type = 'book' AND b.isbn LIKE ?&quot;,</span>
+                this::mapBook, &quot;%&quot; + isbn + &quot;%&quot;);
+    }
+
+    private Book mapBook(ResultSet rs) throws SQLException {
+<span class="fc" id="L51">        return new Book(</span>
+<span class="fc" id="L52">                rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L53">                rs.getString(&quot;title&quot;),</span>
+<span class="fc" id="L54">                rs.getString(&quot;author&quot;),</span>
+<span class="fc" id="L55">                rs.getString(&quot;isbn&quot;),</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">                rs.getInt(&quot;available&quot;) == 1</span>
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

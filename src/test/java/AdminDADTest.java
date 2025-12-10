@@ -1,4 +1,4 @@
-package dao;
+import dao.*;
 
 import model.Admin;
 import org.junit.jupiter.api.AfterEach;
@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AdminDAOTest {
+class AdminDADTest {
 
     @Mock
     private Connection mockConnection;

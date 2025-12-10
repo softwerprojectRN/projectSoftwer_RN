@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=٤;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">BaseDAO.java</span></div><h1>BaseDAO.java</h1><pre class="source lang-java linenums">package dao;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+/**
+ * Base DAO class providing common database operations.
+ * Reduces code duplication across all DAO classes.
+ */
+public abstract class BaseDAO {
+    protected final Logger logger;
+
+<span class="fc" id="L15">    protected BaseDAO() {</span>
+<span class="fc" id="L16">        this.logger = Logger.getLogger(this.getClass().getName());</span>
+<span class="fc" id="L17">    }</span>
+
+    /**
+     * Executes a table creation SQL statement.
+     */
+    protected void createTable(String sql, String tableName) {
+<span class="fc" id="L23">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (conn == null) return;</span>
+
+<span class="fc" id="L26">        try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L27">            stmt.execute(sql);</span>
+<span class="fc" id="L28">            logger.info(tableName + &quot; table created successfully.&quot;);</span>
+<span class="fc" id="L29">        } catch (SQLException e) {</span>
+<span class="fc" id="L30">            logger.severe(&quot;Error creating &quot; + tableName + &quot; table: &quot; + e.getMessage());</span>
+<span class="fc" id="L31">        }</span>
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * Executes a query and returns a single result using a mapper function.
+     */
+    protected &lt;T&gt; T findOne(String sql, ResultSetMapper&lt;T&gt; mapper, Object... params) {
+<span class="fc" id="L38">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (conn == null) return null;</span>
+
+<span class="fc" id="L41">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L42">            setParameters(pstmt, params);</span>
+<span class="fc" id="L43">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L45">                return mapper.map(rs);</span>
+            }
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L48">            logger.severe(&quot;Error executing query: &quot; + e.getMessage());</span>
+<span class="fc" id="L49">        }</span>
+<span class="fc" id="L50">        return null;</span>
+    }
+
+    /**
+     * Executes a query and returns multiple results using a mapper function.
+     */
+    protected &lt;T&gt; List&lt;T&gt; findMany(String sql, ResultSetMapper&lt;T&gt; mapper, Object... params) {
+<span class="fc" id="L57">        List&lt;T&gt; results = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L58">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (conn == null) return results;</span>
+
+<span class="fc" id="L61">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L62">            setParameters(pstmt, params);</span>
+<span class="fc" id="L63">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L65">                results.add(mapper.map(rs));</span>
+            }
+<span class="fc" id="L67">        } catch (SQLException e) {</span>
+<span class="fc" id="L68">            logger.severe(&quot;Error executing query: &quot; + e.getMessage());</span>
+<span class="fc" id="L69">        }</span>
+<span class="fc" id="L70">        return results;</span>
+    }
+
+    /**
+     * Executes an insert and returns the generated key.
+     */
+    protected int executeInsert(String sql, Object... params) {
+<span class="fc" id="L77">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (conn == null) return -1;</span>
+
+<span class="fc" id="L80">        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="fc" id="L81">            setParameters(pstmt, params);</span>
+<span class="fc" id="L82">            pstmt.executeUpdate();</span>
+<span class="fc" id="L83">            ResultSet keys = pstmt.getGeneratedKeys();</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            if (keys.next()) {</span>
+<span class="fc" id="L85">                return keys.getInt(1);</span>
+            }
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L88">            logger.severe(&quot;Error inserting record: &quot; + e.getMessage());</span>
+<span class="fc" id="L89">        }</span>
+<span class="fc" id="L90">        return -1;</span>
+    }
+
+    /**
+     * Executes an update/delete and returns success status.
+     */
+    protected boolean executeUpdate(String sql, Object... params) {
+<span class="fc" id="L97">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (conn == null) return false;</span>
+
+<span class="fc" id="L100">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L101">            setParameters(pstmt, params);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            return pstmt.executeUpdate() &gt; 0;</span>
+<span class="fc" id="L103">        } catch (SQLException e) {</span>
+<span class="fc" id="L104">            logger.severe(&quot;Error updating record: &quot; + e.getMessage());</span>
+<span class="fc" id="L105">            return false;</span>
+        }
+    }
+
+    /**
+     * Executes a count query.
+     */
+    protected int executeCount(String sql, Object... params) {
+<span class="fc" id="L113">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (conn == null) return 0;</span>
+
+<span class="fc" id="L116">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L117">            setParameters(pstmt, params);</span>
+<span class="fc" id="L118">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">            if (rs.next()) {</span>
+<span class="fc" id="L120">                return rs.getInt(1);</span>
+            }
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L123">            logger.severe(&quot;Error counting records: &quot; + e.getMessage());</span>
+<span class="nc" id="L124">        }</span>
+<span class="fc" id="L125">        return 0;</span>
+    }
+
+    /**
+     * Sets parameters on a prepared statement.
+     */
+    private void setParameters(PreparedStatement pstmt, Object... params) throws SQLException {
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        for (int i = 0; i &lt; params.length; i++) {</span>
+<span class="fc" id="L133">            pstmt.setObject(i + 1, params[i]);</span>
+        }
+<span class="fc" id="L135">    }</span>
+
+    @FunctionalInterface
+    public interface ResultSetMapper&lt;T&gt; {
+        T map(ResultSet rs) throws SQLException;
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
