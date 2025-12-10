@@ -1,103 +1,30 @@
 package dao;
-import java.util.logging.Logger;
+
 import model.User;
 import java.sql.*;
 
-/**
- * Data Access Object for User entity.
- * Manages database operations for user accounts including registration and authentication.
- *
- * @author Library Management System
- * @version 1.0
- */
-public class UserDAO {
-    private static final Logger logger = Logger.getLogger(UserDAO.class.getName());
-    /**
-     * Initializes the users table in the database.
-     * Creates the table with columns for authentication and user management.
-     */
-    public void initializeTable() {
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) return;
+public class UserDAO extends BaseDAO {
 
+    public void initializeTable() {
         String sql = "CREATE TABLE IF NOT EXISTS users (\n" +
                 " id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 " username TEXT NOT NULL UNIQUE,\n" +
                 " password_hash TEXT NOT NULL,\n" +
                 " salt TEXT NOT NULL\n" +
                 ");";
-
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-            logger.info("Users table created successfully.");
-        } catch (SQLException e) {
-            logger.severe("Error creating users table: " + e.getMessage());
-        }
+        createTable(sql, "Users");
     }
 
-    /**
-     * Finds a user by username.
-     *
-     * @param username the username to search for
-     * @return User object if found, null otherwise
-     */
     public User findByUsername(String username) {
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) return null;
-
         String sql = "SELECT id, username, password_hash, salt FROM users WHERE username = ?";
-
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("username"),
-                        rs.getString("password_hash"),
-                        rs.getString("salt")
-                );
-            }
-        } catch (SQLException e) {
-            logger.severe("Error finding user: " + e.getMessage());
-        }
-        return null;
+        return findOne(sql, this::mapUser, username);
     }
 
-    /**
-     * Inserts a new user into the database.
-     *
-     * @param username the user's username
-     * @param passwordHash the hashed password
-     * @param salt the salt used for password hashing
-     * @return true if insertion was successful, false otherwise
-     */
     public boolean insert(String username, String passwordHash, String salt) {
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn == null) return false;
-
         String sql = "INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)";
-
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, passwordHash);
-            pstmt.setString(3, salt);
-            pstmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            logger.severe("Error inserting user: " + e.getMessage());
-            return false;
-        }
+        return executeInsert(sql, username, passwordHash, salt) > 0;
     }
 
-    /**
-     * Deletes a user and all associated records from the database.
-     * Uses transaction to ensure data integrity.
-     *
-     * @param username the username of the user to delete
-     * @return true if deletion was successful, false otherwise
-     */
     public boolean delete(String username) {
         Connection conn = DatabaseConnection.getConnection();
         if (conn == null) return false;
@@ -105,45 +32,23 @@ public class UserDAO {
         try {
             conn.setAutoCommit(false);
 
-            // Get user ID
-            int userId = -1;
-            String findSql = "SELECT id FROM users WHERE username = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(findSql)) {
-                pstmt.setString(1, username);
-                ResultSet rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    userId = rs.getInt("id");
-                } else {
-                    conn.rollback();
-                    return false;
-                }
+            Integer userId = findOne("SELECT id FROM users WHERE username = ?",
+                    rs -> rs.getInt("id"), username);
+            if (userId == null) {
+                conn.rollback();
+                return false;
             }
 
-            // Delete related records
-            String deleteBorrowSql = "DELETE FROM borrow_records WHERE user_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(deleteBorrowSql)) {
-                pstmt.setInt(1, userId);
-                pstmt.executeUpdate();
-            }
+            executeUpdate("DELETE FROM borrow_records WHERE user_id = ?", userId);
+            executeUpdate("DELETE FROM user_fines WHERE user_id = ?", userId);
+            boolean deleted = executeUpdate("DELETE FROM users WHERE id = ?", userId);
 
-            String deleteFinesSql = "DELETE FROM user_fines WHERE user_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(deleteFinesSql)) {
-                pstmt.setInt(1, userId);
-                pstmt.executeUpdate();
-            }
-
-            // Delete user
-            String deleteUserSql = "DELETE FROM users WHERE id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(deleteUserSql)) {
-                pstmt.setInt(1, userId);
-                int affected = pstmt.executeUpdate();
-                if (affected > 0) {
-                    conn.commit();
-                    return true;
-                } else {
-                    conn.rollback();
-                    return false;
-                }
+            if (deleted) {
+                conn.commit();
+                return true;
+            } else {
+                conn.rollback();
+                return false;
             }
         } catch (SQLException e) {
             logger.severe("Error deleting user: " + e.getMessage());
@@ -160,5 +65,14 @@ public class UserDAO {
                 logger.severe("Error resetting auto-commit: " + e.getMessage());
             }
         }
+    }
+
+    private User mapUser(ResultSet rs) throws SQLException {
+        return new User(
+                rs.getInt("id"),
+                rs.getString("username"),
+                rs.getString("password_hash"),
+                rs.getString("salt")
+        );
     }
 }
