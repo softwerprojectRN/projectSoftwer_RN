@@ -35,7 +35,7 @@
 //        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
 //            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
 //
-//            userDAO.initializeTable();
+//            userDAO.gitinitializeTable();
 //            verify(mockStmt).execute(anyString());
 //            assertTrue(outContent.toString().contains("Users table created successfully."));
 //        } finally {

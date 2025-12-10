@@ -1,28 +1,30 @@
 package model;
 
 /**
- * Represents a user with overdue books.
- * Used for reporting and notification purposes.
+ * Represents a library user who currently has overdue books.
  *
- * @author Library Management System
- * @version 1.0
+ * <p>This class is primarily used for reporting and sending notifications
+ * about overdue items.</p>
+ *
+ * @author Library Management
+ * @version 1.1
  */
 public class UserWithOverdueBooks {
-    /** The user's ID */
+    /** The unique ID of the user. */
     private int userId;
 
-    /** The username */
+    /** The username of the user. */
     private String username;
 
-    /** The count of overdue items */
+    /** The number of overdue items for this user. */
     private int overdueCount;
 
     /**
-     * Constructs a UserWithOverdueBooks object.
+     * Constructs a {@code UserWithOverdueBooks} instance.
      *
-     * @param userId the user's ID
-     * @param username the username
-     * @param overdueCount the number of overdue items
+     * @param userId the user's unique identifier
+     * @param username the user's username
+     * @param overdueCount the count of overdue items
      */
     public UserWithOverdueBooks(int userId, String username, int overdueCount) {
         this.userId = userId;
@@ -31,7 +33,7 @@ public class UserWithOverdueBooks {
     }
 
     /**
-     * Gets the user ID.
+     * Returns the user's unique ID.
      *
      * @return the user ID
      */
@@ -40,7 +42,7 @@ public class UserWithOverdueBooks {
     }
 
     /**
-     * Gets the username.
+     * Returns the user's username.
      *
      * @return the username
      */
@@ -49,9 +51,9 @@ public class UserWithOverdueBooks {
     }
 
     /**
-     * Gets the overdue count.
+     * Returns the number of overdue items for this user.
      *
-     * @return the number of overdue items
+     * @return the overdue item count
      */
     public int getOverdueCount() {
         return overdueCount;

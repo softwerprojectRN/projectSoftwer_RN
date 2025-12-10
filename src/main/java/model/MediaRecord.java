@@ -3,11 +3,13 @@ package model;
 import java.time.LocalDate;
 
 /**
- * Represents a borrowing record for a media item.
- * Tracks borrowed media, due dates, and overdue status.
+ * Represents a record of a borrowed media item in the library system.
  *
- * @author Library Management System
- * @version 1.0
+ * <p>This class tracks the borrowed media, its due date, and provides methods
+ * to check overdue status and calculate overdue days.</p>
+ *
+ * @author Library Management
+ * @version 1.1
  */
 public class MediaRecord {
     /** The unique identifier for this borrow record */
@@ -20,11 +22,11 @@ public class MediaRecord {
     private LocalDate dueDate;
 
     /**
-     * Constructs a MediaRecord object.
+     * Constructs a new {@code MediaRecord}.
      *
      * @param recordId the record's unique identifier
      * @param media the borrowed media item
-     * @param dueDate the due date for return
+     * @param dueDate the due date for returning the media
      */
     public MediaRecord(int recordId, Media media, LocalDate dueDate) {
         this.recordId = recordId;
