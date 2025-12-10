@@ -40,7 +40,7 @@ jobs:
       uses: SonarSource/sonarcloud-github-action@master
       with:
         args: >
-          -Dsonar.projectKey=softwerprojectrn
+          -Dsonar.projectKey=softwerprojectRN_projectSoftwer_RN
           -Dsonar.organization=softwerprojectRN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
