@@ -20,6 +20,7 @@ import java.util.List;
  * <p>This service interacts with {@link BorrowRecordDAO} and {@link FineDAO}
  * to retrieve and update borrower information.</p>
  *
+ * @author Library
  * @version 1.1
  */
 public class BorrowerService {

@@ -19,6 +19,7 @@ import java.util.List;
  * the core search logic.
  * </p>
  *
+ * @author Library
  * @version 1.1
  */
 

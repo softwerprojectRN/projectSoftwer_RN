@@ -18,8 +18,8 @@ import java.util.Scanner;
  *
  * Usage: Run the {@link #main(String[])} method to start the user menu.
  *
- * @author Library Management System
- * @version 1.0
+ * @author Library
+ * @version 1.1
  */
 public class UserMenu {
     private static Scanner scanner = new Scanner(System.in);

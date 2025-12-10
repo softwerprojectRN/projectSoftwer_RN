@@ -5,36 +5,49 @@ import model.Book;
 import java.util.List;
 
 /**
- * Concrete search strategy for searching books by title.
- * Implements the {@link SearchStrategy} interface.
+ * A concrete implementation of the {@link SearchStrategy} interface that performs
+ * book searches based on title matching.
+ * &lt;p&gt;
+ * This strategy delegates the search operation to the {@link BookDAO}, which
+ * handles the actual database interaction and filtering logic.
+ * &lt;/p&gt;
  *
- * Enables searching for books in the database based on the title field.
+ * &lt;p&gt;
+ * Using this strategy allows the system to support title-based searching without
+ * altering the core search flow, following the Strategy Pattern.
+ * &lt;/p&gt;
  *
- * @author Library Management System
- * @version 1.0
+ * @version 1.1
  */
+
 public class SearchByTitle implements SearchStrategy {
 
-    /** DAO for accessing book data */
+    /**
+     * Data Access Object responsible for retrieving and querying book records
+     * from the underlying data source.
+     */
     private final BookDAO bookDAO;
 
     /**
-     * Constructs a new {@code SearchByTitle} strategy.
-     * Initializes the {@link BookDAO}.
+     * Creates a new instance of the {@code SearchByTitle} strategy and initializes
+     * its associated {@link BookDAO} for performing title-based lookups.
      */
-<span class="nc" id="L25">    public SearchByTitle() {</span>
-<span class="nc" id="L26">        this.bookDAO = new BookDAO();</span>
-<span class="nc" id="L27">    }</span>
+<span class="nc" id="L35">    public SearchByTitle() {</span>
+<span class="nc" id="L36">        this.bookDAO = new BookDAO();</span>
+<span class="nc" id="L37">    }</span>
 
     /**
-     * Searches for books using the title provided.
+     * Searches for books whose titles match the specified search term.
      *
-     * @param searchTerm the title to search for
-     * @return a list of {@link Book} objects matching the title
+     * @param searchTerm the title or partial title used to filter books;
+     *                   must not be null or empty
+     * @return a list of {@link Book} objects that match the given title,
+     *         or an empty list if no results are found
      */
+
     @Override
     public List&lt;Book&gt; search(String searchTerm) {
-<span class="nc" id="L37">        return bookDAO.searchByTitle(searchTerm);</span>
+<span class="nc" id="L50">        return bookDAO.searchByTitle(searchTerm);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Media.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">Media.java</span></div><h1>Media.java</h1><pre class="source lang-java linenums">package model;
 
 /**
- * Abstract base class representing media items in the library.
- * Serves as the parent class for Book and CD.
+ * Represents a media item in the library system.
  *
- * @author Library Management System
- * @version 1.0
+ * &lt;p&gt;This is the base class for all types of media, such as {@link Book} and {@link CD}.
+ * It tracks common attributes including ID, title, availability status, and media type.&lt;/p&gt;
+ *
+ * @author Library
+ * @version 1.1
  */
 public class Media {
     /** The unique identifier for the media */
@@ -28,12 +30,12 @@ public class Media {
      * @param isAvailable the availability status
      * @param mediaType the type of media
      */
-<span class="fc" id="L31">    public Media(int id, String title, boolean isAvailable, String mediaType) {</span>
-<span class="fc" id="L32">        this.id = id;</span>
-<span class="fc" id="L33">        this.title = title;</span>
-<span class="fc" id="L34">        this.isAvailable = isAvailable;</span>
-<span class="fc" id="L35">        this.mediaType = mediaType;</span>
-<span class="fc" id="L36">    }</span>
+<span class="fc" id="L33">    public Media(int id, String title, boolean isAvailable, String mediaType) {</span>
+<span class="fc" id="L34">        this.id = id;</span>
+<span class="fc" id="L35">        this.title = title;</span>
+<span class="fc" id="L36">        this.isAvailable = isAvailable;</span>
+<span class="fc" id="L37">        this.mediaType = mediaType;</span>
+<span class="fc" id="L38">    }</span>
 
     /**
      * Gets the media ID.
@@ -41,7 +43,7 @@ public class Media {
      * @return the media ID
      */
     public int getId() {
-<span class="fc" id="L44">        return id;</span>
+<span class="fc" id="L46">        return id;</span>
     }
 
     /**
@@ -50,7 +52,7 @@ public class Media {
      * @return the title
      */
     public String getTitle() {
-<span class="fc" id="L53">        return title;</span>
+<span class="fc" id="L55">        return title;</span>
     }
 
     /**
@@ -59,7 +61,7 @@ public class Media {
      * @return true if available, false otherwise
      */
     public boolean isAvailable() {
-<span class="fc" id="L62">        return isAvailable;</span>
+<span class="fc" id="L64">        return isAvailable;</span>
     }
 
     /**
@@ -68,7 +70,7 @@ public class Media {
      * @return the media type (book or cd)
      */
     public String getMediaType() {
-<span class="nc" id="L71">        return mediaType;</span>
+<span class="nc" id="L73">        return mediaType;</span>
     }
 
     /**
@@ -77,18 +79,15 @@ public class Media {
      * @param available the new availability status
      */
     public void setAvailable(boolean available) {
-<span class="nc" id="L80">        this.isAvailable = available;</span>
-<span class="nc" id="L81">    }</span>
+<span class="nc" id="L82">        this.isAvailable = available;</span>
+<span class="nc" id="L83">    }</span>
 
-    /**
-     * Returns a string representation of the media.
-     *
-     * @return formatted string with media details
-     */
+    /** Returns a string representation of the media. */
+
     @Override
     public String toString() {
-<span class="nc bnc" id="L90" title="All 2 branches missed.">        String available = isAvailable ? &quot;Yes&quot; : &quot;No&quot;;</span>
-<span class="nc" id="L91">        return &quot;ID: &quot; + id + &quot;, Title: '&quot; + title + &quot;', Type: &quot; + mediaType +</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        String available = isAvailable ? &quot;Yes&quot; : &quot;No&quot;;</span>
+<span class="nc" id="L90">        return &quot;ID: &quot; + id + &quot;, Title: '&quot; + title + &quot;', Type: &quot; + mediaType +</span>
                 &quot;, Available: &quot; + available;
     }
 }

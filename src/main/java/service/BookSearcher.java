@@ -20,6 +20,7 @@ import java.util.List;
  *     results = searcher.search("Joshua Bloch");
  * </pre>
  *
+ * @author Library
  * @version 1.1
  */
 public class BookSearcher {

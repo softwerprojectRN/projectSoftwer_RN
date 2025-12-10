@@ -17,6 +17,7 @@ import java.util.List;
  * search behaviors without modifying the core system logic.
  * </p>
  *
+ * @author Library
  * @version 1.1
  */
 

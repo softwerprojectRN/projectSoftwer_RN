@@ -8,7 +8,7 @@ import java.time.LocalDate;
  * <p>This class tracks the borrowed media, its due date, and provides methods
  * to check overdue status and calculate overdue days.</p>
  *
- * @author Library Management
+ * @author Library
  * @version 1.1
  */
 public class MediaRecord {

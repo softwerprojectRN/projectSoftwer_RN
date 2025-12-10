@@ -5,36 +5,51 @@ import model.Book;
 import java.util.List;
 
 /**
- * Concrete search strategy for searching books by author name.
- * Implements the {@link SearchStrategy} interface.
+ * A concrete implementation of the {@link SearchStrategy} interface that performs
+ * book searches based on author name matching.
+ * &lt;p&gt;
+ * This strategy utilizes the {@link BookDAO} to execute database queries and
+ * retrieve books written by authors whose names match or contain the provided
+ * search term.
+ * &lt;/p&gt;
  *
- * Provides a way to search the book database based on the author field.
+ * &lt;p&gt;
+ * Following the Strategy Pattern, this implementation allows the library system
+ * to support flexible and interchangeable searching behaviors without modifying
+ * the core search logic.
+ * &lt;/p&gt;
  *
- * @author Library Management System
- * @version 1.0
+ * @version 1.1
  */
+
 public class SearchByAuthor implements SearchStrategy {
 
-    /** DAO for accessing book data */
+    /**
+     * Data Access Object responsible for interacting with stored book records.
+     * Handles author-based lookup operations.
+     */
     private final BookDAO bookDAO;
 
     /**
-     * Constructs a new {@code SearchByAuthor} strategy.
-     * Initializes the {@link BookDAO}.
+     * Creates a new instance of the {@code SearchByAuthor} strategy and initializes
+     * its {@link BookDAO} dependency for performing author-based queries.
      */
-<span class="nc" id="L25">    public SearchByAuthor() {</span>
-<span class="nc" id="L26">        this.bookDAO = new BookDAO();</span>
-<span class="nc" id="L27">    }</span>
+<span class="nc" id="L37">    public SearchByAuthor() {</span>
+<span class="nc" id="L38">        this.bookDAO = new BookDAO();</span>
+<span class="nc" id="L39">    }</span>
 
     /**
-     * Searches for books by author using the provided search term.
+     * Searches for books whose author name matches or contains the specified term.
      *
-     * @param searchTerm the author name to search for
-     * @return a list of {@link Book} objects matching the author
+     * @param searchTerm the full or partial author name used to filter book records;
+     *                   must not be null or empty
+     * @return a list of {@link Book} objects written by authors matching the term,
+     *         or an empty list if no matching books are found
      */
+
     @Override
     public List&lt;Book&gt; search(String searchTerm) {
-<span class="nc" id="L37">        return bookDAO.searchByAuthor(searchTerm);</span>
+<span class="nc" id="L52">        return bookDAO.searchByAuthor(searchTerm);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

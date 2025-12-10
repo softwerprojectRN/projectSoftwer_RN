@@ -2,10 +2,15 @@
 
 /**
  * Represents a book in the library system.
- * Extends Media with book-specific attributes.
  *
- * @author Library Management System
- * @version 1.0
+ * &lt;p&gt;Extends {@link Media} to include book-specific attributes such as
+ * author and ISBN.&lt;/p&gt;
+ *
+ * &lt;p&gt;Provides methods to access book information and a string representation
+ * suitable for display.&lt;/p&gt;
+ *
+ * @author Library
+ * @version 1.1
  */
 public class Book extends Media {
     /** The author of the book */
@@ -24,10 +29,10 @@ public class Book extends Media {
      * @param isAvailable the availability status
      */
     public Book(int id, String title, String author, String isbn, boolean isAvailable) {
-<span class="fc" id="L27">        super(id, title, isAvailable, &quot;book&quot;);</span>
-<span class="fc" id="L28">        this.author = author;</span>
-<span class="fc" id="L29">        this.isbn = isbn;</span>
-<span class="fc" id="L30">    }</span>
+<span class="fc" id="L32">        super(id, title, isAvailable, &quot;book&quot;);</span>
+<span class="fc" id="L33">        this.author = author;</span>
+<span class="fc" id="L34">        this.isbn = isbn;</span>
+<span class="fc" id="L35">    }</span>
 
     /**
      * Gets the author of the book.
@@ -35,7 +40,7 @@ public class Book extends Media {
      * @return the author's name
      */
     public String getAuthor() {
-<span class="fc" id="L38">        return author;</span>
+<span class="fc" id="L43">        return author;</span>
     }
 
     /**
@@ -44,17 +49,14 @@ public class Book extends Media {
      * @return the ISBN
      */
     public String getIsbn() {
-<span class="fc" id="L47">        return isbn;</span>
+<span class="fc" id="L52">        return isbn;</span>
     }
 
-    /**
-     * Returns a string representation of the book.
-     *
-     * @return formatted string with book details
-     */
+    /** Returns a formatted string representation of the book. */
+
     @Override
     public String toString() {
-<span class="nc" id="L57">        return super.toString() + &quot;, Author: '&quot; + author + &quot;', ISBN: &quot; + isbn;</span>
+<span class="nc" id="L59">        return super.toString() + &quot;, Author: '&quot; + author + &quot;', ISBN: &quot; + isbn;</span>
     }
 
 

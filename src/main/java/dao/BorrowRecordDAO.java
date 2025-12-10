@@ -6,8 +6,48 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BorrowRecordDAO extends BaseDAO {
 
+/**
+ * {@code BorrowRecordDAO} is a Data Access Object (DAO) class responsible for
+ * managing database operations related to borrow records of media items
+ * (e.g., books, CDs) by users.
+ *
+ * <p>It extends {@link BaseDAO} to reuse common database operations such as
+ * table creation, query execution, and result mapping.</p>
+ *
+ * <p>This class provides methods to:</p>
+ * <ul>
+ *     <li>Create the "borrow_records" table with necessary foreign key constraints.</li>
+ *     <li>Insert new borrow records.</li>
+ *     <li>Mark borrow records as returned and record fines.</li>
+ *     <li>Retrieve active borrow records for a specific user.</li>
+ *     <li>Retrieve overdue borrow records and users with overdue books.</li>
+ *     <li>Count active borrow records for a specific user.</li>
+ * </ul>
+ *
+ * <p>Example usage:</p>
+ * <pre>
+ * {@code
+ * BorrowRecordDAO borrowDAO = new BorrowRecordDAO();
+ * borrowDAO.initializeTable();
+ * int recordId = borrowDAO.insert(userId, mediaId, "book", "Java Programming",
+ *                                  LocalDate.now(), LocalDate.now().plusDays(14));
+ * borrowDAO.markAsReturned(recordId, LocalDate.now(), 0.0);
+ * List<MediaRecord> active = borrowDAO.findActiveByUserId(userId);
+ * List<UserWithOverdueBooks> overdueUsers = borrowDAO.getUsersWithOverdueBooks();
+ * }
+ * </pre>
+ *
+ * @author Library
+ * @version 1.1
+ *
+ */
+public class BorrowRecordDAO extends BaseDAO {
+    /**
+     * Initializes the "borrow_records" table in the database.
+     * If the table already exists, no changes are made.
+     * The table includes foreign keys referencing "users" and "media" tables.
+     */
     public void initializeTable() {
         String sql = "CREATE TABLE IF NOT EXISTS borrow_records (\n" +
                 " id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
@@ -25,7 +65,17 @@ public class BorrowRecordDAO extends BaseDAO {
                 ");";
         createTable(sql, "Borrow records");
     }
-
+    /**
+     * Inserts a new borrow record for a user.
+     *
+     * @param userId     the ID of the user borrowing the media
+     * @param mediaId    the ID of the media item
+     * @param mediaType  the type of media (e.g., "book", "cd")
+     * @param mediaTitle the title of the media
+     * @param borrowDate the date when the media was borrowed
+     * @param dueDate    the due date for returning the media
+     * @return the generated ID of the inserted borrow record; -1 if insertion fails
+     */
     public int insert(int userId, int mediaId, String mediaType, String mediaTitle,
                       LocalDate borrowDate, LocalDate dueDate) {
         return executeInsert(
@@ -34,12 +84,24 @@ public class BorrowRecordDAO extends BaseDAO {
                 userId, mediaId, mediaType, mediaTitle, borrowDate.toString(), dueDate.toString()
         );
     }
-
+    /**
+     * Marks a borrow record as returned and records any associated fine.
+     *
+     * @param recordId   the ID of the borrow record
+     * @param returnDate the actual return date
+     * @param fine       the fine amount for late return
+     * @return {@code true} if the update was successful; {@code false} otherwise
+     */
     public boolean markAsReturned(int recordId, LocalDate returnDate, double fine) {
         return executeUpdate("UPDATE borrow_records SET returned = 1, return_date = ?, fine = ? WHERE id = ?",
                 returnDate.toString(), fine, recordId);
     }
-
+    /**
+     * Retrieves all active (not yet returned) borrow records for a specific user.
+     *
+     * @param userId the ID of the user
+     * @return a list of {@link MediaRecord} representing active borrow records
+     */
     public List<MediaRecord> findActiveByUserId(int userId) {
         List<MediaRecord> records = new ArrayList<>();
         Connection conn = DatabaseConnection.getConnection();
@@ -68,7 +130,15 @@ public class BorrowRecordDAO extends BaseDAO {
         }
         return records;
     }
-
+    /**
+     * Fetches media details based on type.
+     *
+     * @param conn      the database connection
+     * @param mediaId   the ID of the media
+     * @param mediaType the type of media
+     * @return a {@link Media} object if found; {@code null} otherwise
+     * @throws SQLException if a database access error occurs
+     */
     private Media fetchMediaDetails(Connection conn, int mediaId, String mediaType) throws SQLException {
         if ("book".equals(mediaType)) {
             return fetchBookDetails(conn, mediaId);
@@ -105,7 +175,11 @@ public class BorrowRecordDAO extends BaseDAO {
         }
         return null;
     }
-
+    /**
+     * Retrieves users who have overdue borrow records.
+     *
+     * @return a list of {@link UserWithOverdueBooks} representing users with overdue media
+     */
     public List<UserWithOverdueBooks> getUsersWithOverdueBooks() {
         String sql = "SELECT u.id, u.username, COUNT(br.id) as overdue_count " +
                 "FROM users u JOIN borrow_records br ON u.id = br.user_id " +
@@ -119,6 +193,12 @@ public class BorrowRecordDAO extends BaseDAO {
         ));
     }
 
+    /**
+     * Retrieves overdue borrow records for a specific user.
+     *
+     * @param userId the ID of the user
+     * @return a list of overdue {@link MediaRecord} objects
+     */
     public List<MediaRecord> findOverdueByUserId(int userId) {
         List<MediaRecord> allRecords = findActiveByUserId(userId);
         List<MediaRecord> overdueRecords = new ArrayList<>();
@@ -130,6 +210,12 @@ public class BorrowRecordDAO extends BaseDAO {
         return overdueRecords;
     }
 
+    /**
+     * Counts the number of active (not returned) borrow records for a specific user.
+     *
+     * @param userId the ID of the user
+     * @return the number of active borrow records
+     */
     public int countActiveByUserId(int userId) {
         return executeCount("SELECT COUNT(*) FROM borrow_records WHERE user_id = ? AND returned = 0", userId);
     }

@@ -4,12 +4,23 @@ import model.Book;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * Context class for searching books using different search strategies.
- * Supports changing the strategy at runtime.
+ * Context class for searching books using different {@link SearchStrategy} implementations.
  *
- * @author Library Management System
- * @version 1.0
+ * &lt;p&gt;This class allows switching the search strategy at runtime, following
+ * the Strategy design pattern. Clients can perform searches without
+ * worrying about the underlying search logic.&lt;/p&gt;
+ *
+ * &lt;p&gt;Example usage:&lt;/p&gt;
+ * &lt;pre&gt;
+ *     BookSearcher searcher = new BookSearcher(new SearchByTitle());
+ *     List&amp;lt;Book&amp;gt; results = searcher.search(&quot;Java&quot;);
+ *     searcher.setSearchStrategy(new SearchByAuthor());
+ *     results = searcher.search(&quot;Joshua Bloch&quot;);
+ * &lt;/pre&gt;
+ *
+ * @version 1.1
  */
 public class BookSearcher {
 
@@ -21,9 +32,9 @@ public class BookSearcher {
      *
      * @param searchStrategy the initial search strategy to use
      */
-<span class="nc" id="L24">    public BookSearcher(SearchStrategy searchStrategy) {</span>
-<span class="nc" id="L25">        this.searchStrategy = searchStrategy;</span>
-<span class="nc" id="L26">    }</span>
+<span class="nc" id="L35">    public BookSearcher(SearchStrategy searchStrategy) {</span>
+<span class="nc" id="L36">        this.searchStrategy = searchStrategy;</span>
+<span class="nc" id="L37">    }</span>
 
     /**
      * Updates the search strategy at runtime.
@@ -31,21 +42,22 @@ public class BookSearcher {
      * @param searchStrategy the new search strategy to use
      */
     public void setSearchStrategy(SearchStrategy searchStrategy) {
-<span class="nc" id="L34">        this.searchStrategy = searchStrategy;</span>
-<span class="nc" id="L35">    }</span>
+<span class="nc" id="L45">        this.searchStrategy = searchStrategy;</span>
+<span class="nc" id="L46">    }</span>
 
     /**
      * Searches for books using the current search strategy.
      *
-     * @param searchTerm the search query (cannot be empty)
-     * @return a list of {@link Book} objects that match the search term
+     * @param searchTerm the search query; must not be null or empty
+     * @return a list of {@link Book} objects matching the search term,
+     *         or an empty list if no matches are found or the search term is invalid
      */
     public List&lt;Book&gt; search(String searchTerm) {
-<span class="nc bnc" id="L44" title="All 4 branches missed.">        if (searchTerm == null || searchTerm.trim().isEmpty()) {</span>
-<span class="nc" id="L45">            System.out.println(&quot;Search term cannot be empty&quot;);</span>
-<span class="nc" id="L46">            return new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L56" title="All 4 branches missed.">        if (searchTerm == null || searchTerm.trim().isEmpty()) {</span>
+<span class="nc" id="L57">            System.out.println(&quot;Search term cannot be empty&quot;);</span>
+<span class="nc" id="L58">            return new ArrayList&lt;&gt;();</span>
         }
-<span class="nc" id="L48">        return searchStrategy.search(searchTerm.trim());</span>
+<span class="nc" id="L60">        return searchStrategy.search(searchTerm.trim());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

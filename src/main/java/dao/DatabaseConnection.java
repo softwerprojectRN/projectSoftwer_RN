@@ -18,8 +18,8 @@ import java.sql.SQLException;
  * }
  * </pre>
  *
- * Author: Library Management System
- * Version: 1.0
+ * @author Library
+ * @version 1.1
  */
 public class DatabaseConnection {
     private static final Logger logger = Logger.getLogger(DatabaseConnection.class.getName());

@@ -17,6 +17,7 @@ import java.util.List;
  * <p>This service interacts with {@link BookDAO} and {@link MediaDAO} to perform
  * database operations and maintain media/book consistency.</p>
  *
+ * @author Library
  * @version 1.1
  */
 public class BookService {

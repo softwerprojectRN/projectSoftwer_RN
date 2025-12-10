@@ -14,6 +14,7 @@ import java.util.List;
  * to persist CD and media records while providing business logic for validation
  * and search functionality.</p>
  *
+ * @author Library
  * @version 1.1
  */
 

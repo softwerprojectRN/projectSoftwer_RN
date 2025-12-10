@@ -25,8 +25,8 @@ interface Observer {
  *
  * Handles null or invalid data gracefully and logs warnings or errors.
  *
- * Author: Library Management System
- * Version: 1.0
+ * @author Library
+ * @version 1.1
  */
 public class EmailNotifier implements Observer {
 

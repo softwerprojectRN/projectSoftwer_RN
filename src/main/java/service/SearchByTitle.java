@@ -17,6 +17,7 @@ import java.util.List;
  * altering the core search flow, following the Strategy Pattern.
  * </p>
  *
+ * @author Library
  * @version 1.1
  */
 

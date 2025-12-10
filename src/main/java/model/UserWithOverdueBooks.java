@@ -6,7 +6,7 @@ package model;
  * <p>This class is primarily used for reporting and sending notifications
  * about overdue items.</p>
  *
- * @author Library Management
+ * @author Library
  * @version 1.1
  */
 public class UserWithOverdueBooks {

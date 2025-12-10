@@ -17,6 +17,7 @@ import dao.PasswordUtil;
  * through the underlying {@code UserDAO}.
  * </p>
  *
+ * @author Library
  * @version 1.1
  */
 public class UserService {

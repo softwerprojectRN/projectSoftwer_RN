@@ -29,6 +29,7 @@ import java.util.Map;
  *     <li>Media must be available to borrow</li>
  * </ul>
  *
+ * @author Library
  * @version 1.1
  */
 public class BorrowingService {

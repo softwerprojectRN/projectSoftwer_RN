@@ -2,16 +2,22 @@
 import java.util.logging.Logger;
 
 /**
- * Represents an administrator user in the library system.
- * Extends User with administrative privileges.
+ * Represents an administrator in the library system.
  *
- * @author Library Management System
- * @version 1.0
+ * &lt;p&gt;Extends {@link User} to provide administrative privileges, such as
+ * managing users, sending reminders, and overseeing library operations.&lt;/p&gt;
+ *
+ * &lt;p&gt;Provides methods for displaying admin information.&lt;/p&gt;
+ *
+ * &lt;p&gt;Logging is done using {@link Logger}.&lt;/p&gt;
+ *
+ * @author Library
+ * @version 1.1
  */
 public class Admin extends User {
-<span class="fc" id="L12">    private static final Logger logger = Logger.getLogger(Admin.class.getName());</span>
+<span class="fc" id="L18">    private static final Logger logger = Logger.getLogger(Admin.class.getName());</span>
     /**
-     * Constructs an Admin object.
+     * Constructs a new {@code Admin}.
      *
      * @param id the admin's unique identifier
      * @param username the admin's username
@@ -19,14 +25,14 @@ public class Admin extends User {
      * @param salt the salt used for password hashing
      */
     public Admin(int id, String username, String passwordHash, String salt) {
-<span class="fc" id="L22">        super(id, username, passwordHash, salt);</span>
-<span class="fc" id="L23">    }</span>
+<span class="fc" id="L28">        super(id, username, passwordHash, salt);</span>
+<span class="fc" id="L29">    }</span>
 
     /**
      * Displays admin information to the console.
      */
     public void showAdminInfo() {
-<span class="nc" id="L29">        logger.info(&quot;Admin username: &quot; + getUsername());</span>
-<span class="nc" id="L30">    }</span>
+<span class="nc" id="L35">        logger.info(&quot;Admin username: &quot; + getUsername());</span>
+<span class="nc" id="L36">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

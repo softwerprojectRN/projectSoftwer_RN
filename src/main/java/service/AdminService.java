@@ -24,6 +24,7 @@ import java.util.List;
  *     <li>Sending overdue reminders via email</li>
  * </ul>
  *
+ * @author Library
  * @version 1.1
  */
 public class AdminService {

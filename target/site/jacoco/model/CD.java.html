@@ -2,11 +2,14 @@
 
 /**
  * Represents a CD in the library system.
- * Extends Media with CD-specific attributes.
  *
- * @author Library Management System
- * @version 1.0
+ * &lt;p&gt;Extends {@link Media} with CD-specific attributes such as artist, genre,
+ * and duration. This class is used to model audio CDs available in the library.&lt;/p&gt;
+ *
+ * @author Library
+ * @version 1.1
  */
+
 public class CD extends Media {
     /** The artist of the CD */
     private String artist;
@@ -28,11 +31,11 @@ public class CD extends Media {
      * @param isAvailable the availability status
      */
     public CD(int id, String title, String artist, String genre, int duration, boolean isAvailable) {
-<span class="fc" id="L31">        super(id, title, isAvailable, &quot;cd&quot;);</span>
-<span class="fc" id="L32">        this.artist = artist;</span>
-<span class="fc" id="L33">        this.genre = genre;</span>
-<span class="fc" id="L34">        this.duration = duration;</span>
-<span class="fc" id="L35">    }</span>
+<span class="fc" id="L34">        super(id, title, isAvailable, &quot;cd&quot;);</span>
+<span class="fc" id="L35">        this.artist = artist;</span>
+<span class="fc" id="L36">        this.genre = genre;</span>
+<span class="fc" id="L37">        this.duration = duration;</span>
+<span class="fc" id="L38">    }</span>
 
     /**
      * Gets the artist of the CD.
@@ -40,7 +43,7 @@ public class CD extends Media {
      * @return the artist's name
      */
     public String getArtist() {
-<span class="fc" id="L43">        return artist;</span>
+<span class="fc" id="L46">        return artist;</span>
     }
 
     /**
@@ -49,7 +52,7 @@ public class CD extends Media {
      * @return the genre
      */
     public String getGenre() {
-<span class="fc" id="L52">        return genre;</span>
+<span class="fc" id="L55">        return genre;</span>
     }
 
     /**
@@ -58,7 +61,7 @@ public class CD extends Media {
      * @return the duration in minutes
      */
     public int getDuration() {
-<span class="fc" id="L61">        return duration;</span>
+<span class="fc" id="L64">        return duration;</span>
     }
 
     /**
@@ -68,7 +71,7 @@ public class CD extends Media {
      */
     @Override
     public String toString() {
-<span class="nc" id="L71">        return super.toString() + &quot;, Artist: '&quot; + artist + &quot;', Genre: &quot; + genre +</span>
+<span class="nc" id="L74">        return super.toString() + &quot;, Artist: '&quot; + artist + &quot;', Genre: &quot; + genre +</span>
                 &quot;, Duration: &quot; + duration + &quot; min&quot;;
     }
 }

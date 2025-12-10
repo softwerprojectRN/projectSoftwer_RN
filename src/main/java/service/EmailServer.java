@@ -28,6 +28,7 @@ import java.util.Properties;
  *     server.sendEmail("recipient@example.com", "Subject", "Message body");
  * </pre>
  *
+ * @author Library
  * @version 1.1
  */
 

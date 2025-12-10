@@ -18,6 +18,7 @@ import java.util.List;
  * interchangeable search behaviors within the library system.
  * </p>
  *
+ * @author Library
  * @version 1.1
  */
 
