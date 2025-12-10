@@ -456,7 +456,7 @@ public class UserMenu {
      */
     public static void main(String[] args) {
         try {
-            AdminMenu menu = new AdminMenu();
+            UserMenu menu = new UserMenu();
             menu.start();
         } finally {
             scanner.close();

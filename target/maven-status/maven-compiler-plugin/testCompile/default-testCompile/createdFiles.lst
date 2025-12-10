@@ -1,8 +1,0 @@
-AdminDAOTest.class
-BookDAOTest.class
-dao\AdminDAOTest.class
-MediaDAOTest.class
-CDDAOTest.class
-FineDAOTest.class
-DatabaseConnectionTest.class
-PasswordUtilTest.class

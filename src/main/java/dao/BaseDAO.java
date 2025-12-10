@@ -3,6 +3,8 @@ package dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -54,6 +56,13 @@ public abstract class BaseDAO {
      */
     protected BaseDAO() {
         this.logger = Logger.getLogger(this.getClass().getName());
+
+        // إخفاء جميع رسائل INFO و WARNING
+        logger.setUseParentHandlers(false); // يمنع الطباعة عبر الـ root logger
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(Level.SEVERE); // إخفاء INFO و WARNING
+        logger.addHandler(handler);
+        logger.setLevel(Level.SEVERE);
     }
 
     /**
