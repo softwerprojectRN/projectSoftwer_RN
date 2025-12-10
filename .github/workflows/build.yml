@@ -37,7 +37,7 @@ jobs:
       run: mvn -B verify --file pom.xml
 
     - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@main
+      uses: SonarSource/sonarcloud-github-action@master
       with:
         args: >
           -Dsonar.projectKey=softwerprojectRN_projectSoftwer_RN
