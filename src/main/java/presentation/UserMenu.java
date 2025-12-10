@@ -339,7 +339,6 @@ public class UserMenu {
             Media media = null;
 
             if (typeInput.equals("1")) {
-                // Find book by searching all books
                 List<Book> allBooks = bookService.getAllBooks();
                 for (Book book : allBooks) {
                     if (book.getId() == mediaId) {
@@ -456,8 +455,12 @@ public class UserMenu {
      * @param args command-line arguments (not used)
      */
     public static void main(String[] args) {
-        UserMenu menu = new UserMenu();
-        menu.start();
+        try {
+            AdminMenu menu = new AdminMenu();
+            menu.start();
+        } finally {
+            scanner.close();
+        }
     }
 }
 

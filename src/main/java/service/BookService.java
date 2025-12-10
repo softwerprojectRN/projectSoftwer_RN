@@ -21,6 +21,7 @@ import java.util.List;
  * @version 1.1
  */
 public class BookService {
+    private BookSearcher bookSearcher;
 
     /** DAO used for interacting with the books table. */
     private final BookDAO bookDAO;
@@ -103,14 +104,18 @@ public class BookService {
 
         switch (searchType.toLowerCase()) {
             case "title":
-                return bookDAO.searchByTitle(searchTerm);
+                bookSearcher = new BookSearcher(new SearchByTitle());
+                break;
             case "author":
-                return bookDAO.searchByAuthor(searchTerm);
+                bookSearcher = new BookSearcher(new SearchByAuthor());
+                break;
             case "isbn":
-                return bookDAO.searchByISBNPattern(searchTerm);
+                bookSearcher = new BookSearcher(new SearchByISBN());
+                break;
             default:
-                System.out.println("Invalid search type. Using title search.");
-                return bookDAO.searchByTitle(searchTerm);
+                bookSearcher = new BookSearcher(new SearchByTitle());
         }
+
+        return bookSearcher.search(searchTerm);
     }
 }

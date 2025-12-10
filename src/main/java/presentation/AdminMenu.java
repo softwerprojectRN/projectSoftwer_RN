@@ -2,7 +2,10 @@ package presentation;
 
 import model.Admin;
 import service.AdminService;
+import service.BookService;
 import service.BorrowingService;
+import service.CDService;
+
 import java.util.Scanner;
 
 /**
@@ -244,7 +247,7 @@ public class AdminMenu {
             return;
         }
 
-        service.BookService bookService = new service.BookService();
+        BookService bookService = new BookService();
         model.Book book = bookService.addBook(title, author, isbn);
 
         if (book != null) {
@@ -290,7 +293,7 @@ public class AdminMenu {
             return;
         }
 
-        service.CDService cdService = new service.CDService();
+        CDService cdService = new CDService();
         model.CD cd = cdService.addCD(title, artist, genre, duration);
 
         if (cd != null) {
