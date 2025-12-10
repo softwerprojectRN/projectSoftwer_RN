@@ -29,8 +29,7 @@ jobs:
         restore-keys: ${{ runner.os }}-maven-
 
     - name: Build project
-      run: mvn -B package
-
+      run: mvn -B clean package
 
     - name: Run SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v5.0.0
