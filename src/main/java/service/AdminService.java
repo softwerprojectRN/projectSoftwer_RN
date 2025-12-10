@@ -10,10 +10,21 @@ import java.util.List;
 
 /**
  * Service class responsible for admin-related operations such as registration,
- * login, user management, and sending overdue reminders.
+ * login, user management, and sending overdue reminders to library users.
  *
- * @author Library Management System
- * @version 1.0
+ * <p>This service interacts with {@link AdminDAO} and {@link UserDAO} to manage
+ * admins and users. It also integrates with {@link EmailServer} and {@link EmailNotifier}
+ * to send notifications.</p>
+ *
+ * <p>Typical operations include:</p>
+ * <ul>
+ *     <li>Registering new admins</li>
+ *     <li>Logging in existing admins</li>
+ *     <li>Deleting user accounts</li>
+ *     <li>Sending overdue reminders via email</li>
+ * </ul>
+ *
+ * @version 1.1
  */
 public class AdminService {
 
@@ -28,10 +39,11 @@ public class AdminService {
 
     /** Email notifier utility wrapping the email server. */
     private EmailNotifier emailNotifier;
-
     /**
      * Constructs an AdminService instance, initializes required DAOs,
      * and attempts to initialize the email server.
+     * <p>If the email server fails to initialize, a warning is logged
+     * and email notifications will be disabled.</p>
      */
     public AdminService() {
         this.adminDAO = new AdminDAO();
@@ -53,7 +65,7 @@ public class AdminService {
      *
      * @param username The desired username for the admin.
      * @param password The password for the admin account.
-     * @return The newly created Admin object, or null if registration fails.
+     * @return The newly created {@link Admin} object, or {@code null} if registration fails.
      */
     public Admin register(String username, String password) {
         Admin existing = adminDAO.findByUsername(username);
@@ -78,7 +90,7 @@ public class AdminService {
      *
      * @param username The username of the admin.
      * @param password The password provided by the admin.
-     * @return The logged-in Admin object, or null if authentication fails.
+     * @return The logged-in {@link Admin} object, or {@code null} if authentication fails.
      */
     public Admin login(String username, String password) {
         Admin admin = adminDAO.findByUsername(username);
@@ -104,16 +116,16 @@ public class AdminService {
      * Deletes a user account from the system.
      *
      * @param username The username of the user to be deleted.
-     * @return true if deletion was successful, false otherwise.
+     * @return {@code true} if deletion was successful; {@code false} otherwise.
      */
     public boolean unregisterUser(String username) {
         return userDAO.delete(username);
     }
 
     /**
-     * Sends email reminders to all users who have overdue books.
+     * Sends email reminders to all users who currently have overdue books.
      *
-     * @param borrowingService The borrowing service used to fetch overdue records.
+     * @param borrowingService The {@link BorrowingService} used to fetch overdue records.
      */
     public void sendOverdueReminders(BorrowingService borrowingService) {
         if (emailNotifier == null) {
@@ -139,7 +151,7 @@ public class AdminService {
     /**
      * Sets a new email server for sending notifications.
      *
-     * @param server The EmailServer instance to use.
+     * @param server The {@link EmailServer} instance to use; {@code null} disables notifications.
      */
     public void setEmailServer(EmailServer server) {
         this.emailServer = server;
@@ -153,7 +165,7 @@ public class AdminService {
     /**
      * Retrieves the currently configured email server.
      *
-     * @return The EmailServer instance.
+     * @return The {@link EmailServer} instance; may be {@code null} if not configured.
      */
     public EmailServer getEmailServer() {
         return emailServer;

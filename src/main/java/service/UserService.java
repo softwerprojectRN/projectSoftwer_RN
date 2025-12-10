@@ -5,32 +5,60 @@ import model.User;
 import dao.PasswordUtil;
 
 /**
- * Service class that handles user registration and login operations.
- * Provides validation, password hashing, and communication with {@link UserDAO}.
+ * Service class responsible for handling user-related business logic,
+ * including registration, authentication, input validation, and secure
+ * password hashing.
+ * <p>
+ * This class communicates with {@link UserDAO} to perform database operations
+ * and ensures that user data is processed securely before storage.
+ * </p>
+ * <p>
+ * Upon creation, this service automatically initializes the users table
+ * through the underlying {@code UserDAO}.
+ * </p>
  *
- * @author Library Management System
- * @version 1.0
+ * @version 1.1
  */
 public class UserService {
 
-    /** Data Access Object responsible for user-related database operations */
+    /**
+     * Data Access Object used to interact with the user persistence layer.
+     * Handles operations such as finding users, inserting new records,
+     * and retrieving stored authentication data.
+     */
     private final UserDAO userDAO;
 
     /**
-     * Constructs a new {@code UserService} instance and initializes the users table.
+     * Constructs a new {@code UserService} instance.
+     * <p>
+     * During initialization, this constructor creates a {@link UserDAO} object
+     * and triggers the setup of the underlying users table if it does not
+     * already exist.
+     * </p>
      */
+
     public UserService() {
         this.userDAO = new UserDAO();
         this.userDAO.initializeTable();
     }
 
     /**
-     * Registers a new user after validating inputs and hashing the password.
+     * Registers a new user after validating input fields and securely hashing
+     * the provided password with a generated salt.
+     * <p>
+     * Registration fails if:
+     * <ul>
+     *   <li>The username or password is empty or null</li>
+     *   <li>The username already exists in the database</li>
+     *   <li>The database operation fails</li>
+     * </ul>
+     * </p>
      *
-     * @param username the username chosen by the user (cannot be empty)
+     * @param username the desired username chosen by the user (cannot be empty)
      * @param password the raw password to be hashed and stored securely
-     * @return the created {@link User} object if successful, otherwise {@code null}
+     * @return the newly created {@link User}, or {@code null} if registration fails
      */
+
     public User register(String username, String password) {
         if (username == null || username.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()) {
@@ -54,13 +82,21 @@ public class UserService {
 
         return null;
     }
-
     /**
-     * Authenticates a user by verifying their username and password.
+     * Authenticates a user by verifying the existence of the username and
+     * comparing the hashed form of the entered password with the stored hash.
+     * <p>
+     * Login fails if:
+     * <ul>
+     *   <li>The username does not exist in the database</li>
+     *   <li>The password does not match the stored hash</li>
+     * </ul>
+     * </p>
      *
-     * @param username the username of the user attempting to log in
-     * @param password the raw password entered by the user
-     * @return the logged-in {@link User} object if credentials are valid, otherwise {@code null}
+     * @param username the username of the account attempting to log in
+     * @param password the raw password provided by the user
+     * @return the authenticated {@link User} with its state updated to logged in,
+     *         or {@code null} if authentication fails
      */
     public User login(String username, String password) {
         User user = userDAO.findByUsername(username);

@@ -8,20 +8,29 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Represents an email server that can send emails and track sent messages.
+ * A service class responsible for sending emails and maintaining a record
+ * of previously sent messages.
  *
- * Supports loading credentials from a .env file or directly via constructor.
- * Provides methods to send emails, view sent emails, and clear email history.
+ * <p>This class supports two initialization modes:</p>
+ * <ul>
+ *     <li>Automatically loading credentials from a <b>.env</b> file.</li>
+ *     <li>Explicitly receiving credentials through the constructor.</li>
+ * </ul>
  *
- * Usage example:
+ * <p>
+ * The class uses Jakarta Mail API to handle SMTP communication and provides
+ * functionality for sending messages, retrieving email history, and clearing logs.
+ * </p>
  *
- * EmailServer server = new EmailServer();
- * server.sendEmail("recipient@example.com", "Subject", "Body");
+ * <p><b>Example Usage:</b></p>
+ * <pre>
+ *     EmailServer server = new EmailServer();
+ *     server.sendEmail("recipient@example.com", "Subject", "Message body");
+ * </pre>
  *
- *
- * Author: Library Management System
- * Version: 1.0
+ * @version 1.1
  */
+
 public class EmailServer {
     private final String username;
     private final String password;
@@ -30,8 +39,13 @@ public class EmailServer {
 
 
     /**
-     * Inner class representing a sent email.
+     * Represents a record of a sent email.
+     *
+     * <p>This class stores the recipient address, subject, body content,
+     * and the time the message was sent. Instances are created automatically
+     * whenever {@code sendEmail()} is successfully executed.</p>
      */
+
     public static class Email {
         private final String to;
         private final String subject;
@@ -63,9 +77,18 @@ public class EmailServer {
     }
 
     /**
-     * Constructs an EmailServer and loads credentials from a .env file.
-     * Throws IllegalStateException if credentials are missing.
+     * Initializes the EmailServer by loading SMTP credentials from a .env file.
+     *
+     * <p>The method expects two environment variables:</p>
+     * <ul>
+     *     <li><b>EMAIL_USERNAME</b> – the sender email address</li>
+     *     <li><b>EMAIL_PASSWORD</b> – the corresponding password</li>
+     * </ul>
+     *
+     * <p>If either value is missing or empty, the constructor throws
+     * an {@link IllegalStateException} to prevent misconfigured usage.</p>
      */
+
     public EmailServer() {
         try {
             Dotenv dotenv = Dotenv.configure()
@@ -89,11 +112,14 @@ public class EmailServer {
     }
 
     /**
-     * Constructs an EmailServer with explicit username and password.
+     * Constructs an EmailServer using manually provided SMTP credentials.
      *
-     * @param username email username
-     * @param password email password
+     * @param username the email address used for sending messages
+     * @param password the password or app-specific key for SMTP authentication
+     *
+     * @throws IllegalArgumentException if any parameter is null or empty
      */
+
     public EmailServer(String username, String password) {
         if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty");
@@ -107,13 +133,22 @@ public class EmailServer {
     }
 
     /**
-     * Sends an email to a recipient with the specified subject and body.
-     * Tracks sent emails in memory.
+     * Sends an email message to a specified recipient using the configured
+     * SMTP credentials. The email is transmitted using TLS encryption via
+     * Gmail's SMTP server.
      *
-     * @param to recipient email address
-     * @param subject email subject
-     * @param body email body
+     * <p>After a successful send, the message is added to the internal
+     * history list for later retrieval.</p>
+     *
+     * @param to       the recipient's email address; must not be null or empty
+     * @param subject  the subject line of the email
+     * @param body     the message content; if null, an empty body is used
+     *
+     * @throws IllegalStateException if SMTP credentials are not configured
+     * @throws IllegalArgumentException if recipient is invalid
+     * @throws RuntimeException if the email fails to send due to SMTP errors
      */
+
     public void sendEmail(String to, String subject, String body) {
         if (username == null || username.isEmpty()) {
             throw new IllegalStateException("Email username is not configured");
@@ -161,24 +196,39 @@ public class EmailServer {
     }
 
     /**
-     * Returns a copy of the list of sent emails.
-     * @return list of sent emails
+     * Returns a snapshot of all previously sent emails.
+     *
+     * <p>The returned list is a defensive copy to prevent external modification
+     * of the internal email history.</p>
+     *
+     * @return a list containing all sent email records
      */
+
     public List<Email> getSentEmails() {
         return new ArrayList<>(sentEmails);
     }
 
     /**
-     * Clears the sent emails history.
+     * Clears the entire history of sent emails.
+     *
+     * <p>This operation does not affect SMTP settings or service behavior—only
+     * the stored log is removed.</p>
      */
+
     public void clearSentEmails() {
         sentEmails.clear();
     }
 
     /**
-     * Main method for testing the email server.
-     * @param args command-line arguments
+     * A demonstration entry point used for testing the EmailServer.
+     *
+     * <p>The method attempts to load credentials from a .env file and sends
+     * a test message to a specified address. It is intended for manual testing
+     * rather than production use.</p>
+     *
+     * @param args command-line arguments (unused)
      */
+
     public static void main(String[] args) {
         try {
             System.out.println("Current working directory: " + System.getProperty("user.dir"));

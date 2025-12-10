@@ -8,15 +8,19 @@ import model.MediaRecord;
 import java.util.List;
 
 /**
- * Service class that manages borrower-related operations such as loading
- * borrowed media data, generating overdue reports, paying fines,
- * and displaying borrowed items.
+ * Service class responsible for managing borrower-related operations,
+ * including:
+ * <ul>
+ *     <li>Loading currently borrowed media and fine balances</li>
+ *     <li>Generating detailed overdue reports with calculated fines</li>
+ *     <li>Processing fine payments</li>
+ *     <li>Displaying all borrowed media items with overdue warnings</li>
+ * </ul>
  *
  * <p>This service interacts with {@link BorrowRecordDAO} and {@link FineDAO}
  * to retrieve and update borrower information.</p>
  *
- * @author Library Management System
- * @version 1.0
+ * @version 1.1
  */
 public class BorrowerService {
 
@@ -27,7 +31,7 @@ public class BorrowerService {
     private final FineDAO fineDAO;
 
     /**
-     * Constructs a BorrowerService instance and initializes DAOs.
+     * Constructs a {@code BorrowerService} instance and initializes DAOs.
      */
     public BorrowerService() {
         this.borrowRecordDAO = new BorrowRecordDAO();
@@ -35,7 +39,7 @@ public class BorrowerService {
     }
 
     /**
-     * Loads a borrower's currently borrowed media items and fine balance.
+     * Loads the borrower's current borrowed media items and fine balance.
      *
      * @param borrower The borrower whose data will be loaded.
      */
@@ -51,7 +55,7 @@ public class BorrowerService {
 
     /**
      * Generates and prints a detailed overdue report for the borrower,
-     * including overdue days and calculated fines.
+     * including overdue days and calculated fines per item.
      *
      * @param borrower The borrower for whom the overdue report is generated.
      */
@@ -83,11 +87,11 @@ public class BorrowerService {
     }
 
     /**
-     * Processes a fine payment for a borrower.
+     * Processes a payment towards the borrower's outstanding fines.
      *
      * @param borrower The borrower making the payment.
-     * @param amount   The payment amount.
-     * @return true if the payment is successful, false otherwise.
+     * @param amount   The payment amount; must be positive and not exceed current fine balance.
+     * @return {@code true} if the payment is successful; {@code false} otherwise.
      */
     public boolean payFine(Borrower borrower, double amount) {
         if (amount <= 0 || amount > borrower.getFineBalance()) {
@@ -106,10 +110,10 @@ public class BorrowerService {
     }
 
     /**
-     * Displays all currently borrowed media items for a borrower.
-     * Includes overdue warnings when applicable.
+     * Displays all currently borrowed media items for the borrower,
+     * including due dates and overdue warnings where applicable.
      *
-     * @param borrower The borrower whose borrowed media will be displayed.
+     * @param borrower The borrower whose borrowed items will be displayed.
      */
     public void displayBorrowedMedia(Borrower borrower) {
         List<MediaRecord> borrowed = borrower.getBorrowedMedia();

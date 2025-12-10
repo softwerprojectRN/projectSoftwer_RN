@@ -5,33 +5,46 @@ import model.Book;
 import java.util.List;
 
 /**
- * Concrete search strategy for searching books by title.
- * Implements the {@link SearchStrategy} interface.
+ * A concrete implementation of the {@link SearchStrategy} interface that performs
+ * book searches based on title matching.
+ * <p>
+ * This strategy delegates the search operation to the {@link BookDAO}, which
+ * handles the actual database interaction and filtering logic.
+ * </p>
  *
- * Enables searching for books in the database based on the title field.
+ * <p>
+ * Using this strategy allows the system to support title-based searching without
+ * altering the core search flow, following the Strategy Pattern.
+ * </p>
  *
- * @author Library Management System
- * @version 1.0
+ * @version 1.1
  */
+
 public class SearchByTitle implements SearchStrategy {
 
-    /** DAO for accessing book data */
+    /**
+     * Data Access Object responsible for retrieving and querying book records
+     * from the underlying data source.
+     */
     private final BookDAO bookDAO;
 
     /**
-     * Constructs a new {@code SearchByTitle} strategy.
-     * Initializes the {@link BookDAO}.
+     * Creates a new instance of the {@code SearchByTitle} strategy and initializes
+     * its associated {@link BookDAO} for performing title-based lookups.
      */
     public SearchByTitle() {
         this.bookDAO = new BookDAO();
     }
 
     /**
-     * Searches for books using the title provided.
+     * Searches for books whose titles match the specified search term.
      *
-     * @param searchTerm the title to search for
-     * @return a list of {@link Book} objects matching the title
+     * @param searchTerm the title or partial title used to filter books;
+     *                   must not be null or empty
+     * @return a list of {@link Book} objects that match the given title,
+     *         or an empty list if no results are found
      */
+
     @Override
     public List<Book> search(String searchTerm) {
         return bookDAO.searchByTitle(searchTerm);
