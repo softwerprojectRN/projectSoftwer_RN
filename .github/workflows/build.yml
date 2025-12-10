@@ -29,6 +29,8 @@ jobs:
         args: >
           -Dsonar.projectKey=softwerprojectRN_projectSoftwer_RN
           -Dsonar.organization=softwerprojectrn
+          -Dsonar.sources=src/main/java
+          -Dsonar.tests=src/test/java
           -Dsonar.java.binaries=target/classes,target/test-classes
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
