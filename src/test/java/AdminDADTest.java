@@ -1,283 +1,214 @@
-//import dao.*;
 //
+//
+//import dao.AdminDAO;
+//import dao.DatabaseConnection;
 //import model.Admin;
+//import org.junit.jupiter.api.AfterEach;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.extension.ExtendWith;
+//import org.mockito.Mock;
 //import org.mockito.MockedStatic;
+//import org.mockito.junit.jupiter.MockitoExtension;
 //
-//import java.io.ByteArrayOutputStream;
-//import java.io.PrintStream;
 //import java.sql.*;
 //
 //import static org.junit.jupiter.api.Assertions.*;
+//import static org.mockito.ArgumentMatchers.anyString;
 //import static org.mockito.Mockito.*;
 //
+//@ExtendWith(MockitoExtension.class)
 //class AdminDAOTest {
 //
+//    @Mock
+//    private Connection mockConnection;
+//
+//    @Mock
+//    private PreparedStatement mockPreparedStatement;
+//
+//    @Mock
+//    private Statement mockStatement;
+//
+//    @Mock
+//    private ResultSet mockResultSet;
+//
 //    private AdminDAO adminDAO;
+//    private MockedStatic<DatabaseConnection> mockedDatabaseConnection;
 //
 //    @BeforeEach
 //    void setUp() {
+//        // Mock the static DatabaseConnection.getConnection() method
+//        mockedDatabaseConnection = mockStatic(DatabaseConnection.class);
+//        mockedDatabaseConnection.when(DatabaseConnection::getConnection).thenReturn(mockConnection);
 //        adminDAO = new AdminDAO();
 //    }
 //
-//    // ------------------ initializeTable() ------------------
-//
-//    @Test
-//    void testInitializeTable_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
-//
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            adminDAO.initializeTable();
-//
-//            verify(mockStmt, times(1)).execute(anyString());
+//    @AfterEach
+//    void tearDown() {
+//        if (mockedDatabaseConnection != null) {
+//            mockedDatabaseConnection.close();
 //        }
 //    }
 //
 //    @Test
-//    void testInitializeTable_connectionNull() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            assertDoesNotThrow(() -> adminDAO.initializeTable());
-//        }
+//    void testInitializeTable() throws SQLException {
+//        // Setup
+//        when(mockConnection.createStatement()).thenReturn(mockStatement);
+//
+//        // Execute
+//        adminDAO.initializeTable();
+//
+//        // Verify
+//        verify(mockStatement).execute(contains("CREATE TABLE IF NOT EXISTS admins"));
 //    }
 //
 //    @Test
-//    void testInitializeTable_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
+//    void testInitializeTableWithSQLException() throws SQLException {
+//        // Setup
+//        when(mockConnection.createStatement()).thenReturn(mockStatement);
+//        doThrow(new SQLException("Table creation failed")).when(mockStatement).execute(anyString());
 //
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
-//        doThrow(new SQLException("Create table failed")).when(mockStmt).execute(anyString());
+//        // Execute - should not throw an exception
+//        adminDAO.initializeTable();
 //
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//            assertDoesNotThrow(() -> adminDAO.initializeTable());
-//        }
-//    }
-//
-//    // ------------------ findByUsername() ------------------
-//
-//    @Test
-//    void testFindByUsername_found() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(true);
-//        when(mockRs.getInt("id")).thenReturn(1);
-//        when(mockRs.getString("username")).thenReturn("admin");
-//        when(mockRs.getString("password_hash")).thenReturn("hash");
-//        when(mockRs.getString("salt")).thenReturn("salt");
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            Admin admin = adminDAO.findByUsername("admin");
-//
-//            assertNotNull(admin);
-//            assertEquals(1, admin.getId());
-//            assertEquals("admin", admin.getUsername());
-//            assertEquals("hash", admin.getPasswordHash());
-//            assertEquals("salt", admin.getSalt());
-//        }
+//        // Verify
+//        verify(mockStatement).execute(contains("CREATE TABLE IF NOT EXISTS admins"));
 //    }
 //
 //    @Test
-//    void testFindByUsername_notFound() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
+//    void testFindByUsernameSuccess() throws SQLException {
+//        // Setup
+//        String username = "admin";
+//        int expectedId = 1;
+//        String expectedPasswordHash = "hashedpassword";
+//        String expectedSalt = "salt123";
 //
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(false);
+//        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+//        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+//        when(mockResultSet.next()).thenReturn(true);
+//        when(mockResultSet.getInt("id")).thenReturn(expectedId);
+//        when(mockResultSet.getString("username")).thenReturn(username);
+//        when(mockResultSet.getString("password_hash")).thenReturn(expectedPasswordHash);
+//        when(mockResultSet.getString("salt")).thenReturn(expectedSalt);
 //
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
+//        // Execute
+//        Admin result = adminDAO.findByUsername(username);
 //
-//            Admin admin = adminDAO.findByUsername("nonexistent");
-//            assertNull(admin);
-//        }
+//        // Verify
+//        assertNotNull(result);
+//        assertEquals(expectedId, result.getId());
+//        assertEquals(username, result.getUsername());
+//        assertEquals(expectedPasswordHash, result.getPasswordHash());
+//        assertEquals(expectedSalt, result.getSalt());
+//
+//        verify(mockPreparedStatement).setObject(1, username);
+//        verify(mockPreparedStatement).executeQuery();
+//        verify(mockResultSet).next();
 //    }
 //
 //    @Test
-//    void testFindByUsername_connectionNull() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
+//    void testFindByUsernameNotFound() throws SQLException {
+//        // Setup
+//        String username = "nonexistent";
 //
-//            Admin admin = adminDAO.findByUsername("admin");
-//            assertNull(admin);
-//        }
+//        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+//        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+//        when(mockResultSet.next()).thenReturn(false);
+//
+//        // Execute
+//        Admin result = adminDAO.findByUsername(username);
+//
+//        // Verify
+//        assertNull(result);
+//        verify(mockPreparedStatement).setObject(1, username);
+//        verify(mockPreparedStatement).executeQuery();
+//        verify(mockResultSet).next();
 //    }
 //
 //    @Test
-//    void testFindByUsername_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
+//    void testFindByUsernameWithSQLException() throws SQLException {
+//        // Setup
+//        String username = "admin";
 //
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenThrow(new SQLException("Query failed"));
+//        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+//        when(mockPreparedStatement.executeQuery()).thenThrow(new SQLException("Query failed"));
 //
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
+//        // Execute
+//        Admin result = adminDAO.findByUsername(username);
 //
-//            Admin admin = adminDAO.findByUsername("admin");
-//            assertNull(admin);
-//        }
-//    }
-//
-//    // ------------------ insert() ------------------
-//
-//    @Test
-//    void testInsert_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeUpdate()).thenReturn(1);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            boolean result = adminDAO.insert("admin", "hash", "salt");
-//
-//            assertTrue(result);
-//            verify(mockStmt, times(1)).setString(1, "admin");
-//            verify(mockStmt, times(1)).setString(2, "hash");
-//            verify(mockStmt, times(1)).setString(3, "salt");
-//            verify(mockStmt, times(1)).executeUpdate();
-//        }
+//        // Verify
+//        assertNull(result);
+//        verify(mockPreparedStatement).setObject(1, username);
+//        verify(mockPreparedStatement).executeQuery();
 //    }
 //
 //    @Test
-//    void testInsert_failure() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
+//    void testInsertSuccess() throws SQLException {
+//        // Setup
+//        String username = "newadmin";
+//        String passwordHash = "hashedpassword";
+//        String salt = "salt123";
+//        int expectedId = 2;
 //
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        doThrow(new SQLException("Insert failed")).when(mockStmt).executeUpdate();
+//        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+//                .thenReturn(mockPreparedStatement);
+//        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+//        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
+//        when(mockResultSet.next()).thenReturn(true);
+//        when(mockResultSet.getInt(1)).thenReturn(expectedId);
 //
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
+//        // Execute
+//        boolean result = adminDAO.insert(username, passwordHash, salt);
 //
-//            boolean result = adminDAO.insert("admin", "hash", "salt");
-//            assertFalse(result);
-//        }
+//        // Verify
+//        assertTrue(result);
+//        verify(mockPreparedStatement).setObject(1, username);
+//        verify(mockPreparedStatement).setObject(2, passwordHash);
+//        verify(mockPreparedStatement).setObject(3, salt);
+//        verify(mockPreparedStatement).executeUpdate();
 //    }
 //
 //    @Test
-//    void testInsert_connectionNull() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
+//    void testInsertFailure() throws SQLException {
+//        // Setup
+//        String username = "newadmin";
+//        String passwordHash = "hashedpassword";
+//        String salt = "salt123";
 //
-//            boolean result = adminDAO.insert("admin", "hash", "salt");
-//            assertFalse(result);
-//        }
-//    }
-//    @Test
-//    void testInitializeTable_printSuccess() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
+//        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+//                .thenReturn(mockPreparedStatement);
+//        when(mockPreparedStatement.executeUpdate()).thenReturn(0);
 //
-//        // Capture system output
-//        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-//        System.setOut(new PrintStream(outContent));
+//        // Execute
+//        boolean result = adminDAO.insert(username, passwordHash, salt);
 //
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            adminDAO.initializeTable();
-//
-//            String output = outContent.toString();
-//            assertTrue(output.contains("Admins table created successfully."));
-//        } finally {
-//            System.setOut(System.out); // Reset
-//        }
+//        // Verify
+//        assertFalse(result);
+//        verify(mockPreparedStatement).setObject(1, username);
+//        verify(mockPreparedStatement).setObject(2, passwordHash);
+//        verify(mockPreparedStatement).setObject(3, salt);
+//        verify(mockPreparedStatement).executeUpdate();
 //    }
 //
 //    @Test
-//    void testInitializeTable_printError() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
+//    void testInsertWithSQLException() throws SQLException {
+//        // Setup
+//        String username = "newadmin";
+//        String passwordHash = "hashedpassword";
+//        String salt = "salt123";
 //
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
-//        doThrow(new SQLException("Create table failed")).when(mockStmt).execute(anyString());
+//        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+//                .thenReturn(mockPreparedStatement);
+//        when(mockPreparedStatement.executeUpdate()).thenThrow(new SQLException("Insert failed"));
 //
-//        // Capture system error
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
+//        // Execute
+//        boolean result = adminDAO.insert(username, passwordHash, salt);
 //
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            adminDAO.initializeTable();
-//
-//            String output = errContent.toString();
-//            assertTrue(output.contains("Error creating admins table: Create table failed"));
-//        } finally {
-//            System.setErr(System.err); // Reset
-//        }
+//        // Verify
+//        assertFalse(result);
+//        verify(mockPreparedStatement).setObject(1, username);
+//        verify(mockPreparedStatement).setObject(2, passwordHash);
+//        verify(mockPreparedStatement).setObject(3, salt);
+//        verify(mockPreparedStatement).executeUpdate();
 //    }
-//
-//    // ------------------ findByUsername() ------------------
-//
-//    @Test
-//    void testFindByUsername_printError() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenThrow(new SQLException("Query failed"));
-//
-//        // Capture system error
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            Admin admin = adminDAO.findByUsername("admin");
-//            assertNull(admin);
-//
-//            String output = errContent.toString();
-//            assertTrue(output.contains("Error finding admin: Query failed"));
-//        } finally {
-//            System.setErr(System.err);
-//        }
-//    }
-//
-//    @Test
-//    void testInsert_printError() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        doThrow(new SQLException("Insert failed")).when(mockStmt).executeUpdate();
-//
-//        // Capture system error
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            boolean result = adminDAO.insert("admin", "hash", "salt");
-//            assertFalse(result);
-//
-//            String output = errContent.toString();
-//            assertTrue(output.contains("Error inserting admin: Insert failed"));
-//        } finally {
-//            System.setErr(System.err);
-//        }
-//    }
-//
 //}

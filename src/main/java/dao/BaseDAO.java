@@ -135,7 +135,7 @@ public abstract class BaseDAO {
     }
 
     @FunctionalInterface
-    protected interface ResultSetMapper<T> {
+    public interface ResultSetMapper<T> {
         T map(ResultSet rs) throws SQLException;
     }
 }
