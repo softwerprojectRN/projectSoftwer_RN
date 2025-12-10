@@ -2,52 +2,52 @@
 
 import java.sql.*;
 
-<span class="nc" id="L5">public class FineDAO extends BaseDAO {</span>
+<span class="fc" id="L5">public class FineDAO extends BaseDAO {</span>
 
     public void initializeTable() {
-<span class="nc" id="L8">        String sql = &quot;CREATE TABLE IF NOT EXISTS user_fines (\n&quot; +</span>
+<span class="fc" id="L8">        String sql = &quot;CREATE TABLE IF NOT EXISTS user_fines (\n&quot; +</span>
                 &quot; user_id INTEGER PRIMARY KEY,\n&quot; +
                 &quot; total_fine REAL DEFAULT 0.0,\n&quot; +
                 &quot; FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE\n&quot; +
                 &quot;);&quot;;
-<span class="nc" id="L13">        createTable(sql, &quot;User fines&quot;);</span>
-<span class="nc" id="L14">    }</span>
+<span class="fc" id="L13">        createTable(sql, &quot;User fines&quot;);</span>
+<span class="fc" id="L14">    }</span>
 
     public double getFineBalance(int userId) {
-<span class="nc" id="L17">        Double balance = findOne(&quot;SELECT total_fine FROM user_fines WHERE user_id = ?&quot;,</span>
-<span class="nc" id="L18">                rs -&gt; rs.getDouble(&quot;total_fine&quot;), userId);</span>
-<span class="nc bnc" id="L19" title="All 2 branches missed.">        if (balance == null) {</span>
-<span class="nc" id="L20">            initializeFine(userId);</span>
-<span class="nc" id="L21">            return 0.0;</span>
+<span class="fc" id="L17">        Double balance = findOne(&quot;SELECT total_fine FROM user_fines WHERE user_id = ?&quot;,</span>
+<span class="fc" id="L18">                rs -&gt; rs.getDouble(&quot;total_fine&quot;), userId);</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">        if (balance == null) {</span>
+<span class="fc" id="L20">            initializeFine(userId);</span>
+<span class="fc" id="L21">            return 0.0;</span>
         }
-<span class="nc" id="L23">        return balance;</span>
+<span class="fc" id="L23">        return balance;</span>
     }
 
     public boolean initializeFine(int userId) {
-<span class="nc bnc" id="L27" title="All 2 branches missed.">        return executeInsert(&quot;INSERT INTO user_fines (user_id, total_fine) VALUES (?, 0.0)&quot;, userId) &gt; 0;</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        return executeInsert(&quot;INSERT INTO user_fines (user_id, total_fine) VALUES (?, 0.0)&quot;, userId) &gt; 0;</span>
     }
 
     public boolean updateFine(int userId, double totalFine) {
-<span class="nc" id="L31">        boolean updated = executeUpdate(&quot;UPDATE user_fines SET total_fine = ? WHERE user_id = ?&quot;,</span>
-<span class="nc" id="L32">                totalFine, userId);</span>
-<span class="nc bnc" id="L33" title="All 4 branches missed.">        return updated || initializeFine(userId);</span>
+<span class="fc" id="L31">        boolean updated = executeUpdate(&quot;UPDATE user_fines SET total_fine = ? WHERE user_id = ?&quot;,</span>
+<span class="fc" id="L32">                totalFine, userId);</span>
+<span class="fc bfc" id="L33" title="All 4 branches covered.">        return updated || initializeFine(userId);</span>
     }
 
     public boolean addFine(int userId, double amount) {
-<span class="nc" id="L37">        return updateFine(userId, getFineBalance(userId) + amount);</span>
+<span class="fc" id="L37">        return updateFine(userId, getFineBalance(userId) + amount);</span>
     }
 
     public boolean payFine(int userId, double amount) {
-<span class="nc" id="L41">        double currentFine = getFineBalance(userId);</span>
-<span class="nc bnc" id="L42" title="All 4 branches missed.">        if (amount &lt;= 0 || amount &gt; currentFine) {</span>
-<span class="nc" id="L43">            logger.severe(&quot;Invalid payment amount.&quot;);</span>
-<span class="nc" id="L44">            return false;</span>
+<span class="fc" id="L41">        double currentFine = getFineBalance(userId);</span>
+<span class="fc bfc" id="L42" title="All 4 branches covered.">        if (amount &lt;= 0 || amount &gt; currentFine) {</span>
+<span class="fc" id="L43">            logger.severe(&quot;Invalid payment amount.&quot;);</span>
+<span class="fc" id="L44">            return false;</span>
         }
-<span class="nc" id="L46">        return updateFine(userId, currentFine - amount);</span>
+<span class="fc" id="L46">        return updateFine(userId, currentFine - amount);</span>
     }
 
     public boolean clearFine(int userId) {
-<span class="nc" id="L50">        return updateFine(userId, 0.0);</span>
+<span class="fc" id="L50">        return updateFine(userId, 0.0);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

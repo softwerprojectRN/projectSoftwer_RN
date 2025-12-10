@@ -6,11 +6,11 @@ github-inti-demo,dao,UserDAO,175,0,8,0,40,0,11,0,7,0
 github-inti-demo,dao,AdminDAO,0,65,0,2,0,13,0,6,0,5
 github-inti-demo,dao,BookDAO,0,113,0,2,0,17,0,10,0,9
 github-inti-demo,dao,CDDAO,0,122,0,2,0,18,0,10,0,9
-github-inti-demo,dao,FineDAO,119,0,12,0,21,0,15,0,9,0
-github-inti-demo,dao,MediaDAO,44,0,2,0,7,0,5,0,4,0
-github-inti-demo,dao,PasswordUtil,67,0,4,0,16,0,5,0,3,0
-github-inti-demo,dao,DatabaseConnection,18,5,0,0,6,1,2,1,2,1
-github-inti-demo,dao,BaseDAO,86,164,16,14,21,48,13,10,2,6
+github-inti-demo,dao,FineDAO,0,119,0,12,0,21,0,15,0,9
+github-inti-demo,dao,MediaDAO,0,44,0,2,0,7,0,5,0,4
+github-inti-demo,dao,PasswordUtil,8,59,0,4,2,14,0,5,0,3
+github-inti-demo,dao,DatabaseConnection,0,23,0,0,0,7,0,3,0,3
+github-inti-demo,dao,BaseDAO,65,185,13,17,16,53,11,12,1,7
 github-inti-demo,service,BorrowingService,287,0,18,0,69,0,16,0,7,0
 github-inti-demo,service,EmailServer,290,0,34,0,75,0,23,0,6,0
 github-inti-demo,service,UserService,101,0,16,0,29,0,11,0,3,0

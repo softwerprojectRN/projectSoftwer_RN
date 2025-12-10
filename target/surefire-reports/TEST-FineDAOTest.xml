@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="AdminDAOTest" time="4.917" tests="8" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="FineDAOTest" time="0.51" tests="13" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,28 +58,29 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testInsertWithSQLException" classname="AdminDAOTest" time="4.585">
-    <system-err><![CDATA[Dec 10, 2025 11:14:22 PM dao.BaseDAO executeInsert
-SEVERE: Error inserting record: Insert failed
+  <testcase name="testGetFineBalance_Exists" classname="FineDAOTest" time="0.229"/>
+  <testcase name="testAddFine" classname="FineDAOTest" time="0.026"/>
+  <testcase name="testUpdateFine_FailsButInitializeSucceeds" classname="FineDAOTest" time="0.019"/>
+  <testcase name="testPayFine_Success" classname="FineDAOTest" time="0.012"/>
+  <testcase name="testPayFine_InvalidAmountZero" classname="FineDAOTest" time="0.011">
+    <system-err><![CDATA[Dec 10, 2025 11:14:23 PM dao.FineDAO payFine
+SEVERE: Invalid payment amount.
 ]]></system-err>
   </testcase>
-  <testcase name="testFindByUsernameNotFound" classname="AdminDAOTest" time="0.021"/>
-  <testcase name="testInitializeTable" classname="AdminDAOTest" time="0.012">
-    <system-err><![CDATA[Dec 10, 2025 11:14:22 PM dao.BaseDAO createTable
-INFO: Admins table created successfully.
+  <testcase name="testPayFine_InvalidAmountTooHigh" classname="FineDAOTest" time="0.013">
+    <system-err><![CDATA[Dec 10, 2025 11:14:23 PM dao.FineDAO payFine
+SEVERE: Invalid payment amount.
 ]]></system-err>
   </testcase>
-  <testcase name="testInsertSuccess" classname="AdminDAOTest" time="0.019"/>
-  <testcase name="testFindByUsernameSuccess" classname="AdminDAOTest" time="0.026"/>
-  <testcase name="testInsertFailure" classname="AdminDAOTest" time="0.01"/>
-  <testcase name="testInitializeTableWithSQLException" classname="AdminDAOTest" time="0.025">
-    <system-err><![CDATA[Dec 10, 2025 11:14:22 PM dao.BaseDAO createTable
-SEVERE: Error creating Admins table: Table creation failed
+  <testcase name="testClearFine" classname="FineDAOTest" time="0.044"/>
+  <testcase name="testInitializeFine_Success" classname="FineDAOTest" time="0.019"/>
+  <testcase name="testInitializeTable" classname="FineDAOTest" time="0.017">
+    <system-err><![CDATA[Dec 10, 2025 11:14:24 PM dao.BaseDAO createTable
+INFO: User fines table created successfully.
 ]]></system-err>
   </testcase>
-  <testcase name="testFindByUsernameWithSQLException" classname="AdminDAOTest" time="0.031">
-    <system-err><![CDATA[Dec 10, 2025 11:14:22 PM dao.BaseDAO findOne
-SEVERE: Error executing query: Query failed
-]]></system-err>
-  </testcase>
+  <testcase name="testInitializeFine_Failure" classname="FineDAOTest" time="0.014"/>
+  <testcase name="testGetFineBalance_NotExists" classname="FineDAOTest" time="0.017"/>
+  <testcase name="testUpdateFine_FailsAndInitializeFails" classname="FineDAOTest" time="0.014"/>
+  <testcase name="testUpdateFine_Success" classname="FineDAOTest" time="0.01"/>
 </testsuite>

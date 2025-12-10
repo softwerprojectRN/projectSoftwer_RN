@@ -2,26 +2,26 @@
 
 import java.sql.*;
 
-<span class="nc" id="L5">public class MediaDAO extends BaseDAO {</span>
+<span class="fc" id="L5">public class MediaDAO extends BaseDAO {</span>
 
     public void initializeTable() {
-<span class="nc" id="L8">        String sql = &quot;CREATE TABLE IF NOT EXISTS media (\n&quot; +</span>
+<span class="fc" id="L8">        String sql = &quot;CREATE TABLE IF NOT EXISTS media (\n&quot; +</span>
                 &quot; id INTEGER PRIMARY KEY AUTOINCREMENT,\n&quot; +
                 &quot; title TEXT NOT NULL,\n&quot; +
                 &quot; media_type TEXT NOT NULL,\n&quot; +
                 &quot; available INTEGER NOT NULL DEFAULT 1\n&quot; +
                 &quot;);&quot;;
-<span class="nc" id="L14">        createTable(sql, &quot;Media&quot;);</span>
-<span class="nc" id="L15">    }</span>
+<span class="fc" id="L14">        createTable(sql, &quot;Media&quot;);</span>
+<span class="fc" id="L15">    }</span>
 
     public int insert(String title, String mediaType) {
-<span class="nc" id="L18">        return executeInsert(&quot;INSERT INTO media (title, media_type, available) VALUES (?, ?, 1)&quot;,</span>
+<span class="fc" id="L18">        return executeInsert(&quot;INSERT INTO media (title, media_type, available) VALUES (?, ?, 1)&quot;,</span>
                 title, mediaType);
     }
 
     public boolean updateAvailability(int mediaId, boolean available) {
-<span class="nc" id="L23">        return executeUpdate(&quot;UPDATE media SET available = ? WHERE id = ?&quot;,</span>
-<span class="nc bnc" id="L24" title="All 2 branches missed.">                available ? 1 : 0, mediaId);</span>
+<span class="fc" id="L23">        return executeUpdate(&quot;UPDATE media SET available = ? WHERE id = ?&quot;,</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">                available ? 1 : 0, mediaId);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

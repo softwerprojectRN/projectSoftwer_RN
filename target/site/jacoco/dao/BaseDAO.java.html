@@ -94,12 +94,12 @@ public abstract class BaseDAO {
      * Executes an update/delete and returns success status.
      */
     protected boolean executeUpdate(String sql, Object... params) {
-<span class="nc" id="L97">        Connection conn = DatabaseConnection.getConnection();</span>
-<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (conn == null) return false;</span>
+<span class="fc" id="L97">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (conn == null) return false;</span>
 
-<span class="nc" id="L100">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
-<span class="nc" id="L101">            setParameters(pstmt, params);</span>
-<span class="nc bnc" id="L102" title="All 2 branches missed.">            return pstmt.executeUpdate() &gt; 0;</span>
+<span class="fc" id="L100">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L101">            setParameters(pstmt, params);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            return pstmt.executeUpdate() &gt; 0;</span>
 <span class="nc" id="L103">        } catch (SQLException e) {</span>
 <span class="nc" id="L104">            logger.severe(&quot;Error updating record: &quot; + e.getMessage());</span>
 <span class="nc" id="L105">            return false;</span>

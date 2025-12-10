@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: dao.AdminDAOTest
+Test set: DatabaseConnectionTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.160 s -- in dao.AdminDAOTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.174 s -- in DatabaseConnectionTest

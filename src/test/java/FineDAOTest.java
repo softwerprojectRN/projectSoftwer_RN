@@ -1,281 +1,228 @@
-//import dao.*;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.MockedStatic;
-//
-//import java.io.ByteArrayOutputStream;
-//import java.io.PrintStream;
-//import java.sql.*;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.*;
-//
-//class FineDAOTest {
-//
-//    private FineDAO fineDAO;
-//
-//    @BeforeEach
-//    void setUp() {
-//        fineDAO = new FineDAO();
-//    }
-//
-//    // ------------------ initializeTable() ------------------
-//    @Test
-//    void testInitializeTable_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
-//
-//        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-//        System.setOut(new PrintStream(outContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            fineDAO.initializeTable();
-//            verify(mockStmt).execute(anyString());
-//            assertTrue(outContent.toString().contains("User fines table created successfully."));
-//        } finally {
-//            System.setOut(System.out);
-//        }
-//    }
-//
-//    @Test
-//    void testInitializeTable_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
-//        doThrow(new SQLException("Create failed")).when(mockStmt).execute(anyString());
-//
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            fineDAO.initializeTable();
-//            assertTrue(errContent.toString().contains("Error creating user_fines table: Create failed"));
-//        } finally {
-//            System.setErr(System.err);
-//        }
-//    }
-//
-//    @Test
-//    void testInitializeTable_connectionNull() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            assertDoesNotThrow(() -> fineDAO.initializeTable());
-//        }
-//    }
-//
-//    // ------------------ initializeFine() ------------------
-//    @Test
-//    void testInitializeFine_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            assertTrue(fineDAO.initializeFine(1));
-//            verify(mockStmt).executeUpdate();
-//        }
-//    }
-//
-//    @Test
-//    void testInitializeFine_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        doThrow(new SQLException("Insert failed")).when(mockStmt).executeUpdate();
-//
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            assertFalse(fineDAO.initializeFine(1));
-//            assertTrue(errContent.toString().contains("Error initializing fine: Insert failed"));
-//        } finally {
-//            System.setErr(System.err);
-//        }
-//    }
-//
-//    // ------------------ getFineBalance() ------------------
-//    @Test
-//    void testGetFineBalance_existingRecord() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(true);
-//        when(mockRs.getDouble("total_fine")).thenReturn(10.0);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            double fine = fineDAO.getFineBalance(1);
-//            assertEquals(10.0, fine);
-//        }
-//    }
-//
-//    @Test
-//    void testGetFineBalance_noRecord_callsInitialize() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeQuery()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(false); // No record
-//
-//        FineDAO spyDAO = spy(fineDAO);
-//        doReturn(true).when(spyDAO).initializeFine(1);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            double fine = spyDAO.getFineBalance(1);
-//            assertEquals(0.0, fine);
-//            verify(spyDAO).initializeFine(1);
-//        }
-//    }
-//
-//    // ------------------ updateFine() ------------------
-//    @Test
-//    void testUpdateFine_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeUpdate()).thenReturn(1); // updated one row
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            assertTrue(fineDAO.updateFine(1, 20.0));
-//        }
-//    }
-//
-//    @Test
-//    void testUpdateFine_noRows_callsInitialize() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeUpdate()).thenReturn(0); // no rows affected
-//
-//        FineDAO spyDAO = spy(fineDAO);
-//        doReturn(true).when(spyDAO).initializeFine(1);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            assertTrue(spyDAO.updateFine(1, 20.0));
-//            verify(spyDAO).initializeFine(1);
-//        }
-//    }
-//
-//    // ------------------ addFine() ------------------
-//    @Test
-//    void testAddFine_success() throws SQLException {
-//        FineDAO spyDAO = spy(fineDAO);
-//        doReturn(10.0).when(spyDAO).getFineBalance(1);
-//        doReturn(true).when(spyDAO).updateFine(1, 15.0);
-//
-//        assertTrue(spyDAO.addFine(1, 5.0));
-//        verify(spyDAO).updateFine(1, 15.0);
-//    }
-//
-//    // ------------------ payFine() ------------------
-//    @Test
-//    void testPayFine_success() {
-//        FineDAO spyDAO = spy(fineDAO);
-//        doReturn(10.0).when(spyDAO).getFineBalance(1);
-//        doReturn(true).when(spyDAO).updateFine(1, 7.0);
-//
-//        assertTrue(spyDAO.payFine(1, 3.0));
-//        verify(spyDAO).updateFine(1, 7.0);
-//    }
-//
-//    @Test
-//    void testPayFine_invalidAmount() {
-//        FineDAO spyDAO = spy(fineDAO);
-//        doReturn(10.0).when(spyDAO).getFineBalance(1);
-//
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
-//
-//        assertFalse(spyDAO.payFine(1, -5.0));
-//        assertTrue(errContent.toString().contains("Invalid payment amount."));
-//
-//        assertFalse(spyDAO.payFine(1, 15.0));
-//        assertTrue(errContent.toString().contains("Invalid payment amount."));
-//    }
-//
-//    // ------------------ clearFine() ------------------
-//    @Test
-//    void testClearFine_callsUpdate() {
-//        FineDAO spyDAO = spy(fineDAO);
-//        doReturn(true).when(spyDAO).updateFine(1, 0.0);
-//
-//        assertTrue(spyDAO.clearFine(1));
-//        verify(spyDAO).updateFine(1, 0.0);
-//    }
-//    // ------------------ getFineBalance null connection ------------------
-//    @Test
-//    void testGetFineBalance_connectionNull() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            assertEquals(0.0, fineDAO.getFineBalance(1));
-//        }
-//    }
-//
-//    // ------------------ initializeFine null connection ------------------
-//    @Test
-//    void testInitializeFine_connectionNull() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            assertFalse(fineDAO.initializeFine(1));
-//        }
-//    }
-//
-//    // ------------------ updateFine SQLException ------------------
-//    @Test
-//    void testUpdateFine_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        doThrow(new SQLException("Update failed")).when(mockStmt).executeUpdate();
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            assertFalse(fineDAO.updateFine(1, 20.0));
-//        }
-//    }
-//
-//    // ------------------ addFine fails when updateFine returns false ------------------
-//    @Test
-//    void testAddFine_updateFails() {
-//        FineDAO spyDAO = spy(fineDAO);
-//        doReturn(10.0).when(spyDAO).getFineBalance(1);
-//        doReturn(false).when(spyDAO).updateFine(1, 15.0);
-//
-//        assertFalse(spyDAO.addFine(1, 5.0));
-//    }
-//
-//    // ------------------ payFine fails when updateFine returns false ------------------
-//    @Test
-//    void testPayFine_updateFails() {
-//        FineDAO spyDAO = spy(fineDAO);
-//        doReturn(10.0).when(spyDAO).getFineBalance(1);
-//        doReturn(false).when(spyDAO).updateFine(1, 7.0);
-//
-//        assertFalse(spyDAO.payFine(1, 3.0));
-//    }
-//
-//}
+
+import dao.DatabaseConnection;
+import dao.FineDAO;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Spy;
+
+import java.sql.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class FineDAOTest {
+
+    @Mock
+    private Connection mockConnection;
+
+    @Mock
+    private PreparedStatement mockPreparedStatement;
+
+    @Mock
+    private Statement mockStatement;
+
+    @Mock
+    private ResultSet mockResultSet;
+
+    @Mock
+    private ResultSet mockGeneratedKeys;
+
+    // Use a spy to test internal method calls
+    @Spy
+    private FineDAO fineDAO;
+
+    private MockedStatic<DatabaseConnection> mockedDatabaseConnection;
+
+    @BeforeEach
+    void setUp() {
+        mockedDatabaseConnection = mockStatic(DatabaseConnection.class);
+        mockedDatabaseConnection.when(DatabaseConnection::getConnection).thenReturn(mockConnection);
+        fineDAO = new FineDAO();
+        fineDAO = spy(fineDAO);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (mockedDatabaseConnection != null) {
+            mockedDatabaseConnection.close();
+        }
+    }
+
+    @Test
+    void testInitializeTable() throws SQLException {
+        when(mockConnection.createStatement()).thenReturn(mockStatement);
+        fineDAO.initializeTable();
+        verify(mockStatement).execute(contains("CREATE TABLE IF NOT EXISTS user_fines"));
+    }
+
+    @Test
+    void testGetFineBalance_Exists() throws SQLException {
+        double expectedBalance = 15.50;
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getDouble("total_fine")).thenReturn(expectedBalance);
+
+        double result = fineDAO.getFineBalance(1);
+
+        assertEquals(expectedBalance, result);
+        verify(mockPreparedStatement).setObject(1, 1);
+        verify(fineDAO, never()).initializeFine(anyInt());
+    }
+
+    @Test
+    void testGetFineBalance_NotExists() throws SQLException {
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(false);
+
+        doReturn(true).when(fineDAO).initializeFine(1);
+
+        double result = fineDAO.getFineBalance(1);
+
+        assertEquals(0.0, result);
+        verify(mockPreparedStatement).setObject(1, 1);
+        verify(fineDAO).initializeFine(1);
+    }
+
+    @Test
+    void testInitializeFine_Success() throws SQLException {
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
+        when(mockGeneratedKeys.next()).thenReturn(true);
+        when(mockGeneratedKeys.getInt(1)).thenReturn(1);
+
+        boolean result = fineDAO.initializeFine(1);
+
+        assertTrue(result);
+        // --- FIX IS HERE ---
+        // Only verify the parameter that is actually set. The second parameter (0.0) is hardcoded in the SQL.
+        verify(mockPreparedStatement).setObject(1, 1);
+        // Removed: verify(mockPreparedStatement).setObject(2, 0.0);
+    }
+
+    @Test
+    void testInitializeFine_Failure() throws SQLException {
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
+        when(mockGeneratedKeys.next()).thenReturn(false);
+
+        boolean result = fineDAO.initializeFine(1);
+
+        assertFalse(result);
+        // Only verify the parameter that is actually set.
+        verify(mockPreparedStatement).setObject(1, 1);
+    }
+
+    @Test
+    void testUpdateFine_Success() throws SQLException {
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+
+        boolean result = fineDAO.updateFine(1, 25.0);
+
+        assertTrue(result);
+        verify(mockPreparedStatement).setObject(1, 25.0);
+        verify(mockPreparedStatement).setObject(2, 1);
+        verify(fineDAO, never()).initializeFine(anyInt());
+    }
+
+    @Test
+    void testUpdateFine_FailsButInitializeSucceeds() throws SQLException {
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0);
+        doReturn(true).when(fineDAO).initializeFine(1);
+
+        boolean result = fineDAO.updateFine(1, 25.0);
+
+        assertTrue(result);
+        verify(fineDAO).initializeFine(1);
+    }
+
+    @Test
+    void testUpdateFine_FailsAndInitializeFails() throws SQLException {
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0);
+        doReturn(false).when(fineDAO).initializeFine(1);
+
+        boolean result = fineDAO.updateFine(1, 25.0);
+
+        assertFalse(result);
+        verify(fineDAO).initializeFine(1);
+    }
+
+    @Test
+    void testAddFine() {
+        double currentBalance = 10.0;
+        double fineToAdd = 5.0;
+        double newBalance = currentBalance + fineToAdd;
+        doReturn(currentBalance).when(fineDAO).getFineBalance(1);
+        doReturn(true).when(fineDAO).updateFine(1, newBalance);
+
+        boolean result = fineDAO.addFine(1, fineToAdd);
+
+        assertTrue(result);
+        verify(fineDAO).getFineBalance(1);
+        verify(fineDAO).updateFine(1, newBalance);
+    }
+
+    @Test
+    void testPayFine_Success() {
+        double currentBalance = 20.0;
+        double paymentAmount = 15.0;
+        double newBalance = currentBalance - paymentAmount;
+        doReturn(currentBalance).when(fineDAO).getFineBalance(1);
+        doReturn(true).when(fineDAO).updateFine(1, newBalance);
+
+        boolean result = fineDAO.payFine(1, paymentAmount);
+
+        assertTrue(result);
+        verify(fineDAO).getFineBalance(1);
+        verify(fineDAO).updateFine(1, newBalance);
+    }
+
+    @Test
+    void testPayFine_InvalidAmountZero() {
+        double currentBalance = 20.0;
+        doReturn(currentBalance).when(fineDAO).getFineBalance(1);
+
+        boolean result = fineDAO.payFine(1, 0.0);
+
+        assertFalse(result);
+        verify(fineDAO).getFineBalance(1);
+        verify(fineDAO, never()).updateFine(anyInt(), anyDouble());
+    }
+
+    @Test
+    void testPayFine_InvalidAmountTooHigh() {
+        double currentBalance = 20.0;
+        doReturn(currentBalance).when(fineDAO).getFineBalance(1);
+
+        boolean result = fineDAO.payFine(1, 25.0);
+
+        assertFalse(result);
+        verify(fineDAO).getFineBalance(1);
+        verify(fineDAO, never()).updateFine(anyInt(), anyDouble());
+    }
+
+    @Test
+    void testClearFine() {
+        doReturn(true).when(fineDAO).updateFine(1, 0.0);
+
+        boolean result = fineDAO.clearFine(1);
+
+        assertTrue(result);
+        verify(fineDAO).updateFine(1, 0.0);
+    }
+}

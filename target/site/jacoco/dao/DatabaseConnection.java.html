@@ -32,15 +32,15 @@ public class DatabaseConnection {
      * @return a {@link Connection} object if successful, or {@code null} if a connection cannot be established
      */
 
-<span class="nc" id="L35">    private DatabaseConnection() {</span>
-<span class="nc" id="L36">        throw new IllegalStateException(&quot;Utility class&quot;);</span>
+<span class="fc" id="L35">    private DatabaseConnection() {</span>
+<span class="fc" id="L36">        throw new IllegalStateException(&quot;Utility class&quot;);</span>
     }
     public static Connection getConnection() {
         try {
-<span class="nc" id="L40">            return DriverManager.getConnection(URL);</span>
-<span class="nc" id="L41">        } catch (SQLException e) {</span>
-<span class="nc" id="L42">            logger.severe(&quot;Database connection error: &quot; + e.getMessage());</span>
-<span class="nc" id="L43">            return null;</span>
+<span class="fc" id="L40">            return DriverManager.getConnection(URL);</span>
+<span class="fc" id="L41">        } catch (SQLException e) {</span>
+<span class="fc" id="L42">            logger.severe(&quot;Database connection error: &quot; + e.getMessage());</span>
+<span class="fc" id="L43">            return null;</span>
         }
     }
 }
