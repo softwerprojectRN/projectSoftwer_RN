@@ -1,4 +1,4 @@
-name: Build and Analyze
+name: Build, Test, and Sonar Analyze
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build and Sonar Analyze
+    name: Build, Test & SonarCloud Scan
     runs-on: ubuntu-latest
 
     steps:
@@ -28,14 +28,16 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-maven-
 
-    - name: Build project
-      run: mvn -B clean install
+    - name: Build project, run tests and generate coverage
+      run: mvn clean verify jacoco:report
 
-    - name: Run SonarQube Scan
+    - name: Run SonarCloud Scan
       uses: SonarSource/sonarqube-scan-action@v5.0.0
       with:
         args: >
           -Dsonar.projectKey=softwerprojectRN_projectSoftwer_RN
           -Dsonar.organization=softwerprojectrn
+          -Dsonar.java.binaries=target/classes,target/test-classes
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
