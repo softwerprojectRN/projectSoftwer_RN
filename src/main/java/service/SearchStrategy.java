@@ -4,22 +4,31 @@ import model.Book;
 import java.util.List;
 
 /**
- * Interface for book search strategies.
- * Defines the contract for implementing various search methods.
+ * Represents a strategy interface for performing book search operations.
+ * <p>
+ * This interface defines the contract for implementing different search
+ * mechanisms within the library system. Each concrete strategy
+ * (e.g., {@link SearchByTitle}, {@link SearchByAuthor}, {@link SearchByISBN})
+ * provides its own logic for locating books based on a specific criterion.
+ * </p>
  *
- * Different concrete strategies (e.g., {@link SearchByTitle}, {@link SearchByAuthor}, {@link SearchByISBN})
- * implement this interface to provide customized search behavior.
+ * <p>
+ * The Strategy Pattern is used here to allow flexible and interchangeable
+ * search behaviors without modifying the core system logic.
+ * </p>
  *
- * @author Library Management System
- * @version 1.0
+ * @version 1.1
  */
+
 public interface SearchStrategy {
 
     /**
-     * Searches for books based on a search term.
+     * Executes a search operation using the implemented search strategy.
      *
-     * @param searchTerm the query term used for searching
-     * @return a list of {@link Book} objects that match the search term
+     * @param searchTerm the input query used to match books according to the strategy's criteria;
+     *                   must not be null or empty
+     * @return a list of matching {@link Book} objects; returns an empty list if no matches are found
      */
+
     List<Book> search(String searchTerm);
 }

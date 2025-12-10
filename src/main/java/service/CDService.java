@@ -8,21 +8,28 @@ import java.util.List;
 
 /**
  * Service class responsible for managing CD-related operations such as adding,
- * searching, and retrieving CDs from the database.
+ * retrieving, and searching CDs in the system.
  *
- * @author Library Management System
- * @version 1.0
+ * <p>This class coordinates between the {@link CDDAO} and {@link MediaDAO}
+ * to persist CD and media records while providing business logic for validation
+ * and search functionality.</p>
+ *
+ * @version 1.1
  */
+
 public class CDService {
 
-    /** DAO for CD-specific operations */
+    /** DAO for CD-specific database operations */
     private final CDDAO cdDAO;
 
-    /** DAO for shared media operations */
+    /** DAO for shared media database operations */
     private final MediaDAO mediaDAO;
 
     /**
-     * Constructs a new {@code CDService} and initializes required tables.
+     * Constructs a new {@code CDService} and initializes the underlying tables.
+     * <p>
+     * Upon creation, both CD and media tables are initialized if they do not exist.
+     * </p>
      */
     public CDService() {
         this.cdDAO = new CDDAO();
@@ -31,14 +38,22 @@ public class CDService {
         this.mediaDAO.initializeTable();
     }
 
+
     /**
-     * Adds a new CD to the system after validating the input.
+     * Adds a new CD to the system after validating input parameters.
+     *
+     * <p>Validation rules:</p>
+     * <ul>
+     *     <li>Title and artist must not be null or empty</li>
+     *     <li>Duration must be positive</li>
+     * </ul>
      *
      * @param title    the title of the CD
-     * @param artist   the artist of the CD
-     * @param genre    the music genre (maybe empty)
-     * @param duration the duration of the CD in minutes (must be positive)
-     * @return a newly created {@link CD} object if successful, otherwise {@code null}
+     * @param artist   the performing artist
+     * @param genre    the music genre (can be empty)
+     * @param duration the duration in minutes (must be positive)
+     * @return a newly created {@link CD} object if successfully added,
+     *         otherwise {@code null}
      */
     public CD addCD(String title, String artist, String genre, int duration) {
         // Validate input
@@ -71,18 +86,21 @@ public class CDService {
     /**
      * Retrieves all CDs stored in the database.
      *
-     * @return a list of {@link CD} objects
+     * @return a list of all {@link CD} objects
      */
     public List<CD> getAllCDs() {
         return cdDAO.findAll();
     }
 
     /**
-     * Searches for CDs based on user-provided search term and search type.
+     * Searches for CDs using a search term and specified search type.
      *
-     * @param searchTerm the query to search for
-     * @param searchType the field to search by (title, artist, or genre)
-     * @return a list of matching {@link CD} objects
+     * <p>Supported search types: "title", "artist", "genre".
+     * If an invalid search type is provided, it defaults to "title".</p>
+     *
+     * @param searchTerm the query string to search for; must not be empty
+     * @param searchType the field to search by ("title", "artist", "genre")
+     * @return a list of {@link CD} objects matching the criteria; empty list if no matches
      */
     public List<CD> searchCDs(String searchTerm, String searchType) {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
@@ -106,8 +124,8 @@ public class CDService {
     /**
      * Finds a CD by its unique identifier.
      *
-     * @param id the CD's ID
-     * @return the matching {@link CD} or {@code null} if not found
+     * @param id the CD's database ID
+     * @return the {@link CD} object if found, otherwise {@code null}
      */
     public CD findById(int id) {
         return cdDAO.findById(id);

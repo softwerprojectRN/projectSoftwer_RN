@@ -4,12 +4,23 @@ import model.Book;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * Context class for searching books using different search strategies.
- * Supports changing the strategy at runtime.
+ * Context class for searching books using different {@link SearchStrategy} implementations.
  *
- * @author Library Management System
- * @version 1.0
+ * <p>This class allows switching the search strategy at runtime, following
+ * the Strategy design pattern. Clients can perform searches without
+ * worrying about the underlying search logic.</p>
+ *
+ * <p>Example usage:</p>
+ * <pre>
+ *     BookSearcher searcher = new BookSearcher(new SearchByTitle());
+ *     List&lt;Book&gt; results = searcher.search("Java");
+ *     searcher.setSearchStrategy(new SearchByAuthor());
+ *     results = searcher.search("Joshua Bloch");
+ * </pre>
+ *
+ * @version 1.1
  */
 public class BookSearcher {
 
@@ -37,8 +48,9 @@ public class BookSearcher {
     /**
      * Searches for books using the current search strategy.
      *
-     * @param searchTerm the search query (cannot be empty)
-     * @return a list of {@link Book} objects that match the search term
+     * @param searchTerm the search query; must not be null or empty
+     * @return a list of {@link Book} objects matching the search term,
+     *         or an empty list if no matches are found or the search term is invalid
      */
     public List<Book> search(String searchTerm) {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {

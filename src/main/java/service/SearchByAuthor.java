@@ -5,33 +5,48 @@ import model.Book;
 import java.util.List;
 
 /**
- * Concrete search strategy for searching books by author name.
- * Implements the {@link SearchStrategy} interface.
+ * A concrete implementation of the {@link SearchStrategy} interface that performs
+ * book searches based on author name matching.
+ * <p>
+ * This strategy utilizes the {@link BookDAO} to execute database queries and
+ * retrieve books written by authors whose names match or contain the provided
+ * search term.
+ * </p>
  *
- * Provides a way to search the book database based on the author field.
+ * <p>
+ * Following the Strategy Pattern, this implementation allows the library system
+ * to support flexible and interchangeable searching behaviors without modifying
+ * the core search logic.
+ * </p>
  *
- * @author Library Management System
- * @version 1.0
+ * @version 1.1
  */
+
 public class SearchByAuthor implements SearchStrategy {
 
-    /** DAO for accessing book data */
+    /**
+     * Data Access Object responsible for interacting with stored book records.
+     * Handles author-based lookup operations.
+     */
     private final BookDAO bookDAO;
 
     /**
-     * Constructs a new {@code SearchByAuthor} strategy.
-     * Initializes the {@link BookDAO}.
+     * Creates a new instance of the {@code SearchByAuthor} strategy and initializes
+     * its {@link BookDAO} dependency for performing author-based queries.
      */
     public SearchByAuthor() {
         this.bookDAO = new BookDAO();
     }
 
     /**
-     * Searches for books by author using the provided search term.
+     * Searches for books whose author name matches or contains the specified term.
      *
-     * @param searchTerm the author name to search for
-     * @return a list of {@link Book} objects matching the author
+     * @param searchTerm the full or partial author name used to filter book records;
+     *                   must not be null or empty
+     * @return a list of {@link Book} objects written by authors matching the term,
+     *         or an empty list if no matching books are found
      */
+
     @Override
     public List<Book> search(String searchTerm) {
         return bookDAO.searchByAuthor(searchTerm);

@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="github-inti-demo" />
-        <module name="githup-inti-demo" />
       </profile>
     </annotationProcessing>
   </component>

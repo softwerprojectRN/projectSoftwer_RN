@@ -5,33 +5,48 @@ import model.Book;
 import java.util.List;
 
 /**
- * Concrete search strategy for searching books by ISBN pattern.
- * Implements the {@link SearchStrategy} interface.
+ * A concrete implementation of the {@link SearchStrategy} interface that performs
+ * book searches based on ISBN matching.
+ * <p>
+ * This strategy delegates the search operation to the {@link BookDAO}, which
+ * executes the actual database queries to retrieve books whose ISBN contains
+ * or matches the given pattern.
+ * </p>
  *
- * Allows searching for books in the database based on ISBN matching.
+ * <p>
+ * This implementation follows the Strategy Pattern, enabling flexible and
+ * interchangeable search behaviors within the library system.
+ * </p>
  *
- * @author Library Management System
- * @version 1.0
+ * @version 1.1
  */
+
 public class SearchByISBN implements SearchStrategy {
 
-    /** DAO for accessing book data */
+    /**
+     * Data Access Object responsible for interacting with the book repository.
+     * Handles ISBN-based lookup operations.
+     */
     private final BookDAO bookDAO;
 
     /**
-     * Constructs a new {@code SearchByISBN} strategy.
-     * Initializes the {@link BookDAO}.
+     * Creates a new instance of the {@code SearchByISBN} strategy and initializes
+     * its {@link BookDAO} dependency for performing ISBN-based book lookups.
      */
+
     public SearchByISBN() {
         this.bookDAO = new BookDAO();
     }
 
     /**
-     * Searches for books using a pattern of ISBN numbers.
+     * Searches for books whose ISBN matches or contains the specified search pattern.
      *
-     * @param searchTerm the ISBN pattern to search for
-     * @return a list of {@link Book} objects matching the ISBN pattern
+     * @param searchTerm the ISBN or partial ISBN used to filter book records;
+     *                   must not be null or empty
+     * @return a list of {@link Book} objects whose ISBN matches the pattern,
+     *         or an empty list if no books are found
      */
+
     @Override
     public List<Book> search(String searchTerm) {
         return bookDAO.searchByISBNPattern(searchTerm);
