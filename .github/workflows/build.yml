@@ -37,11 +37,9 @@ jobs:
       run: mvn -B verify --file pom.xml
 
     - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
+      uses: SonarSource/sonarqube-scan-action@v5.0.0  # <-- استخدم الـ action الجديد
       with:
-        args: >
-          -Dsonar.projectKey=softwerprojectRN_projectSoftwer_RN
-          -Dsonar.organization=softwerprojectRN
+        organization: softwerprojectrn                     # <-- lowercase صح
+        projectKey: softwerprojectRN_projectSoftwer_RN
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
