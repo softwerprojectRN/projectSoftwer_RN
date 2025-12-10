@@ -1,184 +1,184 @@
-//import dao.*;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.MockedStatic;
-//import dao.DatabaseConnection;
-//
-//import java.io.ByteArrayOutputStream;
-//import java.io.PrintStream;
-//import java.sql.*;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.*;
-//
-//class MediaDAOTest {
-//
-//    private MediaDAO mediaDAO;
-//
-//    @BeforeEach
-//    void setUp() {
-//        mediaDAO = new MediaDAO();
-//    }
-//
-//    // ------------------ initializeTable() ------------------
-//    @Test
-//    void testInitializeTable_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
-//
-//        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-//        System.setOut(new PrintStream(outContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            mediaDAO.initializeTable();
-//            verify(mockStmt).execute(anyString());
-//            assertTrue(outContent.toString().contains("Media table created successfully."));
-//        } finally {
-//            System.setOut(System.out);
-//        }
-//    }
-//
-//    @Test
-//    void testInitializeTable_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        Statement mockStmt = mock(Statement.class);
-//        when(mockConn.createStatement()).thenReturn(mockStmt);
-//        doThrow(new SQLException("Create failed")).when(mockStmt).execute(anyString());
-//
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            mediaDAO.initializeTable();
-//            assertTrue(errContent.toString().contains("Error creating media table: Create failed"));
-//        } finally {
-//            System.setErr(System.err);
-//        }
-//    }
-//
-//    @Test
-//    void testInitializeTable_nullConnection() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            assertDoesNotThrow(() -> mediaDAO.initializeTable());
-//        }
-//    }
-//
-//    // ------------------ insert() ------------------
-//    @Test
-//    void testInsert_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        ResultSet mockRs = mock(ResultSet.class);
-//
-//        when(mockConn.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS))).thenReturn(mockStmt);
-//        when(mockStmt.getGeneratedKeys()).thenReturn(mockRs);
-//        when(mockRs.next()).thenReturn(true);
-//        when(mockRs.getInt(1)).thenReturn(42);
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            int id = mediaDAO.insert("Some Media", "book");
-//            assertEquals(42, id);
-//            verify(mockStmt).executeUpdate();
-//        }
-//    }
-//
-//    @Test
-//    void testInsert_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS))).thenReturn(mockStmt);
-//        doThrow(new SQLException("Insert failed")).when(mockStmt).executeUpdate();
-//
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            int id = mediaDAO.insert("Some Media", "book");
-//            assertEquals(-1, id);
-//            assertTrue(errContent.toString().contains("Error inserting media: Insert failed"));
-//        } finally {
-//            System.setErr(System.err);
-//        }
-//    }
-//
-//    @Test
-//    void testInsert_nullConnection() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            int id = mediaDAO.insert("Some Media", "book");
-//            assertEquals(-1, id);
-//        }
-//    }
-//
-//    // ------------------ updateAvailability() ------------------
-//    @Test
-//    void testUpdateAvailability_success() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeUpdate()).thenReturn(1); // 1 row updated
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            boolean result = mediaDAO.updateAvailability(1, false);
-//            assertTrue(result);
-//        }
-//    }
-//
-//    @Test
-//    void testUpdateAvailability_noRows() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        when(mockStmt.executeUpdate()).thenReturn(0); // no rows updated
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            boolean result = mediaDAO.updateAvailability(1, true);
-//            assertFalse(result);
-//        }
-//    }
-//
-//    @Test
-//    void testUpdateAvailability_sqlException() throws SQLException {
-//        Connection mockConn = mock(Connection.class);
-//        PreparedStatement mockStmt = mock(PreparedStatement.class);
-//        when(mockConn.prepareStatement(anyString())).thenReturn(mockStmt);
-//        doThrow(new SQLException("Update failed")).when(mockStmt).executeUpdate();
-//
-//        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-//        System.setErr(new PrintStream(errContent));
-//
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-//
-//            boolean result = mediaDAO.updateAvailability(1, true);
-//            assertFalse(result);
-//            assertTrue(errContent.toString().contains("Error updating media availability: Update failed"));
-//        } finally {
-//            System.setErr(System.err);
-//        }
-//    }
-//
-//    @Test
-//    void testUpdateAvailability_nullConnection() {
-//        try (MockedStatic<DatabaseConnection> dbMock = mockStatic(DatabaseConnection.class)) {
-//            dbMock.when(DatabaseConnection::getConnection).thenReturn(null);
-//            assertFalse(mediaDAO.updateAvailability(1, true));
-//        }
-//    }
-//}
-//
+
+import dao.DatabaseConnection;
+import dao.MediaDAO;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.sql.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class MediaDAOTest {
+
+    @Mock
+    private Connection mockConnection;
+
+    @Mock
+    private PreparedStatement mockPreparedStatement;
+
+    @Mock
+    private Statement mockStatement;
+
+    @Mock
+    private ResultSet mockResultSet;
+
+    @Mock
+    private ResultSet mockGeneratedKeys;
+
+    private MediaDAO mediaDAO;
+    private MockedStatic<DatabaseConnection> mockedDatabaseConnection;
+
+    @BeforeEach
+    void setUp() {
+        // Mock the static DatabaseConnection.getConnection() method
+        mockedDatabaseConnection = mockStatic(DatabaseConnection.class);
+        mockedDatabaseConnection.when(DatabaseConnection::getConnection).thenReturn(mockConnection);
+        mediaDAO = new MediaDAO();
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (mockedDatabaseConnection != null) {
+            mockedDatabaseConnection.close();
+        }
+    }
+
+    @Test
+    void testInitializeTable() throws SQLException {
+        // Setup
+        when(mockConnection.createStatement()).thenReturn(mockStatement);
+
+        // Execute
+        mediaDAO.initializeTable();
+
+        // Verify
+        verify(mockStatement).execute(contains("CREATE TABLE IF NOT EXISTS media"));
+    }
+
+    @Test
+    void testInitializeTableWithSQLException() throws SQLException {
+        // Setup
+        when(mockConnection.createStatement()).thenReturn(mockStatement);
+        doThrow(new SQLException("Table creation failed")).when(mockStatement).execute(anyString());
+
+        // Execute - should not throw an exception
+        mediaDAO.initializeTable();
+
+        // Verify
+        verify(mockStatement).execute(contains("CREATE TABLE IF NOT EXISTS media"));
+    }
+
+    @Test
+    void testInsert() throws SQLException {
+        // Setup
+        String title = "Test Media";
+        String mediaType = "book";
+        int expectedId = 123;
+
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
+        when(mockGeneratedKeys.next()).thenReturn(true);
+        when(mockGeneratedKeys.getInt(1)).thenReturn(expectedId);
+
+        // Execute
+        int result = mediaDAO.insert(title, mediaType);
+
+        // Verify
+        assertEquals(expectedId, result);
+        verify(mockPreparedStatement).setObject(1, title);
+        verify(mockPreparedStatement).setObject(2, mediaType);
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+    @Test
+    void testInsertFailure() throws SQLException {
+        // Setup
+        String title = "Test Media";
+        String mediaType = "book";
+
+        when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0);
+        // We must stub getGeneratedKeys() to prevent NullPointerException in BaseDAO
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
+        when(mockGeneratedKeys.next()).thenReturn(false);
+
+        // Execute
+        int result = mediaDAO.insert(title, mediaType);
+
+        // Verify
+        assertEquals(-1, result);
+        verify(mockPreparedStatement).setObject(1, title);
+        verify(mockPreparedStatement).setObject(2, mediaType);
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+    @Test
+    void testUpdateAvailabilitySuccessToTrue() throws SQLException {
+        // Setup
+        int mediaId = 1;
+        boolean available = true;
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+
+        // Execute
+        boolean result = mediaDAO.updateAvailability(mediaId, available);
+
+        // Verify
+        assertTrue(result);
+        verify(mockPreparedStatement).setObject(1, 1); // true is converted to 1
+        verify(mockPreparedStatement).setObject(2, mediaId);
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+    @Test
+    void testUpdateAvailabilitySuccessToFalse() throws SQLException {
+        // Setup
+        int mediaId = 1;
+        boolean available = false;
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+
+        // Execute
+        boolean result = mediaDAO.updateAvailability(mediaId, available);
+
+        // Verify
+        assertTrue(result);
+        verify(mockPreparedStatement).setObject(1, 0); // false is converted to 0
+        verify(mockPreparedStatement).setObject(2, mediaId);
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+    @Test
+    void testUpdateAvailabilityFailure() throws SQLException {
+        // Setup
+        int mediaId = 999;
+        boolean available = true;
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0); // No rows affected
+
+        // Execute
+        boolean result = mediaDAO.updateAvailability(mediaId, available);
+
+        // Verify
+        assertFalse(result);
+        verify(mockPreparedStatement).setObject(1, 1);
+        verify(mockPreparedStatement).setObject(2, mediaId);
+        verify(mockPreparedStatement).executeUpdate();
+    }
+}
