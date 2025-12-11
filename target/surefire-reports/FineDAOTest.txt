@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: FineDAOTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.508 s -- in FineDAOTest
-=======
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.264 s -- in FineDAOTest
->>>>>>> 082c0f1 ("rahaf")
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.676 s -- in FineDAOTest

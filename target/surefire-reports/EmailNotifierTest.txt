@@ -1,4 +1,26 @@
 -------------------------------------------------------------------------------
 Test set: EmailNotifierTest
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in EmailNotifierTest
+Tests run: 5, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.040 s <<< FAILURE! -- in EmailNotifierTest
+EmailNotifierTest.testNotify_Success -- Time elapsed: 0.016 s <<< FAILURE!
+Argument(s) are different! Wanted:
+emailServer.sendEmail(
+    "rahaf@example.com",
+    "Library Notification",
+    "Your book is overdue!"
+);
+-> at service.EmailServer.sendEmail(EmailServer.java:154)
+Actual invocations have different arguments at position [0]:
+emailServer.sendEmail(
+    "rahaf@gmail.com",
+    "Library Notification",
+    "Your book is overdue!"
+);
+-> at service.EmailNotifier.notify(EmailNotifier.java:66)
+
+	at service.EmailServer.sendEmail(EmailServer.java:154)
+	at EmailNotifierTest.testNotify_Success(EmailNotifierTest.java:63)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+

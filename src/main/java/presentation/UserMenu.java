@@ -19,7 +19,7 @@ import java.util.Scanner;
  * Usage: Run the {@link #main(String[])} method to start the user menu.
  *
  * @author Library
- * @version 1.1
+ * @version 1.2 - Fixed fine balance synchronization
  */
 public class UserMenu {
     private static Scanner scanner = new Scanner(System.in);
@@ -102,6 +102,7 @@ public class UserMenu {
 
     /**
      * Handles user login and sets the {@link #currentUser}.
+     * FIXED: Ensures fine balance is properly loaded from database.
      */
     private void loginUser() {
         System.out.println("\n=== User Login ===");
@@ -117,10 +118,16 @@ public class UserMenu {
                     user.getPasswordHash(), user.getSalt());
             currentUser.setLoggedIn(true);
 
-            // Load borrower data
+            // CRITICAL FIX: Load borrower data INCLUDING fine balance from database
             borrowerService.loadBorrowerData(currentUser);
 
             System.out.println("Login successful! Welcome " + username + "!");
+
+            // Show current fine balance if any
+            if (currentUser.getFineBalance() > 0) {
+                System.out.printf("Note: You have an outstanding fine balance of %.2f\n",
+                        currentUser.getFineBalance());
+            }
         } else {
             System.out.println("Login failed!");
         }
@@ -322,6 +329,7 @@ public class UserMenu {
 
     /**
      * Borrows a selected media item (book or CD) for the current user.
+     * FIXED: Reloads borrower data after successful borrow to keep state synchronized.
      */
     private void borrowMedia() {
         System.out.println("\n=== Borrow Media ===");
@@ -339,6 +347,7 @@ public class UserMenu {
             Media media = null;
 
             if (typeInput.equals("1")) {
+                // Find book by searching all books
                 List<Book> allBooks = bookService.getAllBooks();
                 for (Book book : allBooks) {
                     if (book.getId() == mediaId) {
@@ -359,7 +368,7 @@ public class UserMenu {
             }
 
             if (borrowingService.borrowMedia(currentUser, media)) {
-                // Reload borrower data
+                // CRITICAL FIX: Reload borrower data to synchronize state
                 borrowerService.loadBorrowerData(currentUser);
             }
 
@@ -370,6 +379,7 @@ public class UserMenu {
 
     /**
      * Returns a borrowed media item for the current user.
+     * FIXED: Reloads borrower data after successful return to synchronize fine balance.
      */
     private void returnMedia() {
         System.out.println("\n=== Return Media ===");
@@ -393,8 +403,14 @@ public class UserMenu {
             if (index >= 0 && index < borrowed.size()) {
                 Media media = borrowed.get(index).getMedia();
                 if (borrowingService.returnMedia(currentUser, media)) {
-                    // Reload borrower data
+                    // CRITICAL FIX: Reload borrower data to get updated fine balance from database
                     borrowerService.loadBorrowerData(currentUser);
+
+                    // Show updated fine balance
+                    if (currentUser.getFineBalance() > 0) {
+                        System.out.printf("\nYour current fine balance is: %.2f\n",
+                                currentUser.getFineBalance());
+                    }
                 }
             } else {
                 System.out.println("Invalid selection!");
@@ -420,9 +436,14 @@ public class UserMenu {
 
     /**
      * Handles paying fines for overdue media.
+     * FIXED: Refreshes fine balance from database before and after payment.
      */
     private void payFine() {
         System.out.println("\n=== Pay Fine ===");
+
+        // CRITICAL FIX: Refresh fine balance from database before displaying
+        borrowerService.loadBorrowerData(currentUser);
+
         System.out.printf("Current fine balance: %.2f\n", currentUser.getFineBalance());
 
         if (currentUser.getFineBalance() <= 0) {
@@ -435,7 +456,10 @@ public class UserMenu {
 
         try {
             double amount = Double.parseDouble(input);
-            borrowerService.payFine(currentUser, amount);
+            if (borrowerService.payFine(currentUser, amount)) {
+                // Fine balance is already updated in payFine method
+                System.out.println("Payment successful!");
+            }
         } catch (NumberFormatException e) {
             System.out.println("Invalid amount!");
         }
@@ -443,10 +467,20 @@ public class UserMenu {
 
     /**
      * Displays the current fine balance for the user.
+     * FIXED: Refreshes fine balance from database before displaying.
      */
     private void viewFineBalance() {
         System.out.println("\n=== Fine Balance ===");
+
+        // CRITICAL FIX: Refresh fine balance from database to ensure accuracy
+        borrowerService.loadBorrowerData(currentUser);
+
         System.out.printf("Your current fine balance: %.2f\n", currentUser.getFineBalance());
+
+        // Additional helpful information
+        if (currentUser.getFineBalance() > 0) {
+            System.out.println("\nNote: You must pay your fine before borrowing more items.");
+        }
     }
 
     /**
@@ -463,4 +497,3 @@ public class UserMenu {
         }
     }
 }
-

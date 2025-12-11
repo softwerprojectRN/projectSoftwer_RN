@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: BookDAOTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.268 s -- in BookDAOTest
-=======
-Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.551 s -- in BookDAOTest
->>>>>>> 082c0f1 ("rahaf")
+Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.280 s -- in BookDAOTest
