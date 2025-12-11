@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="FineDAOTest" time="0.508" tests="13" errors="0" skipped="0" failures="0">
-=======
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="FineDAOTest" time="0.264" tests="13" errors="0" skipped="0" failures="0">
->>>>>>> 082c0f1 ("rahaf")
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="FineDAOTest" time="0.757" tests="13" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -20,11 +16,7 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-<<<<<<< HEAD
-    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire10489861853153442641\surefirebooter-20251210235503459_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire10489861853153442641 2025-12-10T23-55-03_131-jvmRun1 surefire-20251210235503459_1tmp surefire_0-20251210235503459_2tmp"/>
-=======
-    <property name="sun.java.command" value="C:\Users\ly\AppData\Local\Temp\surefire6210622229767130366\surefirebooter-20251211013007528_3.jar C:\Users\ly\AppData\Local\Temp\surefire6210622229767130366 ????-??-??T??-??-??_???-jvmRun1 surefire-20251211013007528_1tmp surefire_0-20251211013007528_2tmp"/>
->>>>>>> 082c0f1 ("rahaf")
+    <property name="sun.java.command" value="C:\Users\ly\AppData\Local\Temp\surefire12516514517514300614\surefirebooter-20251211020826120_3.jar C:\Users\ly\AppData\Local\Temp\surefire12516514517514300614 ????-??-??T??-??-??_???-jvmRun1 surefire-20251211020826120_1tmp surefire_0-20251211020826120_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\intiliji_all files\githup-inti-demo\target\test-classes;C:\intiliji_all files\githup-inti-demo\target\classes;C:\Users\ly\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\ly\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\ly\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ly\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\ly\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ly\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\ly\.m2\repository\org\xerial\sqlite-jdbc\3.50.3.0\sqlite-jdbc-3.50.3.0.jar;C:\Users\ly\.m2\repository\org\mockito\mockito-core\5.8.0\mockito-core-5.8.0.jar;C:\Users\ly\.m2\repository\net\bytebuddy\byte-buddy\1.14.10\byte-buddy-1.14.10.jar;C:\Users\ly\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.10\byte-buddy-agent-1.14.10.jar;C:\Users\ly\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\ly\.m2\repository\org\mockito\mockito-junit-jupiter\5.8.0\mockito-junit-jupiter-5.8.0.jar;C:\Users\ly\.m2\repository\org\mockito\mockito-inline\5.0.0\mockito-inline-5.0.0.jar;C:\Users\ly\.m2\repository\com\sun\mail\jakarta.mail\2.0.1\jakarta.mail-2.0.1.jar;C:\Users\ly\.m2\repository\com\sun\activation\jakarta.activation\2.0.1\jakarta.activation-2.0.1.jar;C:\Users\ly\.m2\repository\io\github\cdimascio\java-dotenv\5.2.2\java-dotenv-5.2.2.jar;C:\Users\ly\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.4.0\kotlin-stdlib-1.4.0.jar;C:\Users\ly\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.4.0\kotlin-stdlib-common-1.4.0.jar;C:\Users\ly\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -40,11 +32,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-<<<<<<< HEAD
-    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire10489861853153442641\surefirebooter-20251210235503459_3.jar"/>
-=======
-    <property name="surefire.real.class.path" value="C:\Users\ly\AppData\Local\Temp\surefire6210622229767130366\surefirebooter-20251211013007528_3.jar"/>
->>>>>>> 082c0f1 ("rahaf")
+    <property name="surefire.real.class.path" value="C:\Users\ly\AppData\Local\Temp\surefire12516514517514300614\surefirebooter-20251211020826120_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -75,57 +63,65 @@
     <property name="maven.repo.local" value="C:\Users\ly\.m2\repository"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-<<<<<<< HEAD
-  <testcase name="testGetFineBalance_Exists" classname="FineDAOTest" time="0.308"/>
-  <testcase name="testAddFine" classname="FineDAOTest" time="0.016"/>
-  <testcase name="testUpdateFine_FailsButInitializeSucceeds" classname="FineDAOTest" time="0.026"/>
-  <testcase name="testPayFine_Success" classname="FineDAOTest" time="0.012"/>
-  <testcase name="testPayFine_InvalidAmountZero" classname="FineDAOTest" time="0.01">
-    <system-err><![CDATA[Dec 10, 2025 11:55:13 PM dao.FineDAO payFine
-SEVERE: Invalid payment amount.
-]]></system-err>
-  </testcase>
-  <testcase name="testPayFine_InvalidAmountTooHigh" classname="FineDAOTest" time="0.012">
-    <system-err><![CDATA[Dec 10, 2025 11:55:13 PM dao.FineDAO payFine
-SEVERE: Invalid payment amount.
-]]></system-err>
-  </testcase>
-  <testcase name="testClearFine" classname="FineDAOTest" time="0.014"/>
-  <testcase name="testInitializeFine_Success" classname="FineDAOTest" time="0.007"/>
-  <testcase name="testInitializeTable" classname="FineDAOTest" time="0.01">
-    <system-err><![CDATA[Dec 10, 2025 11:55:13 PM dao.BaseDAO createTable
-INFO: User fines table created successfully.
-]]></system-err>
-  </testcase>
-  <testcase name="testInitializeFine_Failure" classname="FineDAOTest" time="0.01"/>
-  <testcase name="testGetFineBalance_NotExists" classname="FineDAOTest" time="0.008"/>
-  <testcase name="testUpdateFine_FailsAndInitializeFails" classname="FineDAOTest" time="0.017"/>
-  <testcase name="testUpdateFine_Success" classname="FineDAOTest" time="0.009"/>
-=======
-  <testcase name="testGetFineBalance_Exists" classname="FineDAOTest" time="0.036"/>
-  <testcase name="testAddFine" classname="FineDAOTest" time="0.023"/>
-  <testcase name="testUpdateFine_FailsButInitializeSucceeds" classname="FineDAOTest" time="0.07"/>
-  <testcase name="testPayFine_Success" classname="FineDAOTest" time="0.01"/>
-  <testcase name="testPayFine_InvalidAmountZero" classname="FineDAOTest" time="0.007">
+  <testcase name="testGetFineBalance_Exists" classname="FineDAOTest" time="0.1"/>
+  <testcase name="testAddFine" classname="FineDAOTest" time="0.022"/>
+  <testcase name="testUpdateFine_FailsButInitializeSucceeds" classname="FineDAOTest" time="0.077"/>
+  <testcase name="testPayFine_Success" classname="FineDAOTest" time="0.026"/>
+  <testcase name="testPayFine_InvalidAmountZero" classname="FineDAOTest" time="0.012">
     <system-err><![CDATA[?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
 SEVERE: Invalid payment amount.
-]]></system-err>
-  </testcase>
-  <testcase name="testPayFine_InvalidAmountTooHigh" classname="FineDAOTest" time="0.009">
-    <system-err><![CDATA[?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
 SEVERE: Invalid payment amount.
 ]]></system-err>
   </testcase>
-  <testcase name="testClearFine" classname="FineDAOTest" time="0.018"/>
-  <testcase name="testInitializeFine_Success" classname="FineDAOTest" time="0.009"/>
-  <testcase name="testInitializeTable" classname="FineDAOTest" time="0.014">
-    <system-err><![CDATA[?????? ??, ???? ?:??:?? ? dao.BaseDAO createTable
-INFO: User fines table created successfully.
+  <testcase name="testPayFine_InvalidAmountTooHigh" classname="FineDAOTest" time="0.139">
+    <system-err><![CDATA[?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
+?????? ??, ???? ?:??:?? ? dao.FineDAO payFine
+SEVERE: Invalid payment amount.
 ]]></system-err>
   </testcase>
+  <testcase name="testClearFine" classname="FineDAOTest" time="0.023"/>
+  <testcase name="testInitializeFine_Success" classname="FineDAOTest" time="0.01"/>
+  <testcase name="testInitializeTable" classname="FineDAOTest" time="0.175"/>
   <testcase name="testInitializeFine_Failure" classname="FineDAOTest" time="0.015"/>
-  <testcase name="testGetFineBalance_NotExists" classname="FineDAOTest" time="0.01"/>
-  <testcase name="testUpdateFine_FailsAndInitializeFails" classname="FineDAOTest" time="0.01"/>
-  <testcase name="testUpdateFine_Success" classname="FineDAOTest" time="0.008"/>
->>>>>>> 082c0f1 ("rahaf")
+  <testcase name="testGetFineBalance_NotExists" classname="FineDAOTest" time="0.034"/>
+  <testcase name="testUpdateFine_FailsAndInitializeFails" classname="FineDAOTest" time="0.019"/>
+  <testcase name="testUpdateFine_Success" classname="FineDAOTest" time="0.071"/>
 </testsuite>

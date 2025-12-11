@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: MediaDAOTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.272 s -- in MediaDAOTest
-=======
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.258 s -- in MediaDAOTest
->>>>>>> 082c0f1 ("rahaf")
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.153 s -- in MediaDAOTest
