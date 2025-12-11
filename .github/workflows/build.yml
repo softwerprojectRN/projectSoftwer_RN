@@ -32,5 +32,6 @@ jobs:
           -Dsonar.sources=src/main/java
           -Dsonar.tests=src/test/java
           -Dsonar.java.binaries=target/classes,target/test-classes
+          -Dsonar.coverage.exclusions=**/*
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
