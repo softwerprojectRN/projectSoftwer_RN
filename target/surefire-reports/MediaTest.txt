@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: MediaTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in MediaTest
+=======
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in MediaTest
+>>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8

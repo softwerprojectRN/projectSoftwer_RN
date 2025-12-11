@@ -1,8 +1,13 @@
 -------------------------------------------------------------------------------
 Test set: EmailNotifierTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 5, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.055 s <<< FAILURE! -- in EmailNotifierTest
 EmailNotifierTest.testNotify_Success -- Time elapsed: 1.870 s <<< FAILURE!
+=======
+Tests run: 5, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.040 s <<< FAILURE! -- in EmailNotifierTest
+EmailNotifierTest.testNotify_Success -- Time elapsed: 0.016 s <<< FAILURE!
+>>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
 Argument(s) are different! Wanted:
 emailServer.sendEmail(
     "rahaf@example.com",

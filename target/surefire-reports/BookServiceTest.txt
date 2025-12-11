@@ -1,8 +1,13 @@
 -------------------------------------------------------------------------------
 Test set: BookServiceTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 11, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 1.164 s <<< FAILURE! -- in BookServiceTest
 BookServiceTest.testSearchBooks_InvalidType_UsesTitle -- Time elapsed: 0.579 s <<< FAILURE!
+=======
+Tests run: 11, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.554 s <<< FAILURE! -- in BookServiceTest
+BookServiceTest.testSearchBooks_InvalidType_UsesTitle -- Time elapsed: 0.255 s <<< FAILURE!
+>>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
 Wanted but not invoked:
 bookDAO.searchByTitle("Test");
 -> at dao.BookDAO.searchByTitle(BookDAO.java:102)
@@ -14,7 +19,11 @@ Actually, there were zero interactions with this mock.
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
 
+<<<<<<< HEAD
 BookServiceTest.testSearchBooks_ByISBNPattern -- Time elapsed: 0.092 s <<< FAILURE!
+=======
+BookServiceTest.testSearchBooks_ByISBNPattern -- Time elapsed: 0.048 s <<< FAILURE!
+>>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
 Wanted but not invoked:
 bookDAO.searchByISBNPattern("978");
 -> at dao.BookDAO.searchByISBNPattern(BookDAO.java:124)
@@ -26,7 +35,11 @@ Actually, there were zero interactions with this mock.
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
 
+<<<<<<< HEAD
 BookServiceTest.testSearchBooks_ByTitle -- Time elapsed: 0.029 s <<< FAILURE!
+=======
+BookServiceTest.testSearchBooks_ByTitle -- Time elapsed: 0.016 s <<< FAILURE!
+>>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
 Wanted but not invoked:
 bookDAO.searchByTitle("Design");
 -> at dao.BookDAO.searchByTitle(BookDAO.java:102)
@@ -38,7 +51,11 @@ Actually, there were zero interactions with this mock.
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
 
+<<<<<<< HEAD
 BookServiceTest.testSearchBooks_ByAuthor -- Time elapsed: 0.044 s <<< FAILURE!
+=======
+BookServiceTest.testSearchBooks_ByAuthor -- Time elapsed: 0.018 s <<< FAILURE!
+>>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
 Wanted but not invoked:
 bookDAO.searchByAuthor("Martin");
 -> at dao.BookDAO.searchByAuthor(BookDAO.java:113)
