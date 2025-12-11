@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: UserWithOverdueBooksTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in UserWithOverdueBooksTest
-=======
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in UserWithOverdueBooksTest
->>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in UserWithOverdueBooksTest

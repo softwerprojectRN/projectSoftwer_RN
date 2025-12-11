@@ -440,15 +440,10 @@ public class UserMenu {
      */
     private void payFine() {
         System.out.println("\n=== Pay Fine ===");
-<<<<<<< HEAD
-        // Reload borrower data to get the latest fine balance from database
-        borrowerService.loadBorrowerData(currentUser);
-=======
 
         // CRITICAL FIX: Refresh fine balance from database before displaying
         borrowerService.loadBorrowerData(currentUser);
 
->>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
         System.out.printf("Current fine balance: %.2f\n", currentUser.getFineBalance());
 
         if (currentUser.getFineBalance() <= 0) {
@@ -462,13 +457,8 @@ public class UserMenu {
         try {
             double amount = Double.parseDouble(input);
             if (borrowerService.payFine(currentUser, amount)) {
-<<<<<<< HEAD
-                // Reload borrower data after successful payment to reflect updated balance
-                borrowerService.loadBorrowerData(currentUser);
-=======
                 // Fine balance is already updated in payFine method
                 System.out.println("Payment successful!");
->>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid amount!");
@@ -481,15 +471,10 @@ public class UserMenu {
      */
     private void viewFineBalance() {
         System.out.println("\n=== Fine Balance ===");
-<<<<<<< HEAD
-        // Reload borrower data to get the latest fine balance from database
-        borrowerService.loadBorrowerData(currentUser);
-=======
 
         // CRITICAL FIX: Refresh fine balance from database to ensure accuracy
         borrowerService.loadBorrowerData(currentUser);
 
->>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
         System.out.printf("Your current fine balance: %.2f\n", currentUser.getFineBalance());
 
         // Additional helpful information

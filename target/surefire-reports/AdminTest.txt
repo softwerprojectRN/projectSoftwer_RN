@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: AdminTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in AdminTest
-=======
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 s -- in AdminTest
->>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 s -- in AdminTest

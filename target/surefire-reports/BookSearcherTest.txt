@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: BookSearcherTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.345 s -- in BookSearcherTest
-=======
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.219 s -- in BookSearcherTest
->>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.220 s -- in BookSearcherTest

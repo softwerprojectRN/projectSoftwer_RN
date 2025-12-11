@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: EmailServerTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.786 s -- in EmailServerTest
-=======
-Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.482 s -- in EmailServerTest
->>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
+Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.108 s -- in EmailServerTest

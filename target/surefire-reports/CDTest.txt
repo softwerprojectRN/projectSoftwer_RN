@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: CDTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in CDTest
-=======
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in CDTest
->>>>>>> 6c04434ca7d5d13d00eda05e393f3b7bfc04efb8
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.400 s -- in CDTest

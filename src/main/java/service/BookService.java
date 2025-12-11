@@ -21,8 +21,6 @@ import java.util.List;
  * @version 1.1
  */
 public class BookService {
-    private BookSearcher bookSearcher;
-
     /** DAO used for interacting with the books table. */
     private final BookDAO bookDAO;
 
@@ -104,18 +102,13 @@ public class BookService {
 
         switch (searchType.toLowerCase()) {
             case "title":
-                bookSearcher = new BookSearcher(new SearchByTitle());
-                break;
+                return bookDAO.searchByTitle(searchTerm);
             case "author":
-                bookSearcher = new BookSearcher(new SearchByAuthor());
-                break;
+                return bookDAO.searchByAuthor(searchTerm);
             case "isbn":
-                bookSearcher = new BookSearcher(new SearchByISBN());
-                break;
+                return bookDAO.searchByISBNPattern(searchTerm);
             default:
-                bookSearcher = new BookSearcher(new SearchByTitle());
+                return bookDAO.searchByTitle(searchTerm);
         }
-
-        return bookSearcher.search(searchTerm);
     }
 }

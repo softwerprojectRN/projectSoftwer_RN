@@ -62,7 +62,7 @@ public class EmailNotifier implements Observer {
         }
 
         try {
-            String email = user.getUsername() + "@gmail.com";
+            String email = user.getUsername() + "@example.com";
             emailServer.sendEmail(email, "Library Notification", message);
             System.out.println("Email notification sent to: " + email);
         } catch (Exception e) {
