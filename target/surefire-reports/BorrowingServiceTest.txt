@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: BorrowingServiceTest
 -------------------------------------------------------------------------------
-Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.280 s -- in BorrowingServiceTest
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.442 s -- in BorrowingServiceTest
