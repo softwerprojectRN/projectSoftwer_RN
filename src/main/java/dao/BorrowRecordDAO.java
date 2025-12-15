@@ -202,9 +202,9 @@ public class BorrowRecordDAO extends BaseDAO {
     public List<MediaRecord> findOverdueByUserId(int userId) {
         List<MediaRecord> allRecords = findActiveByUserId(userId);
         List<MediaRecord> overdueRecords = new ArrayList<>();
-        for (MediaRecord record : allRecords) {
-            if (record.isOverdue()) {
-                overdueRecords.add(record);
+        for (MediaRecord recordd : allRecords) {
+            if (recordd.isOverdue()) {
+                overdueRecords.add(recordd);
             }
         }
         return overdueRecords;

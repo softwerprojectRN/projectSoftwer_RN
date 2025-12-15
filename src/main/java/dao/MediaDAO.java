@@ -1,7 +1,5 @@
 package dao;
 
-import java.sql.*;
-
 /**
  * {@code MediaDAO} is a Data Access Object (DAO) class responsible for
  * managing database operations related to the {@code media} table.

@@ -1,7 +1,5 @@
 package dao;
 
-import java.sql.*;
-
 /**
  * {@code FineDAO} is a Data Access Object (DAO) class responsible for
  * managing database operations related to user fines.
