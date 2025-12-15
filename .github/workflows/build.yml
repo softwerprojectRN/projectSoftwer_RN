@@ -20,11 +20,11 @@ jobs:
         distribution: temurin
         java-version: 17
 
-    - name: Build project
-      run: mvn clean package
+- name: Build project
+  run: mvn clean test
 
     - name: Run SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v5.0.0
+uses: SonarSource/sonarcloud-github-action@master
       with:
         args: >
           -Dsonar.projectKey=softwerprojectRN_projectSoftwer_RN
@@ -32,6 +32,5 @@ jobs:
           -Dsonar.sources=src/main/java
           -Dsonar.tests=src/test/java
           -Dsonar.java.binaries=target/classes,target/test-classes
-          -Dsonar.coverage.exclusions=**/*
-      env:
+               env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
