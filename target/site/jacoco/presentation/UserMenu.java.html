@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserMenu.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">presentation</a> &gt; <span class="el_source">UserMenu.java</span></div><h1>UserMenu.java</h1><pre class="source lang-java linenums">package presentation;
+
+import model.Book;
+import model.Borrower;
+import model.CD;
+import model.Media;
+import service.*;
+
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ * Provides a console-based user interface for interacting with the library system.
+ * Allows users to register, login, browse/search media, borrow/return items, and manage fines.
+ *
+ * Communicates with {@link UserService}, {@link BookService}, {@link CDService}, {@link BorrowingService},
+ * and {@link BorrowerService} for performing operations.
+ *
+ * Usage: Run the {@link #main(String[])} method to start the user menu.
+ *
+ * @author Library
+ * @version 1.2 - Fixed fine balance synchronization
+ */
+public class UserMenu {
+<span class="nc" id="L25">    private static Scanner scanner = new Scanner(System.in);</span>
+    private final UserService userService;
+    private final BookService bookService;
+    private final CDService cdService;
+    private final BorrowingService borrowingService;
+    private final BorrowerService borrowerService;
+    private Borrower currentUser;
+
+    /**
+     * Constructs a new {@code UserMenu} and initializes all required services.
+     */
+<span class="nc" id="L36">    public UserMenu() {</span>
+<span class="nc" id="L37">        this.userService = new UserService();</span>
+<span class="nc" id="L38">        this.bookService = new BookService();</span>
+<span class="nc" id="L39">        this.cdService = new CDService();</span>
+<span class="nc" id="L40">        this.borrowingService = new BorrowingService();</span>
+<span class="nc" id="L41">        this.borrowerService = new BorrowerService();</span>
+<span class="nc" id="L42">    }</span>
+
+    /**
+     * Starts the main user menu system with registration, login, and operations.
+     */
+    public void start() {
+<span class="nc" id="L48">        boolean running = true;</span>
+
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        while (running) {</span>
+<span class="nc" id="L51">            System.out.println(&quot;\n=== Library System ===&quot;);</span>
+<span class="nc" id="L52">            System.out.println(&quot;1. Register&quot;);</span>
+<span class="nc" id="L53">            System.out.println(&quot;2. Login&quot;);</span>
+<span class="nc" id="L54">            System.out.println(&quot;3. Exit&quot;);</span>
+<span class="nc" id="L55">            System.out.print(&quot;Select an option: &quot;);</span>
+
+<span class="nc" id="L57">            String input = scanner.nextLine().trim();</span>
+            int choice;
+            try {
+<span class="nc" id="L60">                choice = Integer.parseInt(input);</span>
+<span class="nc" id="L61">            } catch (NumberFormatException e) {</span>
+<span class="nc" id="L62">                System.out.println(&quot;Invalid option! Please enter a number.&quot;);</span>
+<span class="nc" id="L63">                continue;</span>
+<span class="nc" id="L64">            }</span>
+
+<span class="nc bnc" id="L66" title="All 4 branches missed.">            switch (choice) {</span>
+                case 1:
+<span class="nc" id="L68">                    registerUser();</span>
+<span class="nc" id="L69">                    break;</span>
+                case 2:
+<span class="nc" id="L71">                    loginUser();</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                    if (currentUser != null) {</span>
+<span class="nc" id="L73">                        showMainMenu();</span>
+                    }
+                    break;
+                case 3:
+<span class="nc" id="L77">                    System.out.println(&quot;Thank you for using the Library System. Goodbye!&quot;);</span>
+<span class="nc" id="L78">                    running = false;</span>
+<span class="nc" id="L79">                    break;</span>
+                default:
+<span class="nc" id="L81">                    System.out.println(&quot;Invalid option!&quot;);</span>
+            }
+<span class="nc" id="L83">        }</span>
+<span class="nc" id="L84">    }</span>
+
+    /**
+     * Handles user registration with input validation.
+     */
+    private void registerUser() {
+<span class="nc" id="L90">        System.out.println(&quot;\n=== User Registration ===&quot;);</span>
+<span class="nc" id="L91">        System.out.print(&quot;Username: &quot;);</span>
+<span class="nc" id="L92">        String username = scanner.nextLine();</span>
+<span class="nc" id="L93">        System.out.print(&quot;Password: &quot;);</span>
+<span class="nc" id="L94">        String password = scanner.nextLine();</span>
+
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (userService.register(username, password) != null) {</span>
+<span class="nc" id="L97">            System.out.println(&quot;Registration successful! You can now login.&quot;);</span>
+        } else {
+<span class="nc" id="L99">            System.out.println(&quot;Registration failed!&quot;);</span>
+        }
+<span class="nc" id="L101">    }</span>
+
+    /**
+     * Handles user login and sets the {@link #currentUser}.
+     * FIXED: Ensures fine balance is properly loaded from database.
+     */
+    private void loginUser() {
+<span class="nc" id="L108">        System.out.println(&quot;\n=== User Login ===&quot;);</span>
+<span class="nc" id="L109">        System.out.print(&quot;Username: &quot;);</span>
+<span class="nc" id="L110">        String username = scanner.nextLine();</span>
+<span class="nc" id="L111">        System.out.print(&quot;Password: &quot;);</span>
+<span class="nc" id="L112">        String password = scanner.nextLine();</span>
+
+<span class="nc" id="L114">        var user = userService.login(username, password);</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (user != null) {</span>
+            // Convert User to Borrower
+<span class="nc" id="L117">            currentUser = new Borrower(user.getId(), user.getUsername(),</span>
+<span class="nc" id="L118">                    user.getPasswordHash(), user.getSalt());</span>
+<span class="nc" id="L119">            currentUser.setLoggedIn(true);</span>
+
+            // CRITICAL FIX: Load borrower data INCLUDING fine balance from database
+<span class="nc" id="L122">            borrowerService.loadBorrowerData(currentUser);</span>
+
+<span class="nc" id="L124">            System.out.println(&quot;Login successful! Welcome &quot; + username + &quot;!&quot;);</span>
+
+            // Show current fine balance if any
+<span class="nc bnc" id="L127" title="All 2 branches missed.">            if (currentUser.getFineBalance() &gt; 0) {</span>
+<span class="nc" id="L128">                System.out.printf(&quot;Note: You have an outstanding fine balance of %.2f\n&quot;,</span>
+<span class="nc" id="L129">                        currentUser.getFineBalance());</span>
+            }
+        } else {
+<span class="nc" id="L132">            System.out.println(&quot;Login failed!&quot;);</span>
+        }
+<span class="nc" id="L134">    }</span>
+
+    /**
+     * Displays the main menu for a logged-in user.
+     */
+    private void showMainMenu() {
+<span class="nc" id="L140">        boolean running = true;</span>
+
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        while (running) {</span>
+<span class="nc" id="L143">            System.out.println(&quot;\n=== Main Menu ===&quot;);</span>
+<span class="nc" id="L144">            System.out.println(&quot;1. Browse Books&quot;);</span>
+<span class="nc" id="L145">            System.out.println(&quot;2. Browse CDs&quot;);</span>
+<span class="nc" id="L146">            System.out.println(&quot;3. Search Books&quot;);</span>
+<span class="nc" id="L147">            System.out.println(&quot;4. Search CDs&quot;);</span>
+<span class="nc" id="L148">            System.out.println(&quot;5. Borrow Media&quot;);</span>
+<span class="nc" id="L149">            System.out.println(&quot;6. Return Media&quot;);</span>
+<span class="nc" id="L150">            System.out.println(&quot;7. View My Borrowed Items&quot;);</span>
+<span class="nc" id="L151">            System.out.println(&quot;8. View Overdue Report&quot;);</span>
+<span class="nc" id="L152">            System.out.println(&quot;9. Pay Fine&quot;);</span>
+<span class="nc" id="L153">            System.out.println(&quot;10. View Fine Balance&quot;);</span>
+<span class="nc" id="L154">            System.out.println(&quot;11. Logout&quot;);</span>
+<span class="nc" id="L155">            System.out.print(&quot;Select an option: &quot;);</span>
+
+<span class="nc" id="L157">            String input = scanner.nextLine().trim();</span>
+            int choice;
+            try {
+<span class="nc" id="L160">                choice = Integer.parseInt(input);</span>
+<span class="nc" id="L161">            } catch (NumberFormatException e) {</span>
+<span class="nc" id="L162">                System.out.println(&quot;Invalid option! Please enter a number.&quot;);</span>
+<span class="nc" id="L163">                continue;</span>
+<span class="nc" id="L164">            }</span>
+
+<span class="nc bnc" id="L166" title="All 12 branches missed.">            switch (choice) {</span>
+                case 1:
+<span class="nc" id="L168">                    browseBooks();</span>
+<span class="nc" id="L169">                    break;</span>
+                case 2:
+<span class="nc" id="L171">                    browseCDs();</span>
+<span class="nc" id="L172">                    break;</span>
+                case 3:
+<span class="nc" id="L174">                    searchBooks();</span>
+<span class="nc" id="L175">                    break;</span>
+                case 4:
+<span class="nc" id="L177">                    searchCDs();</span>
+<span class="nc" id="L178">                    break;</span>
+                case 5:
+<span class="nc" id="L180">                    borrowMedia();</span>
+<span class="nc" id="L181">                    break;</span>
+                case 6:
+<span class="nc" id="L183">                    returnMedia();</span>
+<span class="nc" id="L184">                    break;</span>
+                case 7:
+<span class="nc" id="L186">                    viewBorrowedItems();</span>
+<span class="nc" id="L187">                    break;</span>
+                case 8:
+<span class="nc" id="L189">                    viewOverdueReport();</span>
+<span class="nc" id="L190">                    break;</span>
+                case 9:
+<span class="nc" id="L192">                    payFine();</span>
+<span class="nc" id="L193">                    break;</span>
+                case 10:
+<span class="nc" id="L195">                    viewFineBalance();</span>
+<span class="nc" id="L196">                    break;</span>
+                case 11:
+<span class="nc" id="L198">                    currentUser.logout();</span>
+<span class="nc" id="L199">                    currentUser = null;</span>
+<span class="nc" id="L200">                    running = false;</span>
+<span class="nc" id="L201">                    break;</span>
+                default:
+<span class="nc" id="L203">                    System.out.println(&quot;Invalid option!&quot;);</span>
+            }
+<span class="nc" id="L205">        }</span>
+<span class="nc" id="L206">    }</span>
+
+    /**
+     * Lists all available books in the library.
+     */
+    private void browseBooks() {
+<span class="nc" id="L212">        System.out.println(&quot;\n=== All Books ===&quot;);</span>
+<span class="nc" id="L213">        List&lt;Book&gt; books = bookService.getAllBooks();</span>
+
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        if (books.isEmpty()) {</span>
+<span class="nc" id="L216">            System.out.println(&quot;No books available in the library.&quot;);</span>
+        } else {
+<span class="nc bnc" id="L218" title="All 2 branches missed.">            for (Book book : books) {</span>
+<span class="nc" id="L219">                System.out.println(book);</span>
+<span class="nc" id="L220">                System.out.println(&quot;---&quot;);</span>
+<span class="nc" id="L221">            }</span>
+        }
+<span class="nc" id="L223">    }</span>
+
+    /**
+     * Lists all available CDs in the library.
+     */
+    private void browseCDs() {
+<span class="nc" id="L229">        System.out.println(&quot;\n=== All CDs ===&quot;);</span>
+<span class="nc" id="L230">        List&lt;CD&gt; cds = cdService.getAllCDs();</span>
+
+<span class="nc bnc" id="L232" title="All 2 branches missed.">        if (cds.isEmpty()) {</span>
+<span class="nc" id="L233">            System.out.println(&quot;No CDs available in the library.&quot;);</span>
+        } else {
+<span class="nc bnc" id="L235" title="All 2 branches missed.">            for (CD cd : cds) {</span>
+<span class="nc" id="L236">                System.out.println(cd);</span>
+<span class="nc" id="L237">                System.out.println(&quot;---&quot;);</span>
+<span class="nc" id="L238">            }</span>
+        }
+<span class="nc" id="L240">    }</span>
+
+    /**
+     * Searches books based on title, author, or ISBN.
+     */
+    private void searchBooks() {
+<span class="nc" id="L246">        System.out.println(&quot;\n=== Search Books ===&quot;);</span>
+<span class="nc" id="L247">        System.out.println(&quot;Search by:&quot;);</span>
+<span class="nc" id="L248">        System.out.println(&quot;1. Title&quot;);</span>
+<span class="nc" id="L249">        System.out.println(&quot;2. Author&quot;);</span>
+<span class="nc" id="L250">        System.out.println(&quot;3. ISBN&quot;);</span>
+<span class="nc" id="L251">        System.out.print(&quot;Select search type: &quot;);</span>
+
+<span class="nc" id="L253">        String typeInput = scanner.nextLine().trim();</span>
+<span class="nc" id="L254">        String searchType = &quot;title&quot;;</span>
+
+<span class="nc bnc" id="L256" title="All 4 branches missed.">        switch (typeInput) {</span>
+            case &quot;1&quot;:
+<span class="nc" id="L258">                searchType = &quot;title&quot;;</span>
+<span class="nc" id="L259">                break;</span>
+            case &quot;2&quot;:
+<span class="nc" id="L261">                searchType = &quot;author&quot;;</span>
+<span class="nc" id="L262">                break;</span>
+            case &quot;3&quot;:
+<span class="nc" id="L264">                searchType = &quot;isbn&quot;;</span>
+<span class="nc" id="L265">                break;</span>
+            default:
+<span class="nc" id="L267">                System.out.println(&quot;Invalid type, using title search.&quot;);</span>
+        }
+
+<span class="nc" id="L270">        System.out.print(&quot;Enter search term: &quot;);</span>
+<span class="nc" id="L271">        String searchTerm = scanner.nextLine();</span>
+
+<span class="nc" id="L273">        List&lt;Book&gt; results = bookService.searchBooks(searchTerm, searchType);</span>
+
+<span class="nc bnc" id="L275" title="All 2 branches missed.">        if (results.isEmpty()) {</span>
+<span class="nc" id="L276">            System.out.println(&quot;No books found matching your search.&quot;);</span>
+        } else {
+<span class="nc" id="L278">            System.out.println(&quot;\n=== Search Results ===&quot;);</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">            for (Book book : results) {</span>
+<span class="nc" id="L280">                System.out.println(book);</span>
+<span class="nc" id="L281">                System.out.println(&quot;---&quot;);</span>
+<span class="nc" id="L282">            }</span>
+        }
+<span class="nc" id="L284">    }</span>
+
+    /**
+     * Searches CDs based on title, artist, or genre.
+     */
+    private void searchCDs() {
+<span class="nc" id="L290">        System.out.println(&quot;\n=== Search CDs ===&quot;);</span>
+<span class="nc" id="L291">        System.out.println(&quot;Search by:&quot;);</span>
+<span class="nc" id="L292">        System.out.println(&quot;1. Title&quot;);</span>
+<span class="nc" id="L293">        System.out.println(&quot;2. Artist&quot;);</span>
+<span class="nc" id="L294">        System.out.println(&quot;3. Genre&quot;);</span>
+<span class="nc" id="L295">        System.out.print(&quot;Select search type: &quot;);</span>
+
+<span class="nc" id="L297">        String typeInput = scanner.nextLine().trim();</span>
+<span class="nc" id="L298">        String searchType = &quot;title&quot;;</span>
+
+<span class="nc bnc" id="L300" title="All 4 branches missed.">        switch (typeInput) {</span>
+            case &quot;1&quot;:
+<span class="nc" id="L302">                searchType = &quot;title&quot;;</span>
+<span class="nc" id="L303">                break;</span>
+            case &quot;2&quot;:
+<span class="nc" id="L305">                searchType = &quot;artist&quot;;</span>
+<span class="nc" id="L306">                break;</span>
+            case &quot;3&quot;:
+<span class="nc" id="L308">                searchType = &quot;genre&quot;;</span>
+<span class="nc" id="L309">                break;</span>
+            default:
+<span class="nc" id="L311">                System.out.println(&quot;Invalid type, using title search.&quot;);</span>
+        }
+
+<span class="nc" id="L314">        System.out.print(&quot;Enter search term: &quot;);</span>
+<span class="nc" id="L315">        String searchTerm = scanner.nextLine();</span>
+
+<span class="nc" id="L317">        List&lt;CD&gt; results = cdService.searchCDs(searchTerm, searchType);</span>
+
+<span class="nc bnc" id="L319" title="All 2 branches missed.">        if (results.isEmpty()) {</span>
+<span class="nc" id="L320">            System.out.println(&quot;No CDs found matching your search.&quot;);</span>
+        } else {
+<span class="nc" id="L322">            System.out.println(&quot;\n=== Search Results ===&quot;);</span>
+<span class="nc bnc" id="L323" title="All 2 branches missed.">            for (CD cd : results) {</span>
+<span class="nc" id="L324">                System.out.println(cd);</span>
+<span class="nc" id="L325">                System.out.println(&quot;---&quot;);</span>
+<span class="nc" id="L326">            }</span>
+        }
+<span class="nc" id="L328">    }</span>
+
+    /**
+     * Borrows a selected media item (book or CD) for the current user.
+     * FIXED: Reloads borrower data after successful borrow to keep state synchronized.
+     */
+    private void borrowMedia() {
+<span class="nc" id="L335">        System.out.println(&quot;\n=== Borrow Media ===&quot;);</span>
+<span class="nc" id="L336">        System.out.println(&quot;1. Borrow Book&quot;);</span>
+<span class="nc" id="L337">        System.out.println(&quot;2. Borrow CD&quot;);</span>
+<span class="nc" id="L338">        System.out.print(&quot;Select media type: &quot;);</span>
+
+<span class="nc" id="L340">        String typeInput = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L342">        System.out.print(&quot;Enter media ID: &quot;);</span>
+<span class="nc" id="L343">        String idInput = scanner.nextLine().trim();</span>
+
+        try {
+<span class="nc" id="L346">            int mediaId = Integer.parseInt(idInput);</span>
+<span class="nc" id="L347">            Media media = null;</span>
+
+<span class="nc bnc" id="L349" title="All 2 branches missed.">            if (typeInput.equals(&quot;1&quot;)) {</span>
+                // Find book by searching all books
+<span class="nc" id="L351">                List&lt;Book&gt; allBooks = bookService.getAllBooks();</span>
+<span class="nc bnc" id="L352" title="All 2 branches missed.">                for (Book book : allBooks) {</span>
+<span class="nc bnc" id="L353" title="All 2 branches missed.">                    if (book.getId() == mediaId) {</span>
+<span class="nc" id="L354">                        media = book;</span>
+<span class="nc" id="L355">                        break;</span>
+                    }
+<span class="nc" id="L357">                }</span>
+<span class="nc bnc" id="L358" title="All 2 branches missed.">            } else if (typeInput.equals(&quot;2&quot;)) {</span>
+<span class="nc" id="L359">                media = cdService.findById(mediaId);</span>
+            } else {
+<span class="nc" id="L361">                System.out.println(&quot;Invalid media type!&quot;);</span>
+<span class="nc" id="L362">                return;</span>
+            }
+
+<span class="nc bnc" id="L365" title="All 2 branches missed.">            if (media == null) {</span>
+<span class="nc" id="L366">                System.out.println(&quot;Media not found!&quot;);</span>
+<span class="nc" id="L367">                return;</span>
+            }
+
+<span class="nc bnc" id="L370" title="All 2 branches missed.">            if (borrowingService.borrowMedia(currentUser, media)) {</span>
+                // CRITICAL FIX: Reload borrower data to synchronize state
+<span class="nc" id="L372">                borrowerService.loadBorrowerData(currentUser);</span>
+            }
+
+<span class="nc" id="L375">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L376">            System.out.println(&quot;Invalid ID format!&quot;);</span>
+<span class="nc" id="L377">        }</span>
+<span class="nc" id="L378">    }</span>
+
+    /**
+     * Returns a borrowed media item for the current user.
+     * FIXED: Reloads borrower data after successful return to synchronize fine balance.
+     */
+    private void returnMedia() {
+<span class="nc" id="L385">        System.out.println(&quot;\n=== Return Media ===&quot;);</span>
+
+<span class="nc" id="L387">        List&lt;model.MediaRecord&gt; borrowed = currentUser.getBorrowedMedia();</span>
+<span class="nc bnc" id="L388" title="All 2 branches missed.">        if (borrowed.isEmpty()) {</span>
+<span class="nc" id="L389">            System.out.println(&quot;You have no borrowed items to return.&quot;);</span>
+<span class="nc" id="L390">            return;</span>
+        }
+
+<span class="nc" id="L393">        System.out.println(&quot;Your borrowed items:&quot;);</span>
+<span class="nc bnc" id="L394" title="All 2 branches missed.">        for (int i = 0; i &lt; borrowed.size(); i++) {</span>
+<span class="nc" id="L395">            System.out.println((i + 1) + &quot;. &quot; + borrowed.get(i).getMedia());</span>
+        }
+
+<span class="nc" id="L398">        System.out.print(&quot;Select item number to return: &quot;);</span>
+<span class="nc" id="L399">        String input = scanner.nextLine().trim();</span>
+
+        try {
+<span class="nc" id="L402">            int index = Integer.parseInt(input) - 1;</span>
+<span class="nc bnc" id="L403" title="All 4 branches missed.">            if (index &gt;= 0 &amp;&amp; index &lt; borrowed.size()) {</span>
+<span class="nc" id="L404">                Media media = borrowed.get(index).getMedia();</span>
+<span class="nc bnc" id="L405" title="All 2 branches missed.">                if (borrowingService.returnMedia(currentUser, media)) {</span>
+                    // CRITICAL FIX: Reload borrower data to get updated fine balance from database
+<span class="nc" id="L407">                    borrowerService.loadBorrowerData(currentUser);</span>
+
+                    // Show updated fine balance
+<span class="nc bnc" id="L410" title="All 2 branches missed.">                    if (currentUser.getFineBalance() &gt; 0) {</span>
+<span class="nc" id="L411">                        System.out.printf(&quot;\nYour current fine balance is: %.2f\n&quot;,</span>
+<span class="nc" id="L412">                                currentUser.getFineBalance());</span>
+                    }
+                }
+<span class="nc" id="L415">            } else {</span>
+<span class="nc" id="L416">                System.out.println(&quot;Invalid selection!&quot;);</span>
+            }
+<span class="nc" id="L418">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L419">            System.out.println(&quot;Invalid input!&quot;);</span>
+<span class="nc" id="L420">        }</span>
+<span class="nc" id="L421">    }</span>
+
+    /**
+     * Displays the list of media currently borrowed by the user.
+     */
+    private void viewBorrowedItems() {
+<span class="nc" id="L427">        borrowerService.displayBorrowedMedia(currentUser);</span>
+<span class="nc" id="L428">    }</span>
+
+    /**
+     * Displays a report of overdue items for the current user.
+     */
+    private void viewOverdueReport() {
+<span class="nc" id="L434">        borrowerService.generateOverdueReport(currentUser);</span>
+<span class="nc" id="L435">    }</span>
+
+    /**
+     * Handles paying fines for overdue media.
+     * FIXED: Refreshes fine balance from database before and after payment.
+     */
+    private void payFine() {
+<span class="nc" id="L442">        System.out.println(&quot;\n=== Pay Fine ===&quot;);</span>
+
+        // CRITICAL FIX: Refresh fine balance from database before displaying
+<span class="nc" id="L445">        borrowerService.loadBorrowerData(currentUser);</span>
+
+<span class="nc" id="L447">        System.out.printf(&quot;Current fine balance: %.2f\n&quot;, currentUser.getFineBalance());</span>
+
+<span class="nc bnc" id="L449" title="All 2 branches missed.">        if (currentUser.getFineBalance() &lt;= 0) {</span>
+<span class="nc" id="L450">            System.out.println(&quot;You have no fines to pay.&quot;);</span>
+<span class="nc" id="L451">            return;</span>
+        }
+
+<span class="nc" id="L454">        System.out.print(&quot;Enter amount to pay: &quot;);</span>
+<span class="nc" id="L455">        String input = scanner.nextLine().trim();</span>
+
+        try {
+<span class="nc" id="L458">            double amount = Double.parseDouble(input);</span>
+<span class="nc bnc" id="L459" title="All 2 branches missed.">            if (borrowerService.payFine(currentUser, amount)) {</span>
+                // Fine balance is already updated in payFine method
+<span class="nc" id="L461">                System.out.println(&quot;Payment successful!&quot;);</span>
+            }
+<span class="nc" id="L463">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L464">            System.out.println(&quot;Invalid amount!&quot;);</span>
+<span class="nc" id="L465">        }</span>
+<span class="nc" id="L466">    }</span>
+
+    /**
+     * Displays the current fine balance for the user.
+     * FIXED: Refreshes fine balance from database before displaying.
+     */
+    private void viewFineBalance() {
+<span class="nc" id="L473">        System.out.println(&quot;\n=== Fine Balance ===&quot;);</span>
+
+        // CRITICAL FIX: Refresh fine balance from database to ensure accuracy
+<span class="nc" id="L476">        borrowerService.loadBorrowerData(currentUser);</span>
+
+<span class="nc" id="L478">        System.out.printf(&quot;Your current fine balance: %.2f\n&quot;, currentUser.getFineBalance());</span>
+
+        // Additional helpful information
+<span class="nc bnc" id="L481" title="All 2 branches missed.">        if (currentUser.getFineBalance() &gt; 0) {</span>
+<span class="nc" id="L482">            System.out.println(&quot;\nNote: You must pay your fine before borrowing more items.&quot;);</span>
+        }
+<span class="nc" id="L484">    }</span>
+
+    /**
+     * Main entry point for the UserMenu console application.
+     *
+     * @param args command-line arguments (not used)
+     */
+    public static void main(String[] args) {
+        try {
+<span class="nc" id="L493">            UserMenu menu = new UserMenu();</span>
+<span class="nc" id="L494">            menu.start();</span>
+        } finally {
+<span class="nc" id="L496">            scanner.close();</span>
+        }
+<span class="nc" id="L498">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

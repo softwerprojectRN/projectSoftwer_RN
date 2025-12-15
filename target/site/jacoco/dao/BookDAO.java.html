@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BookDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">BookDAO.java</span></div><h1>BookDAO.java</h1><pre class="source lang-java linenums">package dao;
+
+import model.Book;
+import java.sql.*;
+import java.util.List;
+
+/**
+ * {@code BookDAO} is a Data Access Object (DAO) class responsible for
+ * managing database operations related to the {@link Book} model.
+ * It extends {@link BaseDAO} to utilize common database operations such as
+ * table creation, query execution, and result mapping.
+ *
+ * &lt;p&gt;This class provides methods to:&lt;/p&gt;
+ * &lt;ul&gt;
+ *     &lt;li&gt;Initialize the &quot;books&quot; table with a foreign key relationship to &quot;media&quot;.&lt;/li&gt;
+ *     &lt;li&gt;Insert a new book record.&lt;/li&gt;
+ *     &lt;li&gt;Find a book by ISBN.&lt;/li&gt;
+ *     &lt;li&gt;Retrieve all books.&lt;/li&gt;
+ *     &lt;li&gt;Search books by title, author, or ISBN pattern.&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;The class uses a {@code BASE_QUERY} to join the &quot;media&quot; and &quot;books&quot; tables
+ * to provide comprehensive information about each book.&lt;/p&gt;
+ *
+ * &lt;p&gt;Example usage:&lt;/p&gt;
+ * &lt;pre&gt;
+ * {@code
+ * BookDAO bookDAO = new BookDAO();
+ * bookDAO.initializeTable();
+ * Book book = bookDAO.findByISBN(&quot;978-3-16-148410-0&quot;);
+ * List&lt;Book&gt; allBooks = bookDAO.findAll();
+ * List&lt;Book&gt; searchResults = bookDAO.searchByAuthor(&quot;J.K. Rowling&quot;);
+ * }
+ * &lt;/pre&gt;
+ *
+ * @author Library
+ * @version 1.1
+ */
+<span class="fc" id="L39">public class BookDAO extends BaseDAO {</span>
+    /**
+     * Base SQL query joining &quot;media&quot; and &quot;books&quot; tables.
+     * Used to simplify SELECT queries.
+     */
+    private static final String BASE_QUERY =
+            &quot;SELECT m.id, m.title, m.available, b.author, b.isbn &quot; +
+                    &quot;FROM media m JOIN books b ON m.id = b.id &quot;;
+
+    /**
+     * Initializes the &quot;books&quot; table in the database.
+     * The table has a foreign key referencing the &quot;media&quot; table.
+     * If the table already exists, no changes are made.
+     */
+    public void initializeTable() {
+<span class="fc" id="L54">        String sql = &quot;CREATE TABLE IF NOT EXISTS books (\n&quot; +</span>
+                &quot; id INTEGER PRIMARY KEY,\n&quot; +
+                &quot; author TEXT NOT NULL,\n&quot; +
+                &quot; isbn TEXT NOT NULL UNIQUE,\n&quot; +
+                &quot; FOREIGN KEY (id) REFERENCES media(id) ON DELETE CASCADE\n&quot; +
+                &quot;);&quot;;
+<span class="fc" id="L60">        createTable(sql, &quot;Books&quot;);</span>
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * Finds a {@link Book} by its ISBN.
+     *
+     * @param isbn the ISBN of the book
+     * @return the {@link Book} object if found; {@code null} otherwise
+     */
+    public Book findByISBN(String isbn) {
+<span class="fc" id="L70">        return findOne(BASE_QUERY + &quot;WHERE b.isbn = ?&quot;, this::mapBook, isbn);</span>
+    }
+
+    /**
+     * Inserts a new book into the &quot;books&quot; table.
+     *
+     * @param mediaId the ID of the corresponding media record
+     * @param author  the author of the book
+     * @param isbn    the unique ISBN of the book
+     * @return the generated key for the inserted book; -1 if insertion fails
+     */
+    public int insert(int mediaId, String author, String isbn) {
+<span class="fc" id="L82">        return executeInsert(&quot;INSERT INTO books (id, author, isbn) VALUES (?, ?, ?)&quot;,</span>
+<span class="fc" id="L83">                mediaId, author, isbn);</span>
+    }
+
+    /**
+     * Retrieves all books from the database.
+     *
+     * @return a list of {@link Book} objects
+     */
+    public List&lt;Book&gt; findAll() {
+<span class="fc" id="L92">        return findMany(BASE_QUERY + &quot;WHERE m.media_type = 'book'&quot;, this::mapBook);</span>
+    }
+
+    /**
+     * Searches for books whose title contains the specified string.
+     *
+     * @param title the title pattern to search for
+     * @return a list of matching {@link Book} objects
+     */
+    public List&lt;Book&gt; searchByTitle(String title) {
+<span class="fc" id="L102">        return findMany(BASE_QUERY + &quot;WHERE m.media_type = 'book' AND m.title LIKE ?&quot;,</span>
+                this::mapBook, &quot;%&quot; + title + &quot;%&quot;);
+    }
+
+    /**
+     * Searches for books whose author contains the specified string.
+     *
+     * @param author the author pattern to search for
+     * @return a list of matching {@link Book} objects
+     */
+    public List&lt;Book&gt; searchByAuthor(String author) {
+<span class="fc" id="L113">        return findMany(BASE_QUERY + &quot;WHERE m.media_type = 'book' AND b.author LIKE ?&quot;,</span>
+                this::mapBook, &quot;%&quot; + author + &quot;%&quot;);
+    }
+
+    /**
+     * Searches for books whose ISBN matches a specified pattern.
+     *
+     * @param isbn the ISBN pattern to search for
+     * @return a list of matching {@link Book} objects
+     */
+    public List&lt;Book&gt; searchByISBNPattern(String isbn) {
+<span class="fc" id="L124">        return findMany(BASE_QUERY + &quot;WHERE m.media_type = 'book' AND b.isbn LIKE ?&quot;,</span>
+                this::mapBook, &quot;%&quot; + isbn + &quot;%&quot;);
+    }
+
+    /**
+     * Maps a {@link ResultSet} row to a {@link Book} object.
+     *
+     * @param rs the result set positioned at the current row
+     * @return the mapped {@link Book} object
+     * @throws SQLException if a database access error occurs
+     */
+    private Book mapBook(ResultSet rs) throws SQLException {
+<span class="fc" id="L136">        return new Book(</span>
+<span class="fc" id="L137">                rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L138">                rs.getString(&quot;title&quot;),</span>
+<span class="fc" id="L139">                rs.getString(&quot;author&quot;),</span>
+<span class="fc" id="L140">                rs.getString(&quot;isbn&quot;),</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">                rs.getInt(&quot;available&quot;) == 1</span>
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

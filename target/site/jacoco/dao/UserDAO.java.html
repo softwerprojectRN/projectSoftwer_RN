@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">UserDAO.java</span></div><h1>UserDAO.java</h1><pre class="source lang-java linenums">package dao;
+
+import model.User;
+import java.sql.*;
+
+
+/**
+ * {@code UserDAO} is a Data Access Object (DAO) class responsible for
+ * managing database operations related to the {@link User} model.
+ * It extends {@link BaseDAO} to reuse common database operations such as
+ * table creation, query execution, and result mapping.
+ *
+ * &lt;p&gt;This class provides methods to:&lt;/p&gt;
+ * &lt;ul&gt;
+ *     &lt;li&gt;Initialize the &quot;users&quot; table.&lt;/li&gt;
+ *     &lt;li&gt;Find a user by username.&lt;/li&gt;
+ *     &lt;li&gt;Insert a new user.&lt;/li&gt;
+ *     &lt;li&gt;Delete a user along with their borrow records and fines.&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;The &quot;users&quot; table stores user credentials including username, hashed password, and salt.&lt;/p&gt;
+ *
+ * &lt;p&gt;Example usage:&lt;/p&gt;
+ * &lt;pre&gt;
+ * {@code
+ * UserDAO userDAO = new UserDAO();
+ * userDAO.initializeTable();
+ * userDAO.insert(&quot;john_doe&quot;, &quot;hashedPassword&quot;, &quot;saltValue&quot;);
+ * User user = userDAO.findByUsername(&quot;john_doe&quot;);
+ * boolean deleted = userDAO.delete(&quot;john_doe&quot;);
+ * }
+ * &lt;/pre&gt;
+ *
+ * @author Library
+ * @version 1.1
+ *
+ */
+<span class="fc" id="L38">public class UserDAO extends BaseDAO {</span>
+
+    /**
+     * Initializes the &quot;users&quot; table in the database.
+     * The table includes an auto-increment primary key, unique username, password hash, and salt.
+     * If the table already exists, no changes are made.
+     */
+    public void initializeTable() {
+<span class="fc" id="L46">        String sql = &quot;CREATE TABLE IF NOT EXISTS users (\n&quot; +</span>
+                &quot; id INTEGER PRIMARY KEY AUTOINCREMENT,\n&quot; +
+                &quot; username TEXT NOT NULL UNIQUE,\n&quot; +
+                &quot; password_hash TEXT NOT NULL,\n&quot; +
+                &quot; salt TEXT NOT NULL\n&quot; +
+                &quot;);&quot;;
+<span class="fc" id="L52">        createTable(sql, &quot;Users&quot;);</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Finds a user by their username.
+     *
+     * @param username the username of the user
+     * @return the {@link User} object if found; {@code null} otherwise
+     */
+    public User findByUsername(String username) {
+<span class="fc" id="L62">        String sql = &quot;SELECT id, username, password_hash, salt FROM users WHERE username = ?&quot;;</span>
+<span class="fc" id="L63">        return findOne(sql, this::mapUser, username);</span>
+    }
+
+    /**
+     * Inserts a new user into the &quot;users&quot; table.
+     *
+     * @param username     the username of the new user
+     * @param passwordHash the hashed password of the user
+     * @param salt         the salt used for hashing
+     * @return {@code true} if insertion was successful; {@code false} otherwise
+     */
+    public boolean insert(String username, String passwordHash, String salt) {
+<span class="fc" id="L75">        String sql = &quot;INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)&quot;;</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        return executeInsert(sql, username, passwordHash, salt) &gt; 0;</span>
+    }
+
+    /**
+     * Deletes a user and their associated borrow records and fines.
+     * The deletion is performed within a transaction to ensure consistency.
+     *
+     * @param username the username of the user to delete
+     * @return {@code true} if deletion was successful; {@code false} otherwise
+     */
+    public boolean delete(String username) {
+<span class="fc" id="L87">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (conn == null) return false;</span>
+
+        try {
+<span class="fc" id="L91">            conn.setAutoCommit(false);</span>
+
+<span class="fc" id="L93">            Integer userId = findOne(&quot;SELECT id FROM users WHERE username = ?&quot;,</span>
+<span class="fc" id="L94">                    rs -&gt; rs.getInt(&quot;id&quot;), username);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            if (userId == null) {</span>
+<span class="fc" id="L96">                conn.rollback();</span>
+<span class="fc" id="L97">                return false;</span>
+            }
+
+<span class="fc" id="L100">            executeUpdate(&quot;DELETE FROM borrow_records WHERE user_id = ?&quot;, userId);</span>
+<span class="fc" id="L101">            executeUpdate(&quot;DELETE FROM user_fines WHERE user_id = ?&quot;, userId);</span>
+<span class="fc" id="L102">            boolean deleted = executeUpdate(&quot;DELETE FROM users WHERE id = ?&quot;, userId);</span>
+
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">            if (deleted) {</span>
+<span class="fc" id="L105">                conn.commit();</span>
+<span class="fc" id="L106">                return true;</span>
+            } else {
+<span class="nc" id="L108">                conn.rollback();</span>
+<span class="nc" id="L109">                return false;</span>
+            }
+<span class="nc" id="L111">        } catch (SQLException e) {</span>
+<span class="nc" id="L112">            logger.severe(&quot;Error deleting user: &quot; + e.getMessage());</span>
+            try {
+<span class="nc" id="L114">                conn.rollback();</span>
+<span class="nc" id="L115">            } catch (SQLException ex) {</span>
+<span class="nc" id="L116">                logger.severe(&quot;Rollback error: &quot; + ex.getMessage());</span>
+<span class="nc" id="L117">            }</span>
+<span class="nc" id="L118">            return false;</span>
+        } finally {
+            try {
+<span class="fc" id="L121">                conn.setAutoCommit(true);</span>
+<span class="nc" id="L122">            } catch (SQLException e) {</span>
+<span class="nc" id="L123">                logger.severe(&quot;Error resetting auto-commit: &quot; + e.getMessage());</span>
+<span class="fc" id="L124">            }</span>
+        }
+    }
+
+    /**
+     * Maps a {@link ResultSet} row to a {@link User} object.
+     *
+     * @param rs the result set positioned at the current row
+     * @return the mapped {@link User} object
+     * @throws SQLException if a database access error occurs
+     */
+    private User mapUser(ResultSet rs) throws SQLException {
+<span class="fc" id="L136">        return new User(</span>
+<span class="fc" id="L137">                rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L138">                rs.getString(&quot;username&quot;),</span>
+<span class="fc" id="L139">                rs.getString(&quot;password_hash&quot;),</span>
+<span class="fc" id="L140">                rs.getString(&quot;salt&quot;)</span>
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

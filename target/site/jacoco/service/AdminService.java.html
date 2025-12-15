@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">AdminService.java</span></div><h1>AdminService.java</h1><pre class="source lang-java linenums">package service;
+
+import dao.AdminDAO;
+import dao.UserDAO;
+import model.Admin;
+import model.UserWithOverdueBooks;
+import dao.PasswordUtil;
+
+import java.util.List;
+
+/**
+ * Service class responsible for admin-related operations such as registration,
+ * login, user management, and sending overdue reminders to library users.
+ *
+ * &lt;p&gt;This service interacts with {@link AdminDAO} and {@link UserDAO} to manage
+ * admins and users. It also integrates with {@link EmailServer} and {@link EmailNotifier}
+ * to send notifications.&lt;/p&gt;
+ *
+ * &lt;p&gt;Typical operations include:&lt;/p&gt;
+ * &lt;ul&gt;
+ *     &lt;li&gt;Registering new admins&lt;/li&gt;
+ *     &lt;li&gt;Logging in existing admins&lt;/li&gt;
+ *     &lt;li&gt;Deleting user accounts&lt;/li&gt;
+ *     &lt;li&gt;Sending overdue reminders via email&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * @author Library
+ * @version 1.1
+ */
+public class AdminService {
+
+    /** DAO for managing admin records. */
+    private final AdminDAO adminDAO;
+
+    /** DAO for managing user records. */
+    private final UserDAO userDAO;
+
+    /** Email server instance used to send notifications. */
+    private EmailServer emailServer;
+
+    /** Email notifier utility wrapping the email server. */
+    private EmailNotifier emailNotifier;
+    /**
+     * Constructs an AdminService instance, initializes required DAOs,
+     * and attempts to initialize the email server.
+     * &lt;p&gt;If the email server fails to initialize, a warning is logged
+     * and email notifications will be disabled.&lt;/p&gt;
+     */
+<span class="fc" id="L49">    public AdminService() {</span>
+<span class="fc" id="L50">        this.adminDAO = new AdminDAO();</span>
+<span class="fc" id="L51">        this.userDAO = new UserDAO();</span>
+<span class="fc" id="L52">        this.adminDAO.initializeTable();</span>
+
+        try {
+<span class="fc" id="L55">            this.emailServer = new EmailServer();</span>
+<span class="fc" id="L56">            this.emailNotifier = new EmailNotifier(emailServer);</span>
+<span class="nc" id="L57">        } catch (Exception e) {</span>
+<span class="nc" id="L58">            System.err.println(&quot;Warning: Email server initialization failed: &quot; + e.getMessage());</span>
+<span class="nc" id="L59">            this.emailServer = null;</span>
+<span class="nc" id="L60">            this.emailNotifier = null;</span>
+<span class="fc" id="L61">        }</span>
+<span class="fc" id="L62">    }</span>
+
+    /**
+     * Registers a new admin with a username and password.
+     *
+     * @param username The desired username for the admin.
+     * @param password The password for the admin account.
+     * @return The newly created {@link Admin} object, or {@code null} if registration fails.
+     */
+    public Admin register(String username, String password) {
+<span class="fc" id="L72">        Admin existing = adminDAO.findByUsername(username);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (existing != null) {</span>
+<span class="fc" id="L74">            System.out.println(&quot;Admin already exists: &quot; + username);</span>
+<span class="fc" id="L75">            return null;</span>
+        }
+
+<span class="fc" id="L78">        String salt = PasswordUtil.generateSalt();</span>
+<span class="fc" id="L79">        String passwordHash = PasswordUtil.hashPassword(password, salt);</span>
+
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (adminDAO.insert(username, passwordHash, salt)) {</span>
+<span class="fc" id="L82">            System.out.println(&quot;Admin registered successfully: &quot; + username);</span>
+<span class="fc" id="L83">            return adminDAO.findByUsername(username);</span>
+        }
+
+<span class="nc" id="L86">        return null;</span>
+    }
+
+    /**
+     * Logs an admin into the system.
+     *
+     * @param username The username of the admin.
+     * @param password The password provided by the admin.
+     * @return The logged-in {@link Admin} object, or {@code null} if authentication fails.
+     */
+    public Admin login(String username, String password) {
+<span class="fc" id="L97">        Admin admin = adminDAO.findByUsername(username);</span>
+
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (admin == null) {</span>
+<span class="fc" id="L100">            System.out.println(&quot;Admin not found.&quot;);</span>
+<span class="fc" id="L101">            return null;</span>
+        }
+
+<span class="fc" id="L104">        String inputHash = PasswordUtil.hashPassword(password, admin.getSalt());</span>
+
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (admin.getPasswordHash().equals(inputHash)) {</span>
+<span class="fc" id="L107">            admin.setLoggedIn(true);</span>
+<span class="fc" id="L108">            System.out.println(&quot;Admin login successful, welcome &quot; + username + &quot;!&quot;);</span>
+<span class="fc" id="L109">            return admin;</span>
+        } else {
+<span class="fc" id="L111">            System.out.println(&quot;Invalid credentials.&quot;);</span>
+<span class="fc" id="L112">            return null;</span>
+        }
+    }
+
+    /**
+     * Deletes a user account from the system.
+     *
+     * @param username The username of the user to be deleted.
+     * @return {@code true} if deletion was successful; {@code false} otherwise.
+     */
+    public boolean unregisterUser(String username) {
+<span class="fc" id="L123">        return userDAO.delete(username);</span>
+    }
+
+    /**
+     * Sends email reminders to all users who currently have overdue books.
+     *
+     * @param borrowingService The {@link BorrowingService} used to fetch overdue records.
+     */
+    public void sendOverdueReminders(BorrowingService borrowingService) {
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (emailNotifier == null) {</span>
+<span class="fc" id="L133">            System.out.println(&quot;Warning: Email server not available. Cannot send reminders.&quot;);</span>
+<span class="fc" id="L134">            return;</span>
+        }
+
+<span class="fc" id="L137">        List&lt;UserWithOverdueBooks&gt; usersWithOverdueBooks = borrowingService.getUsersWithOverdueBooks();</span>
+
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        for (UserWithOverdueBooks userInfo : usersWithOverdueBooks) {</span>
+<span class="fc" id="L140">            String message = &quot;You have &quot; + userInfo.getOverdueCount() + &quot; overdue book(s).&quot;;</span>
+            try {
+<span class="fc" id="L142">                model.User user = userDAO.findByUsername(userInfo.getUsername());</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                if (user != null) {</span>
+<span class="fc" id="L144">                    emailNotifier.notify(user, message);</span>
+                }
+<span class="nc" id="L146">            } catch (Exception e) {</span>
+<span class="nc" id="L147">                System.err.println(&quot;Failed to send email to &quot; + userInfo.getUsername() + &quot;: &quot; + e.getMessage());</span>
+<span class="fc" id="L148">            }</span>
+<span class="fc" id="L149">        }</span>
+<span class="fc" id="L150">    }</span>
+
+    /**
+     * Sets a new email server for sending notifications.
+     *
+     * @param server The {@link EmailServer} instance to use; {@code null} disables notifications.
+     */
+    public void setEmailServer(EmailServer server) {
+<span class="fc" id="L158">        this.emailServer = server;</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (server == null) {</span>
+<span class="nc" id="L160">            this.emailNotifier = null;</span>
+        } else {
+<span class="fc" id="L162">            this.emailNotifier = new EmailNotifier(server);</span>
+        }
+<span class="fc" id="L164">    }</span>
+
+    /**
+     * Retrieves the currently configured email server.
+     *
+     * @return The {@link EmailServer} instance; may be {@code null} if not configured.
+     */
+    public EmailServer getEmailServer() {
+<span class="fc" id="L172">        return emailServer;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

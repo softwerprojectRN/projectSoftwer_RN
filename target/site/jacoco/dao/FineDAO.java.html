@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FineDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">FineDAO.java</span></div><h1>FineDAO.java</h1><pre class="source lang-java linenums">package dao;
+
+import java.sql.*;
+
+/**
+ * {@code FineDAO} is a Data Access Object (DAO) class responsible for
+ * managing database operations related to user fines.
+ * It extends {@link BaseDAO} to utilize common database operations such as
+ * table creation, query execution, and result mapping.
+ *
+ * &lt;p&gt;This class provides methods to:&lt;/p&gt;
+ * &lt;ul&gt;
+ *     &lt;li&gt;Initialize the &quot;user_fines&quot; table.&lt;/li&gt;
+ *     &lt;li&gt;Retrieve the fine balance for a specific user.&lt;/li&gt;
+ *     &lt;li&gt;Initialize a fine record for a user.&lt;/li&gt;
+ *     &lt;li&gt;Update, add, or pay fines.&lt;/li&gt;
+ *     &lt;li&gt;Clear all fines for a user.&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;Example usage:&lt;/p&gt;
+ * &lt;pre&gt;
+ * {@code
+ * FineDAO fineDAO = new FineDAO();
+ * fineDAO.initializeTable();
+ * double balance = fineDAO.getFineBalance(userId);
+ * fineDAO.addFine(userId, 5.0);
+ * fineDAO.payFine(userId, 3.0);
+ * fineDAO.clearFine(userId);
+ * }
+ * &lt;/pre&gt;
+ *
+ * @author Library
+ * @version 1.1
+ *
+ */
+<span class="fc" id="L36">public class FineDAO extends BaseDAO {</span>
+
+    /**
+     * Initializes the &quot;user_fines&quot; table in the database.
+     * If the table already exists, no changes are made.
+     * The table has a foreign key referencing the &quot;users&quot; table.
+     */
+    public void initializeTable() {
+<span class="fc" id="L44">        String sql = &quot;CREATE TABLE IF NOT EXISTS user_fines (\n&quot; +</span>
+                &quot; user_id INTEGER PRIMARY KEY,\n&quot; +
+                &quot; total_fine REAL DEFAULT 0.0,\n&quot; +
+                &quot; FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE\n&quot; +
+                &quot;);&quot;;
+<span class="fc" id="L49">        createTable(sql, &quot;User fines&quot;);</span>
+<span class="fc" id="L50">    }</span>
+
+    /**
+     * Retrieves the total fine balance for a specific user.
+     * If the user has no fine record, it initializes one with a balance of 0.0.
+     *
+     * @param userId the ID of the user
+     * @return the total fine balance
+     */
+    public double getFineBalance(int userId) {
+<span class="fc" id="L60">        Double balance = findOne(&quot;SELECT total_fine FROM user_fines WHERE user_id = ?&quot;,</span>
+<span class="fc" id="L61">                rs -&gt; rs.getDouble(&quot;total_fine&quot;), userId);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (balance == null) {</span>
+<span class="fc" id="L63">            initializeFine(userId);</span>
+<span class="fc" id="L64">            return 0.0;</span>
+        }
+<span class="fc" id="L66">        return balance;</span>
+    }
+
+    /**
+     * Initializes a fine record for a user with a balance of 0.0.
+     *
+     * @param userId the ID of the user
+     * @return {@code true} if initialization was successful; {@code false} otherwise
+     */
+    public boolean initializeFine(int userId) {
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        return executeInsert(&quot;INSERT INTO user_fines (user_id, total_fine) VALUES (?, 0.0)&quot;, userId) &gt; 0;</span>
+    }
+
+    /**
+     * Updates the fine balance for a specific user.
+     * If the user has no fine record, it initializes one with the given totalFine.
+     *
+     * @param userId    the ID of the user
+     * @param totalFine the new total fine amount
+     * @return {@code true} if update or initialization was successful; {@code false} otherwise
+     */
+    public boolean updateFine(int userId, double totalFine) {
+<span class="fc" id="L88">        boolean updated = executeUpdate(&quot;UPDATE user_fines SET total_fine = ? WHERE user_id = ?&quot;,</span>
+<span class="fc" id="L89">                totalFine, userId);</span>
+<span class="fc bfc" id="L90" title="All 4 branches covered.">        return updated || initializeFine(userId);</span>
+    }
+
+    /**
+     * Adds a specified amount to the user's current fine balance.
+     *
+     * @param userId the ID of the user
+     * @param amount the amount to add
+     * @return {@code true} if the operation was successful; {@code false} otherwise
+     */
+    public boolean addFine(int userId, double amount) {
+<span class="fc" id="L101">        return updateFine(userId, getFineBalance(userId) + amount);</span>
+    }
+
+    /**
+     * Pays a specified amount from the user's fine balance.
+     * Validates that the payment amount is positive and does not exceed the current balance.
+     *
+     * @param userId the ID of the user
+     * @param amount the amount to pay
+     * @return {@code true} if the payment was successful; {@code false} otherwise
+     */
+    public boolean payFine(int userId, double amount) {
+<span class="fc" id="L113">        double currentFine = getFineBalance(userId);</span>
+<span class="fc bfc" id="L114" title="All 4 branches covered.">        if (amount &lt;= 0 || amount &gt; currentFine) {</span>
+<span class="fc" id="L115">            logger.severe(&quot;Invalid payment amount.&quot;);</span>
+<span class="fc" id="L116">            return false;</span>
+        }
+<span class="fc" id="L118">        return updateFine(userId, currentFine - amount);</span>
+    }
+
+    /**
+     * Clears all fines for a specific user by setting the fine balance to 0.0.
+     *
+     * @param userId the ID of the user
+     * @return {@code true} if the operation was successful; {@code false} otherwise
+     */
+    public boolean clearFine(int userId) {
+<span class="fc" id="L128">        return updateFine(userId, 0.0);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

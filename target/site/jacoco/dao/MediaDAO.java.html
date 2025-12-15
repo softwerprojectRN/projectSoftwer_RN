@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MediaDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">MediaDAO.java</span></div><h1>MediaDAO.java</h1><pre class="source lang-java linenums">package dao;
+
+import java.sql.*;
+
+/**
+ * {@code MediaDAO} is a Data Access Object (DAO) class responsible for
+ * managing database operations related to the {@code media} table.
+ * It extends {@link BaseDAO} to reuse common database operations such as
+ * table creation, query execution, and result mapping.
+ *
+ * &lt;p&gt;This class provides methods to:&lt;/p&gt;
+ * &lt;ul&gt;
+ *     &lt;li&gt;Initialize the &quot;media&quot; table.&lt;/li&gt;
+ *     &lt;li&gt;Insert new media records.&lt;/li&gt;
+ *     &lt;li&gt;Update the availability status of media items.&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;The &quot;media&quot; table stores information about media items such as
+ * books, CDs, or other library resources, along with their availability status.&lt;/p&gt;
+ *
+ * &lt;p&gt;Example usage:&lt;/p&gt;
+ * &lt;pre&gt;
+ * {@code
+ * MediaDAO mediaDAO = new MediaDAO();
+ * mediaDAO.initializeTable();
+ * int mediaId = mediaDAO.insert(&quot;Java Programming&quot;, &quot;book&quot;);
+ * mediaDAO.updateAvailability(mediaId, false);
+ * }
+ * &lt;/pre&gt;
+ *
+ *
+ * @author Library
+ * @version 1.1
+ *
+ */
+<span class="fc" id="L36">public class MediaDAO extends BaseDAO {</span>
+
+    /**
+     * Initializes the &quot;media&quot; table in the database.
+     * The table includes an auto-increment primary key, title, media type, and availability.
+     * If the table already exists, no changes are made.
+     */
+    public void initializeTable() {
+<span class="fc" id="L44">        String sql = &quot;CREATE TABLE IF NOT EXISTS media (\n&quot; +</span>
+                &quot; id INTEGER PRIMARY KEY AUTOINCREMENT,\n&quot; +
+                &quot; title TEXT NOT NULL,\n&quot; +
+                &quot; media_type TEXT NOT NULL,\n&quot; +
+                &quot; available INTEGER NOT NULL DEFAULT 1\n&quot; +
+                &quot;);&quot;;
+<span class="fc" id="L50">        createTable(sql, &quot;Media&quot;);</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Inserts a new media record into the &quot;media&quot; table.
+     *
+     * @param title     the title of the media item
+     * @param mediaType the type of media (e.g., &quot;book&quot;, &quot;cd&quot;)
+     * @return the generated ID of the inserted media; -1 if insertion fails
+     */
+    public int insert(String title, String mediaType) {
+<span class="fc" id="L61">        return executeInsert(&quot;INSERT INTO media (title, media_type, available) VALUES (?, ?, 1)&quot;,</span>
+                title, mediaType);
+    }
+
+    /**
+     * Updates the availability status of a media item.
+     *
+     * @param mediaId   the ID of the media item
+     * @param available {@code true} if the media is available; {@code false} otherwise
+     * @return {@code true} if the update was successful; {@code false} otherwise
+     */
+    public boolean updateAvailability(int mediaId, boolean available) {
+<span class="fc" id="L73">        return executeUpdate(&quot;UPDATE media SET available = ? WHERE id = ?&quot;,</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">                available ? 1 : 0, mediaId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BorrowRecordDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">BorrowRecordDAO.java</span></div><h1>BorrowRecordDAO.java</h1><pre class="source lang-java linenums">package dao;
+
+import model.*;
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * {@code BorrowRecordDAO} is a Data Access Object (DAO) class responsible for
+ * managing database operations related to borrow records of media items
+ * (e.g., books, CDs) by users.
+ *
+ * &lt;p&gt;It extends {@link BaseDAO} to reuse common database operations such as
+ * table creation, query execution, and result mapping.&lt;/p&gt;
+ *
+ * &lt;p&gt;This class provides methods to:&lt;/p&gt;
+ * &lt;ul&gt;
+ *     &lt;li&gt;Create the &quot;borrow_records&quot; table with necessary foreign key constraints.&lt;/li&gt;
+ *     &lt;li&gt;Insert new borrow records.&lt;/li&gt;
+ *     &lt;li&gt;Mark borrow records as returned and record fines.&lt;/li&gt;
+ *     &lt;li&gt;Retrieve active borrow records for a specific user.&lt;/li&gt;
+ *     &lt;li&gt;Retrieve overdue borrow records and users with overdue books.&lt;/li&gt;
+ *     &lt;li&gt;Count active borrow records for a specific user.&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;Example usage:&lt;/p&gt;
+ * &lt;pre&gt;
+ * {@code
+ * BorrowRecordDAO borrowDAO = new BorrowRecordDAO();
+ * borrowDAO.initializeTable();
+ * int recordId = borrowDAO.insert(userId, mediaId, &quot;book&quot;, &quot;Java Programming&quot;,
+ *                                  LocalDate.now(), LocalDate.now().plusDays(14));
+ * borrowDAO.markAsReturned(recordId, LocalDate.now(), 0.0);
+ * List&lt;MediaRecord&gt; active = borrowDAO.findActiveByUserId(userId);
+ * List&lt;UserWithOverdueBooks&gt; overdueUsers = borrowDAO.getUsersWithOverdueBooks();
+ * }
+ * &lt;/pre&gt;
+ *
+ * @author Library
+ * @version 1.1
+ *
+ */
+<span class="fc" id="L45">public class BorrowRecordDAO extends BaseDAO {</span>
+    /**
+     * Initializes the &quot;borrow_records&quot; table in the database.
+     * If the table already exists, no changes are made.
+     * The table includes foreign keys referencing &quot;users&quot; and &quot;media&quot; tables.
+     */
+    public void initializeTable() {
+<span class="fc" id="L52">        String sql = &quot;CREATE TABLE IF NOT EXISTS borrow_records (\n&quot; +</span>
+                &quot; id INTEGER PRIMARY KEY AUTOINCREMENT,\n&quot; +
+                &quot; user_id INTEGER NOT NULL,\n&quot; +
+                &quot; media_id INTEGER NOT NULL,\n&quot; +
+                &quot; media_type TEXT NOT NULL,\n&quot; +
+                &quot; media_title TEXT NOT NULL,\n&quot; +
+                &quot; borrow_date TEXT NOT NULL,\n&quot; +
+                &quot; due_date TEXT NOT NULL,\n&quot; +
+                &quot; returned INTEGER DEFAULT 0,\n&quot; +
+                &quot; return_date TEXT,\n&quot; +
+                &quot; fine REAL DEFAULT 0.0,\n&quot; +
+                &quot; FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,\n&quot; +
+                &quot; FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE\n&quot; +
+                &quot;);&quot;;
+<span class="fc" id="L66">        createTable(sql, &quot;Borrow records&quot;);</span>
+<span class="fc" id="L67">    }</span>
+    /**
+     * Inserts a new borrow record for a user.
+     *
+     * @param userId     the ID of the user borrowing the media
+     * @param mediaId    the ID of the media item
+     * @param mediaType  the type of media (e.g., &quot;book&quot;, &quot;cd&quot;)
+     * @param mediaTitle the title of the media
+     * @param borrowDate the date when the media was borrowed
+     * @param dueDate    the due date for returning the media
+     * @return the generated ID of the inserted borrow record; -1 if insertion fails
+     */
+    public int insert(int userId, int mediaId, String mediaType, String mediaTitle,
+                      LocalDate borrowDate, LocalDate dueDate) {
+<span class="fc" id="L81">        return executeInsert(</span>
+                &quot;INSERT INTO borrow_records (user_id, media_id, media_type, media_title, borrow_date, due_date) &quot; +
+                        &quot;VALUES (?, ?, ?, ?, ?, ?)&quot;,
+<span class="fc" id="L84">                userId, mediaId, mediaType, mediaTitle, borrowDate.toString(), dueDate.toString()</span>
+        );
+    }
+    /**
+     * Marks a borrow record as returned and records any associated fine.
+     *
+     * @param recordId   the ID of the borrow record
+     * @param returnDate the actual return date
+     * @param fine       the fine amount for late return
+     * @return {@code true} if the update was successful; {@code false} otherwise
+     */
+    public boolean markAsReturned(int recordId, LocalDate returnDate, double fine) {
+<span class="fc" id="L96">        return executeUpdate(&quot;UPDATE borrow_records SET returned = 1, return_date = ?, fine = ? WHERE id = ?&quot;,</span>
+<span class="fc" id="L97">                returnDate.toString(), fine, recordId);</span>
+    }
+    /**
+     * Retrieves all active (not yet returned) borrow records for a specific user.
+     *
+     * @param userId the ID of the user
+     * @return a list of {@link MediaRecord} representing active borrow records
+     */
+    public List&lt;MediaRecord&gt; findActiveByUserId(int userId) {
+<span class="fc" id="L106">        List&lt;MediaRecord&gt; records = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L107">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (conn == null) return records;</span>
+
+<span class="fc" id="L110">        String sql = &quot;SELECT br.*, m.media_type FROM borrow_records br &quot; +</span>
+                &quot;JOIN media m ON br.media_id = m.id &quot; +
+                &quot;WHERE br.user_id = ? AND br.returned = 0&quot;;
+
+<span class="fc" id="L114">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L115">            pstmt.setInt(1, userId);</span>
+<span class="fc" id="L116">            ResultSet rs = pstmt.executeQuery();</span>
+
+<span class="fc bfc" id="L118" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L119">                Media media = fetchMediaDetails(conn, rs.getInt(&quot;media_id&quot;), rs.getString(&quot;media_type&quot;));</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">                if (media != null) {</span>
+<span class="fc" id="L121">                    records.add(new MediaRecord(</span>
+<span class="fc" id="L122">                            rs.getInt(&quot;id&quot;),</span>
+                            media,
+<span class="fc" id="L124">                            LocalDate.parse(rs.getString(&quot;due_date&quot;))</span>
+                    ));
+                }
+<span class="fc" id="L127">            }</span>
+<span class="fc" id="L128">        } catch (SQLException e) {</span>
+<span class="fc" id="L129">            logger.severe(&quot;Error loading borrowed media: &quot; + e.getMessage());</span>
+<span class="fc" id="L130">        }</span>
+<span class="fc" id="L131">        return records;</span>
+    }
+    /**
+     * Fetches media details based on type.
+     *
+     * @param conn      the database connection
+     * @param mediaId   the ID of the media
+     * @param mediaType the type of media
+     * @return a {@link Media} object if found; {@code null} otherwise
+     * @throws SQLException if a database access error occurs
+     */
+    private Media fetchMediaDetails(Connection conn, int mediaId, String mediaType) throws SQLException {
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if (&quot;book&quot;.equals(mediaType)) {</span>
+<span class="fc" id="L144">            return fetchBookDetails(conn, mediaId);</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        } else if (&quot;cd&quot;.equals(mediaType)) {</span>
+<span class="fc" id="L146">            return fetchCDDetails(conn, mediaId);</span>
+        }
+<span class="fc" id="L148">        return null;</span>
+    }
+
+    public Book fetchBookDetails(Connection conn, int mediaId) throws SQLException {
+<span class="fc" id="L152">        String sql = &quot;SELECT m.title, b.author, b.isbn FROM media m &quot; +</span>
+                &quot;JOIN books b ON m.id = b.id WHERE m.id = ?&quot;;
+<span class="fc" id="L154">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L155">            pstmt.setInt(1, mediaId);</span>
+<span class="fc" id="L156">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L158">                return new Book(mediaId, rs.getString(&quot;title&quot;),</span>
+<span class="fc" id="L159">                        rs.getString(&quot;author&quot;), rs.getString(&quot;isbn&quot;), false);</span>
+            }
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        }</span>
+<span class="fc" id="L162">        return null;</span>
+    }
+
+    public CD fetchCDDetails(Connection conn, int mediaId) throws SQLException {
+<span class="fc" id="L166">        String sql = &quot;SELECT m.title, c.artist, c.genre, c.duration FROM media m &quot; +</span>
+                &quot;JOIN cds c ON m.id = c.id WHERE m.id = ?&quot;;
+<span class="fc" id="L168">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L169">            pstmt.setInt(1, mediaId);</span>
+<span class="fc" id="L170">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L172">                return new CD(mediaId, rs.getString(&quot;title&quot;), rs.getString(&quot;artist&quot;),</span>
+<span class="fc" id="L173">                        rs.getString(&quot;genre&quot;), rs.getInt(&quot;duration&quot;), false);</span>
+            }
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        }</span>
+<span class="fc" id="L176">        return null;</span>
+    }
+    /**
+     * Retrieves users who have overdue borrow records.
+     *
+     * @return a list of {@link UserWithOverdueBooks} representing users with overdue media
+     */
+    public List&lt;UserWithOverdueBooks&gt; getUsersWithOverdueBooks() {
+<span class="fc" id="L184">        String sql = &quot;SELECT u.id, u.username, COUNT(br.id) as overdue_count &quot; +</span>
+                &quot;FROM users u JOIN borrow_records br ON u.id = br.user_id &quot; +
+                &quot;WHERE br.returned = 0 AND br.due_date &lt; date('now') &quot; +
+                &quot;GROUP BY u.id, u.username&quot;;
+
+<span class="fc" id="L189">        return findMany(sql, rs -&gt; new UserWithOverdueBooks(</span>
+<span class="fc" id="L190">                rs.getInt(&quot;id&quot;),</span>
+<span class="fc" id="L191">                rs.getString(&quot;username&quot;),</span>
+<span class="fc" id="L192">                rs.getInt(&quot;overdue_count&quot;)</span>
+        ));
+    }
+
+    /**
+     * Retrieves overdue borrow records for a specific user.
+     *
+     * @param userId the ID of the user
+     * @return a list of overdue {@link MediaRecord} objects
+     */
+    public List&lt;MediaRecord&gt; findOverdueByUserId(int userId) {
+<span class="fc" id="L203">        List&lt;MediaRecord&gt; allRecords = findActiveByUserId(userId);</span>
+<span class="fc" id="L204">        List&lt;MediaRecord&gt; overdueRecords = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        for (MediaRecord record : allRecords) {</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">            if (record.isOverdue()) {</span>
+<span class="fc" id="L207">                overdueRecords.add(record);</span>
+            }
+<span class="fc" id="L209">        }</span>
+<span class="fc" id="L210">        return overdueRecords;</span>
+    }
+
+    /**
+     * Counts the number of active (not returned) borrow records for a specific user.
+     *
+     * @param userId the ID of the user
+     * @return the number of active borrow records
+     */
+    public int countActiveByUserId(int userId) {
+<span class="fc" id="L220">        return executeCount(&quot;SELECT COUNT(*) FROM borrow_records WHERE user_id = ? AND returned = 0&quot;, userId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

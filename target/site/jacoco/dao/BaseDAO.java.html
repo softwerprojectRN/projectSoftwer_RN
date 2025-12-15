@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">BaseDAO.java</span></div><h1>BaseDAO.java</h1><pre class="source lang-java linenums">package dao;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * {@code BaseDAO} is an abstract base class providing common database operations
+ * that can be reused by all DAO (Data Access Object) classes. It simplifies
+ * database interaction by handling connection management, SQL execution, and
+ * result mapping. This class aims to reduce boilerplate code and provide
+ * a consistent logging and error handling approach for database operations.
+ *
+ * &lt;p&gt;Features provided by this class include:&lt;/p&gt;
+ * &lt;ul&gt;
+ *     &lt;li&gt;Creating tables.&lt;/li&gt;
+ *     &lt;li&gt;Executing SELECT queries returning single or multiple results.&lt;/li&gt;
+ *     &lt;li&gt;Executing INSERT statements with retrieval of generated keys.&lt;/li&gt;
+ *     &lt;li&gt;Executing UPDATE and DELETE statements with success status.&lt;/li&gt;
+ *     &lt;li&gt;Counting records in a table.&lt;/li&gt;
+ *     &lt;li&gt;Parameter binding for prepared statements.&lt;/li&gt;
+ *     &lt;li&gt;Functional interface for mapping {@link ResultSet} to domain objects.&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;All database operations log success or failure messages using
+ * {@link java.util.logging.Logger}.&lt;/p&gt;
+ *
+ * &lt;p&gt;Usage example:&lt;/p&gt;
+ * &lt;pre&gt;
+ * {@code
+ * public class UserDAO extends BaseDAO {
+ *     public User findUserById(int id) {
+ *         return findOne(&quot;SELECT * FROM users WHERE id = ?&quot;, rs -&gt; {
+ *             return new User(rs.getInt(&quot;id&quot;), rs.getString(&quot;name&quot;));
+ *         }, id);
+ *     }
+ * }
+ * }
+ * &lt;/pre&gt;
+ *
+ * @author Library
+ * @version 1.1
+ */
+public abstract class BaseDAO {
+    /**
+     * Logger instance for logging database operations and errors.
+     */
+    protected final Logger logger;
+
+    /**
+     * Constructs a new {@code BaseDAO} and initializes the logger
+     * for the specific DAO class.
+     */
+<span class="fc" id="L57">    protected BaseDAO() {</span>
+<span class="fc" id="L58">        this.logger = Logger.getLogger(this.getClass().getName());</span>
+
+        // إخفاء جميع رسائل INFO و WARNING
+<span class="fc" id="L61">        logger.setUseParentHandlers(false); // يمنع الطباعة عبر الـ root logger</span>
+<span class="fc" id="L62">        ConsoleHandler handler = new ConsoleHandler();</span>
+<span class="fc" id="L63">        handler.setLevel(Level.SEVERE); // إخفاء INFO و WARNING</span>
+<span class="fc" id="L64">        logger.addHandler(handler);</span>
+<span class="fc" id="L65">        logger.setLevel(Level.SEVERE);</span>
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * Executes a table creation SQL statement.
+     *
+     * @param sql       the SQL statement to create a table
+     * @param tableName the name of the table for logging purposes
+     */
+    protected void createTable(String sql, String tableName) {
+<span class="fc" id="L75">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (conn == null) return;</span>
+
+<span class="fc" id="L78">        try (Statement stmt = conn.createStatement()) {</span>
+<span class="fc" id="L79">            stmt.execute(sql);</span>
+<span class="fc" id="L80">            logger.info(tableName + &quot; table created successfully.&quot;);</span>
+<span class="fc" id="L81">        } catch (SQLException e) {</span>
+<span class="fc" id="L82">            logger.severe(&quot;Error creating &quot; + tableName + &quot; table: &quot; + e.getMessage());</span>
+<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Executes a SELECT query that returns a single result.
+     *
+     * @param sql    the SQL query to execute
+     * @param mapper a {@link ResultSetMapper} to map the result set to a domain object
+     * @param params optional parameters for the prepared statement
+     * @param &lt;T&gt;    the type of the domain object
+     * @return the mapped object if a result exists; {@code null} otherwise
+     */
+    protected &lt;T&gt; T findOne(String sql, ResultSetMapper&lt;T&gt; mapper, Object... params) {
+<span class="fc" id="L96">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (conn == null) return null;</span>
+
+<span class="fc" id="L99">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L100">            setParameters(pstmt, params);</span>
+<span class="fc" id="L101">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L103">                return mapper.map(rs);</span>
+            }
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L106">            logger.severe(&quot;Error executing query: &quot; + e.getMessage());</span>
+<span class="fc" id="L107">        }</span>
+<span class="fc" id="L108">        return null;</span>
+    }
+
+    /**
+     * Executes a SELECT query that returns multiple results.
+     *
+     * @param sql    the SQL query to execute
+     * @param mapper a {@link ResultSetMapper} to map each row to a domain object
+     * @param params optional parameters for the prepared statement
+     * @param &lt;T&gt;    the type of the domain objects
+     * @return a list of mapped objects; empty if no results found
+     */
+    protected &lt;T&gt; List&lt;T&gt; findMany(String sql, ResultSetMapper&lt;T&gt; mapper, Object... params) {
+<span class="fc" id="L121">        List&lt;T&gt; results = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L122">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (conn == null) return results;</span>
+
+<span class="fc" id="L125">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L126">            setParameters(pstmt, params);</span>
+<span class="fc" id="L127">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L129">                results.add(mapper.map(rs));</span>
+            }
+<span class="fc" id="L131">        } catch (SQLException e) {</span>
+<span class="fc" id="L132">            logger.severe(&quot;Error executing query: &quot; + e.getMessage());</span>
+<span class="fc" id="L133">        }</span>
+<span class="fc" id="L134">        return results;</span>
+    }
+
+    /**
+     * Executes an INSERT statement and returns the generated key.
+     *
+     * @param sql    the INSERT SQL statement
+     * @param params optional parameters for the prepared statement
+     * @return the generated key if insertion succeeds; -1 otherwise
+     */
+    protected int executeInsert(String sql, Object... params) {
+<span class="fc" id="L145">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        if (conn == null) return -1;</span>
+
+<span class="fc" id="L148">        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+<span class="fc" id="L149">            setParameters(pstmt, params);</span>
+<span class="fc" id="L150">            pstmt.executeUpdate();</span>
+<span class="fc" id="L151">            ResultSet keys = pstmt.getGeneratedKeys();</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">            if (keys.next()) {</span>
+<span class="fc" id="L153">                return keys.getInt(1);</span>
+            }
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L156">            logger.severe(&quot;Error inserting record: &quot; + e.getMessage());</span>
+<span class="fc" id="L157">        }</span>
+<span class="fc" id="L158">        return -1;</span>
+    }
+
+    /**
+     * Executes an UPDATE or DELETE statement.
+     *
+     * @param sql    the SQL statement to execute
+     * @param params optional parameters for the prepared statement
+     * @return {@code true} if at least one row was affected; {@code false} otherwise
+     */
+    protected boolean executeUpdate(String sql, Object... params) {
+<span class="fc" id="L169">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        if (conn == null) return false;</span>
+
+<span class="fc" id="L172">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L173">            setParameters(pstmt, params);</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">            return pstmt.executeUpdate() &gt; 0;</span>
+<span class="fc" id="L175">        } catch (SQLException e) {</span>
+<span class="fc" id="L176">            logger.severe(&quot;Error updating record: &quot; + e.getMessage());</span>
+<span class="fc" id="L177">            return false;</span>
+        }
+    }
+
+    /**
+     * Executes a COUNT query.
+     *
+     * @param sql    the SQL query returning a single integer count
+     * @param params optional parameters for the prepared statement
+     * @return the number of records; 0 if an error occurs
+     */
+    protected int executeCount(String sql, Object... params) {
+<span class="fc" id="L189">        Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        if (conn == null) return 0;</span>
+
+<span class="fc" id="L192">        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L193">            setParameters(pstmt, params);</span>
+<span class="fc" id="L194">            ResultSet rs = pstmt.executeQuery();</span>
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">            if (rs.next()) {</span>
+<span class="fc" id="L196">                return rs.getInt(1);</span>
+            }
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        } catch (SQLException e) {</span>
+<span class="fc" id="L199">            logger.severe(&quot;Error counting records: &quot; + e.getMessage());</span>
+<span class="nc" id="L200">        }</span>
+<span class="fc" id="L201">        return 0;</span>
+    }
+
+    /**
+     * Sets parameters on a {@link PreparedStatement}.
+     *
+     * @param pstmt  the prepared statement
+     * @param params the parameters to set
+     * @throws SQLException if a database access error occurs
+     */
+    private void setParameters(PreparedStatement pstmt, Object... params) throws SQLException {
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        for (int i = 0; i &lt; params.length; i++) {</span>
+<span class="fc" id="L213">            pstmt.setObject(i + 1, params[i]);</span>
+        }
+<span class="fc" id="L215">    }</span>
+
+    /**
+     * Functional interface for mapping a {@link ResultSet} row to a domain object.
+     *
+     * @param &lt;T&gt; the type of the mapped object
+     */
+    @FunctionalInterface
+    public interface ResultSetMapper&lt;T&gt; {
+        /**
+         * Maps the current row of the {@link ResultSet} to a domain object.
+         *
+         * @param rs the result set positioned at the current row
+         * @return the mapped object
+         * @throws SQLException if a database access error occurs
+         */
+        T map(ResultSet rs) throws SQLException;
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

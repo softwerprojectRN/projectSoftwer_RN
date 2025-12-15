@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package service;
+
+import dao.UserDAO;
+import model.User;
+import dao.PasswordUtil;
+
+/**
+ * Service class responsible for handling user-related business logic,
+ * including registration, authentication, input validation, and secure
+ * password hashing.
+ * &lt;p&gt;
+ * This class communicates with {@link UserDAO} to perform database operations
+ * and ensures that user data is processed securely before storage.
+ * &lt;/p&gt;
+ * &lt;p&gt;
+ * Upon creation, this service automatically initializes the users table
+ * through the underlying {@code UserDAO}.
+ * &lt;/p&gt;
+ *
+ * @author Library
+ * @version 1.1
+ */
+public class UserService {
+
+    /**
+     * Data Access Object used to interact with the user persistence layer.
+     * Handles operations such as finding users, inserting new records,
+     * and retrieving stored authentication data.
+     */
+    private final UserDAO userDAO;
+
+    /**
+     * Constructs a new {@code UserService} instance.
+     * &lt;p&gt;
+     * During initialization, this constructor creates a {@link UserDAO} object
+     * and triggers the setup of the underlying users table if it does not
+     * already exist.
+     * &lt;/p&gt;
+     */
+
+<span class="fc" id="L41">    public UserService() {</span>
+<span class="fc" id="L42">        this.userDAO = new UserDAO();</span>
+<span class="fc" id="L43">        this.userDAO.initializeTable();</span>
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * Registers a new user after validating input fields and securely hashing
+     * the provided password with a generated salt.
+     * &lt;p&gt;
+     * Registration fails if:
+     * &lt;ul&gt;
+     *   &lt;li&gt;The username or password is empty or null&lt;/li&gt;
+     *   &lt;li&gt;The username already exists in the database&lt;/li&gt;
+     *   &lt;li&gt;The database operation fails&lt;/li&gt;
+     * &lt;/ul&gt;
+     * &lt;/p&gt;
+     *
+     * @param username the desired username chosen by the user (cannot be empty)
+     * @param password the raw password to be hashed and stored securely
+     * @return the newly created {@link User}, or {@code null} if registration fails
+     */
+
+    public User register(String username, String password) {
+<span class="fc bfc" id="L64" title="All 6 branches covered.">        if (username == null || username.trim().isEmpty() ||</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">                password == null || password.trim().isEmpty()) {</span>
+<span class="fc" id="L66">            System.err.println(&quot;Error: Username and password cannot be empty&quot;);</span>
+<span class="fc" id="L67">            return null;</span>
+        }
+
+<span class="fc" id="L70">        User existing = userDAO.findByUsername(username);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (existing != null) {</span>
+<span class="fc" id="L72">            System.out.println(&quot;User already exists: &quot; + username);</span>
+<span class="fc" id="L73">            return null;</span>
+        }
+
+<span class="fc" id="L76">        String salt = PasswordUtil.generateSalt();</span>
+<span class="fc" id="L77">        String passwordHash = PasswordUtil.hashPassword(password, salt);</span>
+
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (userDAO.insert(username, passwordHash, salt)) {</span>
+<span class="fc" id="L80">            System.out.println(&quot;User registered successfully: &quot; + username);</span>
+<span class="fc" id="L81">            return userDAO.findByUsername(username);</span>
+        }
+
+<span class="nc" id="L84">        return null;</span>
+    }
+    /**
+     * Authenticates a user by verifying the existence of the username and
+     * comparing the hashed form of the entered password with the stored hash.
+     * &lt;p&gt;
+     * Login fails if:
+     * &lt;ul&gt;
+     *   &lt;li&gt;The username does not exist in the database&lt;/li&gt;
+     *   &lt;li&gt;The password does not match the stored hash&lt;/li&gt;
+     * &lt;/ul&gt;
+     * &lt;/p&gt;
+     *
+     * @param username the username of the account attempting to log in
+     * @param password the raw password provided by the user
+     * @return the authenticated {@link User} with its state updated to logged in,
+     *         or {@code null} if authentication fails
+     */
+    public User login(String username, String password) {
+<span class="fc" id="L103">        User user = userDAO.findByUsername(username);</span>
+
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (user == null) {</span>
+<span class="fc" id="L106">            System.out.println(&quot;User not found.&quot;);</span>
+<span class="fc" id="L107">            return null;</span>
+        }
+
+<span class="fc" id="L110">        String inputHash = PasswordUtil.hashPassword(password, user.getSalt());</span>
+
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (user.getPasswordHash().equals(inputHash)) {</span>
+<span class="fc" id="L113">            user.setLoggedIn(true);</span>
+<span class="fc" id="L114">            System.out.println(&quot;Login successful, welcome &quot; + username + &quot;!&quot;);</span>
+<span class="fc" id="L115">            return user;</span>
+        } else {
+<span class="fc" id="L117">            System.out.println(&quot;Invalid username or password.&quot;);</span>
+<span class="fc" id="L118">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

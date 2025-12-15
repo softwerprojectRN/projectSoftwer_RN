@@ -60,7 +60,7 @@ public class EmailNotifierTest {
         assertDoesNotThrow(() -> emailNotifier.notify(user, "Your book is overdue!"));
 
         verify(emailServer, times(1))
-                .sendEmail("rahaf@example.com", "Library Notification", "Your book is overdue!");
+                .sendEmail("rahaf@gmail.com", "Library Notification", "Your book is overdue!");
     }
 
     // -------------------------------------------------------------------------

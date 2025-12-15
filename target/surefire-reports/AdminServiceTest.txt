@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: AdminServiceTest
 -------------------------------------------------------------------------------
-Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.847 s -- in AdminServiceTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.487 s -- in AdminServiceTest

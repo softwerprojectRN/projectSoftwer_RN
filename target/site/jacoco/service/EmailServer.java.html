@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmailServer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">github-inti-demo</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">EmailServer.java</span></div><h1>EmailServer.java</h1><pre class="source lang-java linenums">package service;
+
+import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+/**
+ * A service class responsible for sending emails and maintaining a record
+ * of previously sent messages.
+ *
+ * &lt;p&gt;This class supports two initialization modes:&lt;/p&gt;
+ * &lt;ul&gt;
+ *     &lt;li&gt;Automatically loading credentials from a &lt;b&gt;.env&lt;/b&gt; file.&lt;/li&gt;
+ *     &lt;li&gt;Explicitly receiving credentials through the constructor.&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;
+ * The class uses Jakarta Mail API to handle SMTP communication and provides
+ * functionality for sending messages, retrieving email history, and clearing logs.
+ * &lt;/p&gt;
+ *
+ * &lt;p&gt;&lt;b&gt;Example Usage:&lt;/b&gt;&lt;/p&gt;
+ * &lt;pre&gt;
+ *     EmailServer server = new EmailServer();
+ *     server.sendEmail(&quot;recipient@example.com&quot;, &quot;Subject&quot;, &quot;Message body&quot;);
+ * &lt;/pre&gt;
+ *
+ * @author Library
+ * @version 1.1
+ */
+
+public class EmailServer {
+    private final String username;
+    private final String password;
+<span class="fc" id="L38">    private final List&lt;Email&gt; sentEmails = new ArrayList&lt;&gt;();</span>
+
+
+
+    /**
+     * Represents a record of a sent email.
+     *
+     * &lt;p&gt;This class stores the recipient address, subject, body content,
+     * and the time the message was sent. Instances are created automatically
+     * whenever {@code sendEmail()} is successfully executed.&lt;/p&gt;
+     */
+
+    public static class Email {
+        private final String to;
+        private final String subject;
+        private final String body;
+        private final long timestamp;
+
+<span class="fc" id="L56">        public Email(String to, String subject, String body) {</span>
+<span class="fc" id="L57">            this.to = to;</span>
+<span class="fc" id="L58">            this.subject = subject;</span>
+<span class="fc" id="L59">            this.body = body;</span>
+<span class="fc" id="L60">            this.timestamp = System.currentTimeMillis();</span>
+<span class="fc" id="L61">        }</span>
+
+        public String getTo() {
+<span class="fc" id="L64">            return to;</span>
+        }
+
+        public String getSubject() {
+<span class="fc" id="L68">            return subject;</span>
+        }
+
+        public String getBody() {
+<span class="fc" id="L72">            return body;</span>
+        }
+
+        public long getTimestamp() {
+<span class="fc" id="L76">            return timestamp;</span>
+        }
+    }
+
+    /**
+     * Initializes the EmailServer by loading SMTP credentials from a .env file.
+     *
+     * &lt;p&gt;The method expects two environment variables:&lt;/p&gt;
+     * &lt;ul&gt;
+     *     &lt;li&gt;&lt;b&gt;EMAIL_USERNAME&lt;/b&gt; – the sender email address&lt;/li&gt;
+     *     &lt;li&gt;&lt;b&gt;EMAIL_PASSWORD&lt;/b&gt; – the corresponding password&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * &lt;p&gt;If either value is missing or empty, the constructor throws
+     * an {@link IllegalStateException} to prevent misconfigured usage.&lt;/p&gt;
+     */
+
+<span class="fc" id="L93">    public EmailServer() {</span>
+        try {
+<span class="fc" id="L95">            Dotenv dotenv = Dotenv.configure()</span>
+<span class="fc" id="L96">                    .ignoreIfMissing()</span>
+<span class="fc" id="L97">                    .load();</span>
+
+<span class="fc" id="L99">            this.username = dotenv.get(&quot;EMAIL_USERNAME&quot;);</span>
+<span class="fc" id="L100">            this.password = dotenv.get(&quot;EMAIL_PASSWORD&quot;);</span>
+
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">            if (username == null || username.isEmpty()) {</span>
+<span class="fc" id="L103">                throw new IllegalStateException(&quot;EMAIL_USERNAME not found in .env file&quot;);</span>
+            }
+<span class="pc bpc" id="L105" title="1 of 4 branches missed.">            if (password == null || password.isEmpty()) {</span>
+<span class="fc" id="L106">                throw new IllegalStateException(&quot;EMAIL_PASSWORD not found in .env file&quot;);</span>
+            }
+
+<span class="fc" id="L109">            System.out.println(&quot;Email server initialized successfully&quot;);</span>
+<span class="fc" id="L110">        } catch (Exception e) {</span>
+<span class="fc" id="L111">            throw new IllegalStateException(&quot;Failed to initialize EmailServer: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L112">        }</span>
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * Constructs an EmailServer using manually provided SMTP credentials.
+     *
+     * @param username the email address used for sending messages
+     * @param password the password or app-specific key for SMTP authentication
+     *
+     * @throws IllegalArgumentException if any parameter is null or empty
+     */
+
+<span class="fc" id="L124">    public EmailServer(String username, String password) {</span>
+<span class="fc bfc" id="L125" title="All 4 branches covered.">        if (username == null || username.isEmpty()) {</span>
+<span class="fc" id="L126">            throw new IllegalArgumentException(&quot;Username cannot be null or empty&quot;);</span>
+        }
+<span class="fc bfc" id="L128" title="All 4 branches covered.">        if (password == null || password.isEmpty()) {</span>
+<span class="fc" id="L129">            throw new IllegalArgumentException(&quot;Password cannot be null or empty&quot;);</span>
+        }
+
+<span class="fc" id="L132">        this.username = username;</span>
+<span class="fc" id="L133">        this.password = password;</span>
+<span class="fc" id="L134">    }</span>
+
+    /**
+     * Sends an email message to a specified recipient using the configured
+     * SMTP credentials. The email is transmitted using TLS encryption via
+     * Gmail's SMTP server.
+     *
+     * &lt;p&gt;After a successful send, the message is added to the internal
+     * history list for later retrieval.&lt;/p&gt;
+     *
+     * @param to       the recipient's email address; must not be null or empty
+     * @param subject  the subject line of the email
+     * @param body     the message content; if null, an empty body is used
+     *
+     * @throws IllegalStateException if SMTP credentials are not configured
+     * @throws IllegalArgumentException if recipient is invalid
+     * @throws RuntimeException if the email fails to send due to SMTP errors
+     */
+
+    public void sendEmail(String to, String subject, String body) {
+<span class="pc bpc" id="L154" title="2 of 4 branches missed.">        if (username == null || username.isEmpty()) {</span>
+<span class="nc" id="L155">            throw new IllegalStateException(&quot;Email username is not configured&quot;);</span>
+        }
+<span class="pc bpc" id="L157" title="2 of 4 branches missed.">        if (password == null || password.isEmpty()) {</span>
+<span class="nc" id="L158">            throw new IllegalStateException(&quot;Email password is not configured&quot;);</span>
+        }
+<span class="fc bfc" id="L160" title="All 4 branches covered.">        if (to == null || to.isEmpty()) {</span>
+<span class="fc" id="L161">            throw new IllegalArgumentException(&quot;Recipient email address cannot be null or empty&quot;);</span>
+        }
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (body == null) {</span>
+<span class="fc" id="L164">            body = &quot;&quot;;</span>
+        }
+
+<span class="fc" id="L167">        Properties props = new Properties();</span>
+<span class="fc" id="L168">        props.put(&quot;mail.smtp.auth&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L169">        props.put(&quot;mail.smtp.starttls.enable&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L170">        props.put(&quot;mail.smtp.host&quot;, &quot;smtp.gmail.com&quot;);</span>
+<span class="fc" id="L171">        props.put(&quot;mail.smtp.port&quot;, &quot;587&quot;);</span>
+<span class="fc" id="L172">        props.put(&quot;mail.smtp.ssl.trust&quot;, &quot;smtp.gmail.com&quot;);</span>
+<span class="fc" id="L173">        props.put(&quot;mail.smtp.ssl.protocols&quot;, &quot;TLSv1.2&quot;);</span>
+
+<span class="fc" id="L175">        Session session = Session.getInstance(props, new Authenticator() {</span>
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+<span class="nc" id="L178">                return new PasswordAuthentication(username, password);</span>
+            }
+        });
+
+        try {
+<span class="fc" id="L183">            Message message = new MimeMessage(session);</span>
+<span class="fc" id="L184">            message.setFrom(new InternetAddress(username));</span>
+<span class="fc" id="L185">            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));</span>
+<span class="fc" id="L186">            message.setSubject(subject);</span>
+<span class="fc" id="L187">            message.setText(body);</span>
+
+<span class="fc" id="L189">            Transport.send(message);</span>
+<span class="fc" id="L190">            System.out.println(&quot;Email sent successfully to: &quot; + to);</span>
+
+<span class="fc" id="L192">            sentEmails.add(new Email(to, subject, body));</span>
+<span class="fc" id="L193">        } catch (MessagingException e) {</span>
+<span class="fc" id="L194">            System.err.println(&quot;Failed to send email: &quot; + e.getMessage());</span>
+<span class="fc" id="L195">            throw new RuntimeException(&quot;Failed to send email: &quot; + e.getMessage(), e);</span>
+<span class="fc" id="L196">        }</span>
+<span class="fc" id="L197">    }</span>
+
+    /**
+     * Returns a snapshot of all previously sent emails.
+     *
+     * &lt;p&gt;The returned list is a defensive copy to prevent external modification
+     * of the internal email history.&lt;/p&gt;
+     *
+     * @return a list containing all sent email records
+     */
+
+    public List&lt;Email&gt; getSentEmails() {
+<span class="fc" id="L209">        return new ArrayList&lt;&gt;(sentEmails);</span>
+    }
+
+    /**
+     * Clears the entire history of sent emails.
+     *
+     * &lt;p&gt;This operation does not affect SMTP settings or service behavior—only
+     * the stored log is removed.&lt;/p&gt;
+     */
+
+    public void clearSentEmails() {
+<span class="fc" id="L220">        sentEmails.clear();</span>
+<span class="fc" id="L221">    }</span>
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
