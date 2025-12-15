@@ -25,7 +25,14 @@ jobs:
       - name: Build & Test
         run: mvn clean test
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+     - name: SonarCloud Scan
+  uses: SonarSource/sonarqube-scan-action@v5.0.0
+  with:
+    args: >
+      -Dsonar.projectKey=softwerprojectRN_projectSoftwer_RN
+      -Dsonar.organization=softwerprojectRN
+      -Dsonar.host.url=https://sonarcloud.io
+      -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+  env:
+    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
