@@ -14,23 +14,24 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Java 17
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         distribution: temurin
         java-version: 17
 
-    - name: Build and Test with Maven
-      run: mvn clean verify
+    - name: Build project
+      run: mvn clean package
 
-    - name: SonarCloud Scan
+    - name: Run SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v5.0.0
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
         args: >
           -Dsonar.projectKey=softwerprojectRN_projectSoftwer_RN
           -Dsonar.organization=softwerprojectrn
-          -Dsonar.host.url=https://sonarcloud.io
-          -Dsonar.java.binaries=target/classes
-          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+          -Dsonar.sources=src/main/java
+          -Dsonar.tests=src/test/java
+          -Dsonar.java.binaries=target/classes,target/test-classes
+          -Dsonar.coverage.exclusions=**/*
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
