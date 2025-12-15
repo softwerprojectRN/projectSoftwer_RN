@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="AdminServiceTest" time="1.19" tests="9" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="AdminServiceTest" time="1.422" tests="9" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire12598849360066318210\surefirebooter-20251215141131473_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire12598849360066318210 2025-12-15T14-11-31_229-jvmRun1 surefire-20251215141131473_1tmp surefire_0-20251215141131473_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire2212986773233600360\surefirebooter-20251215141814262_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire2212986773233600360 2025-12-15T14-18-13_939-jvmRun1 surefire-20251215141814262_1tmp surefire_0-20251215141814262_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\lenovo\projectSoftwer_RN\target\test-classes;C:\Users\lenovo\projectSoftwer_RN\target\classes;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\xerial\sqlite-jdbc\3.50.3.0\sqlite-jdbc-3.50.3.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-core\5.8.0\mockito-core-5.8.0.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy\1.14.10\byte-buddy-1.14.10.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.10\byte-buddy-agent-1.14.10.jar;C:\Users\lenovo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-junit-jupiter\5.8.0\mockito-junit-jupiter-5.8.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-inline\5.0.0\mockito-inline-5.0.0.jar;C:\Users\lenovo\.m2\repository\com\sun\mail\jakarta.mail\2.0.1\jakarta.mail-2.0.1.jar;C:\Users\lenovo\.m2\repository\com\sun\activation\jakarta.activation\2.0.1\jakarta.activation-2.0.1.jar;C:\Users\lenovo\.m2\repository\io\github\cdimascio\java-dotenv\5.2.2\java-dotenv-5.2.2.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.4.0\kotlin-stdlib-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.4.0\kotlin-stdlib-common-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -31,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire12598849360066318210\surefirebooter-20251215141131473_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire2212986773233600360\surefirebooter-20251215141814262_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -58,16 +58,16 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testSetEmailServer" classname="AdminServiceTest" time="0.914">
+  <testcase name="testSetEmailServer" classname="AdminServiceTest" time="0.986">
     <system-out><![CDATA[Email server initialized successfully
 ]]></system-out>
   </testcase>
-  <testcase name="testLogin_Success" classname="AdminServiceTest" time="0.046">
+  <testcase name="testLogin_Success" classname="AdminServiceTest" time="0.038">
     <system-out><![CDATA[Email server initialized successfully
 Admin login successful, welcome admin!
 ]]></system-out>
   </testcase>
-  <testcase name="testSendOverdueReminders_NoEmailServer" classname="AdminServiceTest" time="0.08">
+  <testcase name="testSendOverdueReminders_NoEmailServer" classname="AdminServiceTest" time="0.101">
     <system-out><![CDATA[Email server initialized successfully
 Warning: Email server not available. Cannot send reminders.
 ]]></system-out>
@@ -77,25 +77,25 @@ Warning: Email server not available. Cannot send reminders.
 Admin not found.
 ]]></system-out>
   </testcase>
-  <testcase name="testSendOverdueReminders_SendsEmails" classname="AdminServiceTest" time="0.026">
+  <testcase name="testSendOverdueReminders_SendsEmails" classname="AdminServiceTest" time="0.053">
     <system-out><![CDATA[Email server initialized successfully
 ]]></system-out>
   </testcase>
-  <testcase name="testUnregisterUser" classname="AdminServiceTest" time="0.014">
+  <testcase name="testUnregisterUser" classname="AdminServiceTest" time="0.012">
     <system-out><![CDATA[Email server initialized successfully
 ]]></system-out>
   </testcase>
-  <testcase name="testRegister_FailsIfExists" classname="AdminServiceTest" time="0.011">
+  <testcase name="testRegister_FailsIfExists" classname="AdminServiceTest" time="0.096">
     <system-out><![CDATA[Email server initialized successfully
 Admin already exists: admin
 ]]></system-out>
   </testcase>
-  <testcase name="testRegister_Success" classname="AdminServiceTest" time="0.011">
+  <testcase name="testRegister_Success" classname="AdminServiceTest" time="0.069">
     <system-out><![CDATA[Email server initialized successfully
 Admin registered successfully: admin
 ]]></system-out>
   </testcase>
-  <testcase name="testLogin_InvalidPassword" classname="AdminServiceTest" time="0.027">
+  <testcase name="testLogin_InvalidPassword" classname="AdminServiceTest" time="0.01">
     <system-out><![CDATA[Email server initialized successfully
 Invalid credentials.
 ]]></system-out>
