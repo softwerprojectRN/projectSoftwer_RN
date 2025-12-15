@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="BookDAOTest" time="0.376" tests="19" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="BookDAOTest" time="0.328" tests="19" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire5470581177549478171\surefirebooter-20251215134938578_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire5470581177549478171 2025-12-15T13-49-38_123-jvmRun1 surefire-20251215134938578_1tmp surefire_0-20251215134938578_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\lenovo\AppData\Local\Temp\surefire2396085794450755487\surefirebooter-20251215135249163_3.jar C:\Users\lenovo\AppData\Local\Temp\surefire2396085794450755487 2025-12-15T13-52-48_755-jvmRun1 surefire-20251215135249163_1tmp surefire_0-20251215135249163_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\lenovo\projectSoftwer_RN\target\test-classes;C:\Users\lenovo\projectSoftwer_RN\target\classes;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\lenovo\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\lenovo\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\lenovo\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\lenovo\.m2\repository\org\xerial\sqlite-jdbc\3.50.3.0\sqlite-jdbc-3.50.3.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-core\5.8.0\mockito-core-5.8.0.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy\1.14.10\byte-buddy-1.14.10.jar;C:\Users\lenovo\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.10\byte-buddy-agent-1.14.10.jar;C:\Users\lenovo\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-junit-jupiter\5.8.0\mockito-junit-jupiter-5.8.0.jar;C:\Users\lenovo\.m2\repository\org\mockito\mockito-inline\5.0.0\mockito-inline-5.0.0.jar;C:\Users\lenovo\.m2\repository\com\sun\mail\jakarta.mail\2.0.1\jakarta.mail-2.0.1.jar;C:\Users\lenovo\.m2\repository\com\sun\activation\jakarta.activation\2.0.1\jakarta.activation-2.0.1.jar;C:\Users\lenovo\.m2\repository\io\github\cdimascio\java-dotenv\5.2.2\java-dotenv-5.2.2.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.4.0\kotlin-stdlib-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.4.0\kotlin-stdlib-common-1.4.0.jar;C:\Users\lenovo\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -31,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire5470581177549478171\surefirebooter-20251215134938578_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\lenovo\AppData\Local\Temp\surefire2396085794450755487\surefirebooter-20251215135249163_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -58,133 +58,133 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testInitializeTable_success" classname="BookDAOTest" time="0.092"/>
-  <testcase name="testFindByISBN_connectionNull" classname="BookDAOTest" time="0.028"/>
-  <testcase name="testSearchByAuthor_success" classname="BookDAOTest" time="0.011"/>
+  <testcase name="testInitializeTable_success" classname="BookDAOTest" time="0.012"/>
+  <testcase name="testFindByISBN_connectionNull" classname="BookDAOTest" time="0.007"/>
+  <testcase name="testSearchByAuthor_success" classname="BookDAOTest" time="0.01"/>
   <testcase name="testSearchByTitle_connectionNull" classname="BookDAOTest" time="0.003"/>
-  <testcase name="testFindByISBN_notFound" classname="BookDAOTest" time="0.004"/>
-  <testcase name="testSearchByISBNPattern_success" classname="BookDAOTest" time="0.006"/>
-  <testcase name="testSearchByAuthor_connectionNull" classname="BookDAOTest" time="0.001"/>
-  <testcase name="testSearchByTitle_success" classname="BookDAOTest" time="0.024"/>
-  <testcase name="testInitializeTable_sqlException" classname="BookDAOTest" time="0.031">
-    <system-err><![CDATA[Dec 15, 2025 1:49:49 PM dao.BaseDAO createTable
+  <testcase name="testFindByISBN_notFound" classname="BookDAOTest" time="0.003"/>
+  <testcase name="testSearchByISBNPattern_success" classname="BookDAOTest" time="0.015"/>
+  <testcase name="testSearchByAuthor_connectionNull" classname="BookDAOTest" time="0.005"/>
+  <testcase name="testSearchByTitle_success" classname="BookDAOTest" time="0.004"/>
+  <testcase name="testInitializeTable_sqlException" classname="BookDAOTest" time="0.016">
+    <system-err><![CDATA[Dec 15, 2025 1:52:59 PM dao.BaseDAO createTable
 SEVERE: Error creating Books table: Create table failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO createTable
+Dec 15, 2025 1:52:59 PM dao.BaseDAO createTable
 SEVERE: Error creating Books table: Create table failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO createTable
+Dec 15, 2025 1:52:59 PM dao.BaseDAO createTable
 SEVERE: Error creating Books table: Create table failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO createTable
+Dec 15, 2025 1:52:59 PM dao.BaseDAO createTable
 SEVERE: Error creating Books table: Create table failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO createTable
+Dec 15, 2025 1:52:59 PM dao.BaseDAO createTable
 SEVERE: Error creating Books table: Create table failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO createTable
+Dec 15, 2025 1:52:59 PM dao.BaseDAO createTable
 SEVERE: Error creating Books table: Create table failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO createTable
+Dec 15, 2025 1:52:59 PM dao.BaseDAO createTable
 SEVERE: Error creating Books table: Create table failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO createTable
+Dec 15, 2025 1:52:59 PM dao.BaseDAO createTable
 SEVERE: Error creating Books table: Create table failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO createTable
+Dec 15, 2025 1:52:59 PM dao.BaseDAO createTable
 SEVERE: Error creating Books table: Create table failed
 ]]></system-err>
   </testcase>
-  <testcase name="testInsert_success" classname="BookDAOTest" time="0.01"/>
-  <testcase name="testInitializeTable_connectionNull" classname="BookDAOTest" time="0.002"/>
-  <testcase name="testSearchByISBNPattern_connectionNull" classname="BookDAOTest" time="0.002"/>
-  <testcase name="testFindByISBN_sqlException" classname="BookDAOTest" time="0.033">
-    <system-err><![CDATA[Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+  <testcase name="testInsert_success" classname="BookDAOTest" time="0.006"/>
+  <testcase name="testInitializeTable_connectionNull" classname="BookDAOTest" time="0.016"/>
+  <testcase name="testSearchByISBNPattern_connectionNull" classname="BookDAOTest" time="0.03"/>
+  <testcase name="testFindByISBN_sqlException" classname="BookDAOTest" time="0.064">
+    <system-err><![CDATA[Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findOne
-SEVERE: Error executing query: Query failed
-]]></system-err>
-  </testcase>
-  <testcase name="testFindAll_sqlException" classname="BookDAOTest" time="0.014">
-    <system-err><![CDATA[Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
-SEVERE: Error executing query: Query failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO findMany
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findOne
 SEVERE: Error executing query: Query failed
 ]]></system-err>
   </testcase>
-  <testcase name="testInsert_failure" classname="BookDAOTest" time="0.012">
-    <system-err><![CDATA[Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+  <testcase name="testFindAll_sqlException" classname="BookDAOTest" time="0.019">
+    <system-err><![CDATA[Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+Dec 15, 2025 1:52:59 PM dao.BaseDAO findMany
+SEVERE: Error executing query: Query failed
+]]></system-err>
+  </testcase>
+  <testcase name="testInsert_failure" classname="BookDAOTest" time="0.02">
+    <system-err><![CDATA[Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
-Dec 15, 2025 1:49:49 PM dao.BaseDAO executeInsert
+Dec 15, 2025 1:52:59 PM dao.BaseDAO executeInsert
 SEVERE: Error inserting record: Insert failed
 ]]></system-err>
   </testcase>
-  <testcase name="testFindByISBN_found" classname="BookDAOTest" time="0.01"/>
-  <testcase name="testFindAll_connectionNull" classname="BookDAOTest" time="0.004"/>
-  <testcase name="testFindAll_success" classname="BookDAOTest" time="0.013"/>
-  <testcase name="testInsert_connectionNull" classname="BookDAOTest" time="0.005"/>
+  <testcase name="testFindByISBN_found" classname="BookDAOTest" time="0.004"/>
+  <testcase name="testFindAll_connectionNull" classname="BookDAOTest" time="0.002"/>
+  <testcase name="testFindAll_success" classname="BookDAOTest" time="0.003"/>
+  <testcase name="testInsert_connectionNull" classname="BookDAOTest" time="0.001"/>
 </testsuite>

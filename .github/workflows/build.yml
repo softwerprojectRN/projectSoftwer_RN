@@ -2,35 +2,30 @@ name: Build and Analyze
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        distribution: temurin
-        java-version: 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
 
-- name: Build project
-  run: mvn clean test
+      - name: Build & Test
+        run: mvn clean test
 
-    - name: Run SonarQube Scan
-uses: SonarSource/sonarcloud-github-action@master
-      with:
-        args: >
-          -Dsonar.projectKey=softwerprojectRN_projectSoftwer_RN
-          -Dsonar.organization=softwerprojectrn
-          -Dsonar.sources=src/main/java
-          -Dsonar.tests=src/test/java
-          -Dsonar.java.binaries=target/classes,target/test-classes
-               env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
