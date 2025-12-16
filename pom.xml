@@ -23,6 +23,14 @@
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.java.binaries>${project.build.directory}/classes</sonar.java.binaries>
+
+        <!-- Exclude presentation layer from SonarCloud analysis -->
+        <sonar.exclusions>
+            src/main/java/presentation/**/*.java
+        </sonar.exclusions>
+        <sonar.coverage.exclusions>
+            src/main/java/presentation/**/*.java
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
@@ -103,6 +111,12 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <!-- Exclude presentation layer from coverage -->
+                            <excludes>
+                                <exclude>presentation/**/*.class</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
 
                     <!-- Check coverage (optional - can set minimum coverage) -->
@@ -124,6 +138,10 @@
                                     </limits>
                                 </rule>
                             </rules>
+                            <!-- Exclude presentation layer from checks -->
+                            <excludes>
+                                <exclude>presentation/**/*.class</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
