@@ -69,13 +69,13 @@ public class BorrowerService {
         }
 
         System.out.println("\n=== Overdue Items Report ===");
-        double totalFine = 0.0;
+        double totalOverdueFines = 0.0;
 
         for (MediaRecord record : overdueItems) {
             long overdueDays = record.getOverdueDays();
             double finePerDay = BorrowingService.getFinePerDay(record.getMedia().getMediaType());
             double itemFine = overdueDays * finePerDay;
-            totalFine += itemFine;
+            totalOverdueFines += itemFine;
 
             String mediaType = record.getMedia().getMediaType().equals("book") ? "Book" : "CD";
             System.out.printf("- Title: '%s', Type: %s, Overdue Days: %d, Fine: %.2f\n",
@@ -83,7 +83,16 @@ public class BorrowerService {
         }
 
         System.out.println("-----------------------------");
-        System.out.printf("Total Overdue Fines: %.2f\n", totalFine);
+        System.out.printf("Total Overdue Fines: %.2f\n", totalOverdueFines);
+
+        // Load current fine balance from database
+        double currentBalance = fineDAO.getFineBalance(borrower.getId());
+        double paidAmount = totalOverdueFines - currentBalance;
+
+        System.out.println("\n=== Payment Summary ===");
+        System.out.printf("Total Fines Generated: %.2f\n", totalOverdueFines);
+        System.out.printf("Amount Paid: %.2f\n", paidAmount);
+        System.out.printf("Remaining Balance: %.2f\n", currentBalance);
         System.out.println("=============================\n");
     }
 
@@ -100,6 +109,16 @@ public class BorrowerService {
             return false;
         }
 
+        // ★ الخطوة المهمة: احفظ الغرامات المعلقة في قاعدة البيانات أولاً ★
+        double currentDbBalance = fineDAO.getFineBalance(borrower.getId());
+        double pendingFines = borrower.getFineBalance() - currentDbBalance;
+
+        if (pendingFines > 0) {
+            System.out.println("Saving pending fines to database: " + pendingFines);
+            fineDAO.addFine(borrower.getId(), pendingFines);
+        }
+
+        // الآن ادفع من قاعدة البيانات
         if (fineDAO.payFine(borrower.getId(), amount)) {
             borrower.setFineBalance(borrower.getFineBalance() - amount);
             System.out.printf("Payment of %.2f successful. New balance: %.2f\n",

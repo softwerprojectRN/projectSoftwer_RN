@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: AdminDADTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.913 s -- in AdminDADTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.713 s -- in AdminDADTest

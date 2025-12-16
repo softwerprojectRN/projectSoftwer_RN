@@ -109,10 +109,19 @@ public class FineDAO extends BaseDAO {
      */
     public boolean payFine(int userId, double amount) {
         double currentFine = getFineBalance(userId);
-        if (amount <= 0 || amount > currentFine) {
-            logger.severe("Invalid payment amount.");
+
+        System.out.println("DEBUG: Database fine balance = " + currentFine + ", Payment amount = " + amount);
+
+        if (amount <= 0) {
+            logger.severe("Invalid payment amount: must be positive.");
             return false;
         }
+
+        if (amount > currentFine) {
+            logger.severe("Invalid payment amount: exceeds current balance (" + currentFine + ")");
+            return false;
+        }
+
         return updateFine(userId, currentFine - amount);
     }
 

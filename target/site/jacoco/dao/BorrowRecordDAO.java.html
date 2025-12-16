@@ -202,9 +202,9 @@ import java.util.List;
     public List&lt;MediaRecord&gt; findOverdueByUserId(int userId) {
 <span class="fc" id="L203">        List&lt;MediaRecord&gt; allRecords = findActiveByUserId(userId);</span>
 <span class="fc" id="L204">        List&lt;MediaRecord&gt; overdueRecords = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L205" title="All 2 branches covered.">        for (MediaRecord record : allRecords) {</span>
-<span class="fc bfc" id="L206" title="All 2 branches covered.">            if (record.isOverdue()) {</span>
-<span class="fc" id="L207">                overdueRecords.add(record);</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        for (MediaRecord recordd : allRecords) {</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">            if (recordd.isOverdue()) {</span>
+<span class="fc" id="L207">                overdueRecords.add(recordd);</span>
             }
 <span class="fc" id="L209">        }</span>
 <span class="fc" id="L210">        return overdueRecords;</span>
